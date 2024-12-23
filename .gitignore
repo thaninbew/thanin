@@ -26,6 +26,15 @@ jspm_packages/
 # dotenv environment variables file
 .env
 
+# Next.js
+.next/
+out/
+node_modules/
+.env.local
+.env.development
+.env.test
+.env.production
+
 # VSCode settings
 .vscode/
 
