@@ -8,7 +8,42 @@ generator client {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  name  String
-  email String  @unique
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
+
+model Project {
+  id            Int      @id @default(autoincrement())
+  name          String
+  positions     String   //store multiple positions in a JSON string
+  description   String
+  githubLink    String?
+  liveLink      String?
+  technologies  String   //could store as comma separated or JSON
+  skills        String
+  starredSkills String?
+  images        String?
+  createdAt     DateTime @default(now())
+}
+
+model Experience {
+  id          Int      @id @default(autoincrement())
+  companyName String
+  positions   String
+  location    String?
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  technologies  String?
+  skills        String?
+  createdAt   DateTime @default(now())
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  content   String
+  createdAt DateTime @default(now())
 }

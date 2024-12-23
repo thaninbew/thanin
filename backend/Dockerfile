@@ -1,12 +1,8 @@
-FROM node:14
-
+FROM node:18-alpine
 WORKDIR /app
-
-COPY package.json tsconfig.json ./
-RUN npm install
-
-COPY src ./src
-
-RUN npm run build
-
-CMD ["npm", "start"]
+COPY package*.json ./
+RUN yarn install
+COPY . .
+RUN npx prisma generate
+EXPOSE 8080
+CMD ["yarn", "start"]
