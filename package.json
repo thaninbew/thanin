@@ -5,7 +5,7 @@
   },
   "scripts": {
     "start": "concurrently \"yarn start:frontend\" \"yarn start:backend\"",
-    "start:frontend": "cd frontend && yarn start --port 3000",
+    "start:frontend": "cd frontend && yarn build && yarn start:watch",
     "start:backend": "cd backend && yarn start --port 3001",
     "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
     "dev:frontend": "cd frontend && yarn dev",
