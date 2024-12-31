@@ -1,5 +1,19 @@
 {
   "dependencies": {
+    "concurrently": "^9.1.2",
     "docker": "^1.0.0"
+  },
+  "scripts": {
+    "start": "concurrently \"yarn start:frontend\" \"yarn start:backend\"",
+    "start:frontend": "cd frontend && yarn start --port 3000",
+    "start:backend": "cd backend && yarn start --port 3001",
+    "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
+    "dev:frontend": "cd frontend && yarn dev",
+    "dev:backend": "cd backend && yarn dev"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0"
   }
 }
