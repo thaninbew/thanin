@@ -8,12 +8,12 @@ import Contact from '../components/Contact';
 
 const Home: React.FC = () => {
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
+    <div style={{ position: 'absolute', width: '100vw', height: '100vh', overflow: 'hidden' }}>
       {/* Overlay */}
       <Overlay />
 
       {/* Main Content */}
-      <main style={{ position: 'absolute', top: 0, left: 0, zIndex: 900 }}>
+      <main style={{ position: 'absolute', top: 0, left: 0, zIndex: 900, width: '100%', height: '100%', overflow: 'hidden' }}>
         <About />
         <Experiences />
         <Projects />
