@@ -5,19 +5,15 @@ import Experiences from '../components/Experiences';
 import Projects from '../components/Projects';
 import Music from '../components/Music';
 import Contact from '../components/Contact';
+import BackgroundLayers from '../components/Background';
 
 const Home: React.FC = () => {
   return (
     <div>
+      <BackgroundLayers />
       {/* Overlay */}
       <Overlay />
 
-      {/* Main Content */}
-        <About />
-        <Experiences />
-        <Projects />
-        <Music />
-        <Contact />
     </div>
   );
 };

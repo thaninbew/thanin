@@ -1,0 +1,43 @@
+.backgroundLayer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -3; /* Ensure it's below everything else */
+  overflow: hidden;
+}
+
+.backgroundVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -3;
+}
+
+.middleLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    #ffffff 0%,
+    #859bb6 77%,
+    rgba(98, 122, 157, 0) 100%
+  );
+  opacity: 0.2; /* Set to 20% fill */
+  backdrop-filter: blur(20px); /* Background blur */
+  z-index: -2;
+}
+
+.topLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px) brightness(1); /* Apply both blurs, no tint */
+  z-index: -1;
+}
