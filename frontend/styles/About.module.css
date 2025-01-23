@@ -1,7 +1,8 @@
 .about {
     margin: 2rem auto; /* Center horizontally and add some margin */
-    width: 95%; /* Initial width */
-    padding: 0.7rem; /* 10px */
+    width: 88%; /* Initial width */
+    height: 100%;
+    padding: 1.5rem; /* Increase padding */
     background: linear-gradient(
       to top,
       rgba(241, 247, 252, 0.75),
@@ -21,26 +22,25 @@
     transition: all 0.5s ease;
     z-index: 10; /* Ensure it is above other content */
     font-size: 1.3rem;
-    position: absolute; /* Make it float */
-    bottom: -18rem; /* Move it slightly down */
-    right: 0rem; /* Adjust as needed */
-  }
-  
+    position: relative; /* Allow it to expand outwards */
+}
+
 .description {
     margin-top: 2rem; /* Add margin from the section label */
 }
 
 .about.expanded {
-  width: 100%; /* Expand to full width */
-  height: 100%; /* Expand to full height */
+  width: 100vw; /* Expand to full viewport width */
+  height: 100vh; /* Expand to full viewport height */
   bottom: 0;
   left: 0;
   right: 0;
+  top: 0;
   border-radius: 0; /* Remove border radius when expanded */
 }
 
 .about p {
-  font-size: 1rem; /* 16px */
+  font-size: 1.2rem; /* 16px */
   margin: 0.5rem 0; /* 8px 0 */
 }
 

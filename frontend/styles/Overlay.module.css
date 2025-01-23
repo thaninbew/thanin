@@ -263,6 +263,32 @@
   gap: 0.5rem; /* 8px */
   width: 100%; /* Ensure content fits within the section */
   position: relative; /* Ensure relative positioning */
+  overflow: visible; /* Allow overflow for the about component */
+}
+
+.about {
+  position: relative; /* Allow it to expand outwards */
+  margin: 0; /* Remove margin */
+  width: auto; /* Adjust width */
+  height: auto; /* Adjust height */
+  padding: 1rem; /* Add padding */
+  background: linear-gradient(
+    to top,
+    rgba(241, 247, 252, 0.75),
+    rgba(241, 247, 252, 0.75)
+  ), radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(133, 155, 182, 0.5) 45%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  border: 1px solid black;
+  border-radius: 0.9375rem; /* 15px */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'UncutSans', Arial, sans-serif;
+  font-weight: bold;
+  text-align: left;
+  z-index: 10; /* Ensure it is above other content */
 }
 
 .imagePlaceholder {
