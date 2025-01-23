@@ -9,49 +9,58 @@
   background-color: transparent;
   font-family: Arial, sans-serif;
   z-index: 1;
+  overflow-y: auto; /* Enable vertical scrolling for the entire container */
+  font-size: 1.3em; /* Increase font size by 1.3x */
 }
 
 .header {
   width: 100%;
-  height: 3.125rem; /* 50px */
+  height: 4.0625rem; /* 65px, increased by 1.3x */
   border-bottom: 1px solid black;
   background-color: rgba(255, 255, 255, 0.75); /* 75% white fill */
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 1.25rem; /* 20px */
+  padding: 0 1.625rem; /* 26px, increased by 1.3x */
   z-index: 10; /* Ensure header is above everything */
+  position: fixed; /* Keep header fixed at the top */
+  top: 0;
 }
 
 .footer {
   width: 100%;
-  height: 3.125rem; /* 50px */
+  height: 4.0625rem; /* 65px, increased by 1.3x */
   border-top: 1px solid black;
   background-color: rgba(255, 255, 255, 0.75); /* 75% white fill */
   z-index: 10; /* Ensure footer is above everything */
+  position: fixed; /* Keep footer fixed at the bottom */
+  bottom: 0;
 }
 
 .contentWrapper {
   flex: 1;
   display: flex;
   flex-direction: row;
-  padding: 0.625rem; /* 10px */
-  gap: 0.625rem; /* 10px */
+  padding: 0.8125rem; /* 13px, increased by 1.3x */
+  gap: 0.8125rem; /* 13px, increased by 1.3x */
+  margin-top: 4rem; /* Adjust for fixed header height */
+  margin-bottom: 4rem; /* Adjust for fixed footer height */
 }
 
 .sidebar {
   position: relative;
   width: 12%;
-  height: 100%;
+  height: auto; /* Allow height to adjust based on content */
+  min-height: 200vh; /* Extend height to allow scrolling */
   background: rgba(0, 0, 0, 0.025);
   border: 1px solid black;
   border-radius: 0.9375rem; /* 15px */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0.625rem; /* 10px */
-  gap: 0.5rem; /* 8px */
-  padding-top: 2rem; /* Add padding to avoid overlap with label */
+  padding: 0.8125rem; /* 13px, increased by 1.3x */
+  gap: 0.65rem; /* 10.4px, increased by 1.3x */
+  padding-top: 2.6rem; /* 32px, increased by 1.3x */
 }
 
 .sidebar::before {
@@ -72,9 +81,9 @@
 }
 
 .sidebarItem {
-  font-size: 1.25rem; /* 20px */
+  font-size: 1.5rem; /* 26px, increased by 1.3x */
   font-weight: bold;
-  padding: 0.3125rem 0.5rem; /* 5px 8px */
+  padding: 0.40625rem 0.65rem; /* 6.5px 10.4px, increased by 1.3x */
   cursor: pointer;
   border-radius: 0.625rem; /* 10px */
   border: 1px solid black;
@@ -88,7 +97,7 @@
   flex-direction: column;
   align-items: flex-start;
   font-family: 'UncutSans', Arial, sans-serif;
-  margin-top: 5%;
+  margin-top: 6.5%; /* Increased spacing between items */
 }
 
 .sidebarItem > span {
@@ -96,10 +105,10 @@
 }
 
 .sidebarItemDescription {
-  font-size: 0.9375rem; /* 15px */
+  font-size: 1.21875rem; /* 19.5px, increased by 1.3x */
   font-weight: normal; /* Use normal font */
   color: #000000;
-  padding: 0.125rem 0.3125rem; /* 2px 5px */
+  padding: 0.1625rem 0.2rem; /* 2.6px 6.5px, increased by 1.3x */
   width: 100%; /* Fit within the sidebar frame */
   text-align: left;
   font-family: 'UncutSans', Arial, sans-serif; /* Apply font */
@@ -178,7 +187,7 @@
 .mainContent {
   position: relative;
   flex: 3;
-  padding: 0.625rem; /* 10px */
+  padding: 0.8125rem; /* 13px, increased by 1.3x */
   background: linear-gradient(
     to top,
     rgba(241, 247, 252, 0.75),
@@ -193,18 +202,19 @@
   border-radius: 0.9375rem; /* 15px */
   display: flex;
   flex-direction: column;
-  gap: 0.625rem; /* 10px */
+  gap: 0.8125rem; /* 13px, increased by 1.3x */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   font-family: 'UncutSans', Arial, sans-serif; /* Apply font */
   font-weight: bold; /* Use bold font */
-  padding-top: 2rem; /* Add padding to avoid overlap with label */
+  padding-top: 2.6rem; /* 32px, increased by 1.3x */
+  height: auto; /* Allow height to adjust based on content */
+  min-height: 200vh; /* Extend height to allow scrolling */
 }
 
 .about {
   position: relative;
-  width: 92%;
-  height: 98%;
-  padding: 0.625rem; /* 10px */
+  width: 100%; /* Use 100% width */
+  height: 100%; /* Use 100% height */
   background: linear-gradient(
     to top,
     rgba(241, 247, 252, 0.75),
@@ -231,18 +241,20 @@
 }
 
 .mainContent p {
-  font-size: 2rem; /* 44px */
-  margin-left: 2rem;
-  margin-top: 2rem;
+  font-size: 2.2rem; /* 52px, increased by 1.3x */
+  margin-left: 2.6rem; /* 32px, increased by 1.3x */
+  margin-top: 2.6rem;
+  margin-right:2.6rem; /* 32px, increased by 1.3x */
 }
 
 .radioSection {
   position: relative;
   width: 26%;
-  height: 100%;
+  height: auto; /* Allow height to adjust based on content */
+  min-height: 200vh; /* Extend height to allow scrolling */
   background: rgba(0, 0, 0, 0.01);
   border-radius: 0.9375rem; /* 15px */
-  padding: 0.5rem; /* 8px */
+  padding: 0.65rem; /* 10.4px, increased by 1.3x */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -251,7 +263,7 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid black;
   font-family: 'UncutSans', Arial, sans-serif;
-  padding-top: 2rem; /* Adjust padding to position content */
+  padding-top: 2.6rem; /* 32px, increased by 1.3x */
 }
 
 .radioSection::before {
@@ -280,8 +292,8 @@
 }
 
 .imagePlaceholder {
-  width: 98%; /* Adjust width to fit within the section */
-  height: 98%; /* Maintain aspect ratio */
+  width: 100%; /* Use 100% width */
+  height: 100%; /* Use 100% height */
   padding-top: 100%; /* Maintain aspect ratio by using padding */
   background-color: #e0e0e0;
   border: 1px solid #000;
@@ -292,7 +304,7 @@
 
 .songName {
   margin-left:0.5rem;
-  font-size: 1.4rem; /* 20px */
+  font-size: 1.82rem; /* 26px, increased by 1.3x */
   font-weight: bold;
   text-align: left; /* Align text to the left */
   width: 100%; /* Ensure text fits within the section */
@@ -301,23 +313,23 @@
 
 .artistName {
   margin-left:0.5rem;
-  font-size: 1.2rem; /* 16px */
+  font-size: 1.56rem; /* 20.8px, increased by 1.3x */
   font-weight: normal;
   text-align: left; /* Align text to the left */
   width: 100%; /* Ensure text fits within the section */
 }
 
 .icon {
-  width: 1.25rem; /* 20px */
-  height: 1.25rem; /* 20px */
+  width: 1.625rem; /* 26px, increased by 1.3x */
+  height: 1.625rem; /* 26px, increased by 1.3x */
   cursor: pointer;
-  margin-left: 0.9375rem; /* 15px */
+  margin-left: 1.21875rem; /* 19.5px, increased by 1.3x */
 }
 
 .sectionLabel {
   position: absolute;
-  top: 0.5rem; /* Adjust as needed */
-  left: 0.5rem; /* Adjust as needed */
+  top: 0.65rem; /* 10.4px, increased by 1.3x */
+  left: 0.65rem; /* 10.4px, increased by 1.3x */
   font-weight: bold;
   font-family: 'UncutSans', Arial, sans-serif;
   color: #000;

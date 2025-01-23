@@ -8,7 +8,6 @@ const Home: React.FC = () => {
       <BackgroundLayers />
       {/* Overlay */}
       <Overlay />
-
     </div>
   );
 };

@@ -1,29 +1,12 @@
 import React from 'react';
 import styles from '../styles/Overlay.module.css';
+import Frame from './Frame';
+import About from './About';
 
 const Overlay: React.FC = () => {
   return (
-    <>
+    <Frame>
       <div className={styles.container}>
-        {/* Header */}
-        <div className={styles.header}>
-          <img
-            className={styles.icon}
-            src="https://c.animaapp.com/BCw7hWIC/img/---icon--github-@2x.png"
-            alt="GitHub Icon"
-          />
-          <img
-            className={styles.icon}
-            src="https://c.animaapp.com/BCw7hWIC/img/---icon--linkedin-in-@2x.png"
-            alt="LinkedIn Icon"
-          />
-          <img
-            className={styles.icon}
-            src="https://c.animaapp.com/BCw7hWIC/img/---icon--envelope-closed-@2x.png"
-            alt="Mail Icon"
-          />
-        </div>
-
         {/* Content Wrapper */}
         <div className={styles.contentWrapper}>
           {/* Sidebar */}
@@ -77,16 +60,13 @@ const Overlay: React.FC = () => {
               <h4 className={styles.songName}>Portfolio</h4>
               <p className={styles.artistName}>Thanin Kongkiatsophon</p>
             </div>
-            <div className={styles.about}>
-              <div className={styles.sectionLabel}>About the developer</div>
-            </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className={styles.footer}></div>
+        {/* About Section */}
+        <About />
       </div>
-    </>
+    </Frame>
   );
 };
 

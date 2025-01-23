@@ -1,0 +1,50 @@
+.about {
+    margin: 2rem auto; /* Center horizontally and add some margin */
+    width: 50%; /* Initial width */
+    padding: 0.625rem; /* 10px */
+    background: linear-gradient(
+      to top,
+      rgba(241, 247, 252, 0.75),
+      rgba(241, 247, 252, 0.75)
+    ), radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(133, 155, 182, 0.5) 45%,
+      rgba(255, 255, 255, 0.2) 100%
+    );
+    border: 1px solid black;
+    border-radius: 0.9375rem; /* 15px */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'UncutSans', Arial, sans-serif;
+    font-weight: bold;
+    text-align: left;
+    transition: all 0.5s ease;
+    z-index: 9; /* Ensure About is above the main content but below the header and footer */
+    font-size: 1.3rem;
+    position: relative; /* Keep it in the normal document flow */
+  }
+  
+
+.about.expanded {
+  width: 100%; /* Expand to full width */
+  height: 100%; /* Expand to full height */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0; /* Remove border radius when expanded */
+}
+
+.about p {
+  font-size: 1rem; /* 16px */
+  margin: 0.5rem 0; /* 8px 0 */
+}
+
+.sectionLabel {
+  position: absolute;
+  top: 0.5rem; /* Adjust as needed */
+  left: 0.5rem; /* Adjust as needed */
+  font-weight: bold;
+  font-family: 'UncutSans', Arial, sans-serif;
+  color: #000;
+  opacity: 0.5; /* Adjust opacity to 70% */
+}
