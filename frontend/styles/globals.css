@@ -16,8 +16,6 @@ body, html {
   margin: 0;
   font-family: 'UncutSans', Arial, sans-serif;
   overflow-x: hidden; /* Prevents side scrolling */
-  width: 100vw; /* Ensures the body and html take the full viewport width */
-  height: 100vh; /* Ensures the body and html take the full viewport height */
 }
 
 h1, h2, h3, h4, h5, h6 {

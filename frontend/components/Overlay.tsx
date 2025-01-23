@@ -1,12 +1,33 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/Overlay.module.css';
 import Frame from './Frame';
 import About from './About';
 
 const Overlay: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrollRatio = Math.min(scrollTop / scrollHeight, 1);
+      setScrollPosition(scrollRatio);
+    };
+
+    container.addEventListener('scroll', handleScroll);
+
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <Frame>
-      <div className={styles.container}>
+      <div ref={containerRef} className={styles.container}>
         {/* Content Wrapper */}
         <div className={styles.contentWrapper}>
           {/* Sidebar */}
@@ -14,23 +35,33 @@ const Overlay: React.FC = () => {
             <div className={styles.sectionLabel}>LIBRARY</div>
             <div className={styles.sidebarItem}>
               <span>Home</span>
-              <div className={styles.sidebarItemDescription}>Folder ✦ 4 Playlists</div>
+              <div className={styles.sidebarItemDescription}>
+                Folder ✦ 4 Playlists
+              </div>
             </div>
             <div className={styles.sidebarItem}>
               <span>About</span>
-              <div className={styles.sidebarItemDescription}>Playlist ✦ bew</div>
+              <div className={styles.sidebarItemDescription}>
+                Playlist ✦ bew
+              </div>
             </div>
             <div className={styles.sidebarItem}>
               <span>Experiences</span>
-              <div className={styles.sidebarItemDescription}>Playlist ✦ 4 songs</div>
+              <div className={styles.sidebarItemDescription}>
+                Playlist ✦ 4 songs
+              </div>
             </div>
             <div className={styles.sidebarItem}>
               <span>Projects</span>
-              <div className={styles.sidebarItemDescription}>Playlist ✦ 3 songs</div>
+              <div className={styles.sidebarItemDescription}>
+                Playlist ✦ 3 songs
+              </div>
             </div>
             <div className={styles.sidebarItem}>
               <span>Contact Me</span>
-              <div className={styles.sidebarItemDescription}>Playlist ✦ bew</div>
+              <div className={styles.sidebarItemDescription}>
+                Playlist ✦ bew
+              </div>
             </div>
           </div>
 
@@ -39,16 +70,25 @@ const Overlay: React.FC = () => {
             <div className={styles.sectionLabel}>LYRICS</div>
             <p>Hello!</p>
             <p>
-              I’m <strong><u>Thanin Kongkiatsophon</u></strong>, also known as Bew
+              I’m{' '}
+              <strong>
+                <u>Thanin Kongkiatsophon</u>
+              </strong>
+              , also known as Bew
             </p>
             <p>
-              Software Engineer, Full-Stack Developer, and Current student in Boston, MA
+              Software Engineer, Full-Stack Developer, and Current student in
+              Boston, MA
             </p>
             <p>
-              Bringing ideas to life with scalable, user-friendly, and creative software solutions.
+              Bringing ideas to life with scalable, user-friendly, and creative
+              software solutions.
             </p>
             <p>
-              <i>↜ See how my experiences and projects combine creativity with technical expertise.</i>
+              <i>
+                ↜ See how my experiences and projects combine creativity with
+                technical expertise.
+              </i>
             </p>
           </div>
 
@@ -59,7 +99,7 @@ const Overlay: React.FC = () => {
               <div className={styles.imagePlaceholder}></div>
               <h4 className={styles.songName}>Portfolio</h4>
               <p className={styles.artistName}>Thanin Kongkiatsophon</p>
-              <About /> {/* Move About component here */}
+              <About scrollPosition={scrollPosition} /> {/* Pass scrollPosition prop */}
             </div>
           </div>
         </div>

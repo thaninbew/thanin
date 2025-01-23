@@ -5,7 +5,6 @@
   width: 100vw;
   height: 100vh;
   z-index: -3; /* Ensure it's below everything else */
-  overflow: hidden;
 }
 
 .backgroundVideo {

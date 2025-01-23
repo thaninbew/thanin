@@ -13,30 +13,6 @@
   font-size: 1.3em; /* Increase font size by 1.3x */
 }
 
-.header {
-  width: 100%;
-  height: 4.0625rem; /* 65px, increased by 1.3x */
-  border-bottom: 1px solid black;
-  background-color: rgba(255, 255, 255, 0.75); /* 75% white fill */
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 1.625rem; /* 26px, increased by 1.3x */
-  z-index: 10; /* Ensure header is above everything */
-  position: fixed; /* Keep header fixed at the top */
-  top: 0;
-}
-
-.footer {
-  width: 100%;
-  height: 4.0625rem; /* 65px, increased by 1.3x */
-  border-top: 1px solid black;
-  background-color: rgba(255, 255, 255, 0.75); /* 75% white fill */
-  z-index: 10; /* Ensure footer is above everything */
-  position: fixed; /* Keep footer fixed at the bottom */
-  bottom: 0;
-}
-
 .contentWrapper {
   flex: 1;
   display: flex;
@@ -294,6 +270,7 @@
 .imagePlaceholder {
   width: 100%; /* Use 100% width */
   height: 100%; /* Use 100% height */
+  max-height:1%;
   padding-top: 100%; /* Maintain aspect ratio by using padding */
   background-color: #e0e0e0;
   border: 1px solid #000;

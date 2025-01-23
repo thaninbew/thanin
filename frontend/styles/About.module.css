@@ -1,7 +1,7 @@
 .about {
     margin: 2rem auto; /* Center horizontally and add some margin */
     width: 88%; /* Initial width */
-    height: 100%;
+    height: auto;
     padding: 1.5rem; /* Increase padding */
     background: linear-gradient(
       to top,
@@ -19,7 +19,7 @@
     font-family: 'UncutSans', Arial, sans-serif;
     font-weight: bold;
     text-align: left;
-    transition: all 0.5s ease;
+    transition: all 0.2s ease;
     z-index: 10; /* Ensure it is above other content */
     font-size: 1.3rem;
     position: relative; /* Allow it to expand outwards */
@@ -27,16 +27,6 @@
 
 .description {
     margin-top: 2rem; /* Add margin from the section label */
-}
-
-.about.expanded {
-  width: 100vw; /* Expand to full viewport width */
-  height: 100vh; /* Expand to full viewport height */
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
-  border-radius: 0; /* Remove border radius when expanded */
 }
 
 .about p {
