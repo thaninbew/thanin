@@ -72,9 +72,14 @@ const Overlay: React.FC = () => {
           {/* Thanin's Radio Section */}
           <div className={styles.radioSection}>
             <div className={styles.sectionLabel}>Thanin’s Radio</div>
-            <h3>Thanin’s Radio</h3>
-            <p>Portfolio</p>
-            <p>About the developer</p>
+            <div className={styles.radioContent}>
+              <div className={styles.imagePlaceholder}></div>
+              <h4 className={styles.songName}>Portfolio</h4>
+              <p className={styles.artistName}>Thanin Kongkiatsophon</p>
+            </div>
+            <div className={styles.about}>
+              <div className={styles.sectionLabel}>About the developer</div>
+            </div>
           </div>
         </div>
 
