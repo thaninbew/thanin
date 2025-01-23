@@ -211,34 +211,6 @@
   min-height: 200vh; /* Extend height to allow scrolling */
 }
 
-.about {
-  position: relative;
-  width: 100%; /* Use 100% width */
-  height: 100%; /* Use 100% height */
-  background: linear-gradient(
-    to top,
-    rgba(241, 247, 252, 0.75),
-    rgba(241, 247, 252, 0.75)
-  ), radial-gradient(
-    ellipse at center,
-    rgba(255, 255, 255, 0.5) 0%,
-    rgba(133, 155, 182, 0.5) 45%,
-    rgba(255, 255, 255, 0.2) 100%
-  );
-  border: 1px solid black;
-  border-radius: 0.9375rem; /* 15px */
-  margin-top: 1rem; /* 16px */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  font-family: 'UncutSans', Arial, sans-serif;
-  font-weight: bold;
-  text-align: left;
-  z-index: -1;
-}
-
-.about p {
-  font-size: 1rem; /* 16px */
-  margin: 0.5rem 0; /* 8px 0 */
-}
 
 .mainContent p {
   font-size: 2.2rem; /* 52px, increased by 1.3x */
@@ -248,7 +220,7 @@
 }
 
 .radioSection {
-  position: relative;
+  position: relative; /* Ensure relative positioning */
   width: 26%;
   height: auto; /* Allow height to adjust based on content */
   min-height: 200vh; /* Extend height to allow scrolling */
@@ -264,6 +236,7 @@
   border: 1px solid black;
   font-family: 'UncutSans', Arial, sans-serif;
   padding-top: 2.6rem; /* 32px, increased by 1.3x */
+  padding-bottom: 5rem; /* Add padding to accommodate the floating About component */
 }
 
 .radioSection::before {
@@ -289,6 +262,7 @@
   align-items: flex-start; /* Align items to the left */
   gap: 0.5rem; /* 8px */
   width: 100%; /* Ensure content fits within the section */
+  position: relative; /* Ensure relative positioning */
 }
 
 .imagePlaceholder {

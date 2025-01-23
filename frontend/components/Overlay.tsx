@@ -59,12 +59,10 @@ const Overlay: React.FC = () => {
               <div className={styles.imagePlaceholder}></div>
               <h4 className={styles.songName}>Portfolio</h4>
               <p className={styles.artistName}>Thanin Kongkiatsophon</p>
+              <About /> {/* Move About component here */}
             </div>
           </div>
         </div>
-
-        {/* About Section */}
-        <About />
       </div>
     </Frame>
   );

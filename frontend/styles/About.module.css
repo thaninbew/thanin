@@ -1,7 +1,7 @@
 .about {
     margin: 2rem auto; /* Center horizontally and add some margin */
-    width: 50%; /* Initial width */
-    padding: 0.625rem; /* 10px */
+    width: 95%; /* Initial width */
+    padding: 0.7rem; /* 10px */
     background: linear-gradient(
       to top,
       rgba(241, 247, 252, 0.75),
@@ -19,11 +19,16 @@
     font-weight: bold;
     text-align: left;
     transition: all 0.5s ease;
-    z-index: 9; /* Ensure About is above the main content but below the header and footer */
+    z-index: 10; /* Ensure it is above other content */
     font-size: 1.3rem;
-    position: relative; /* Keep it in the normal document flow */
+    position: absolute; /* Make it float */
+    bottom: -18rem; /* Move it slightly down */
+    right: 0rem; /* Adjust as needed */
   }
   
+.description {
+    margin-top: 2rem; /* Add margin from the section label */
+}
 
 .about.expanded {
   width: 100%; /* Expand to full width */
