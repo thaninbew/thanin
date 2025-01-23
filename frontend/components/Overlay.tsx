@@ -5,25 +5,52 @@ import About from './About';
 
 const Overlay: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const handleScroll = () => {
-      const scrollTop = container.scrollTop;
-      const scrollHeight = container.scrollHeight - container.clientHeight;
-      const scrollRatio = Math.min(scrollTop / scrollHeight, 1);
-      setScrollPosition(scrollRatio);
+      const currentScroll = container.scrollTop;
+      setScrollY(currentScroll);
+
+      // Add scrolling class to sidebar items with calculated scroll amount
+      const sidebarItems = container.querySelectorAll(`.${styles.sidebarItem}`);
+      const scrollDiff = currentScroll - lastScrollY;
+      
+      sidebarItems.forEach((item) => {
+        item.classList.add(styles.scrolling);
+        (item as HTMLElement).style.setProperty('--scroll-amount', String(scrollDiff * 0.1));
+      });
+
+      // Clear previous timeout
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+
+      // Set new timeout to remove scrolling class
+      scrollTimeout.current = setTimeout(() => {
+        sidebarItems.forEach((item) => {
+          item.classList.remove(styles.scrolling);
+          (item as HTMLElement).style.setProperty('--scroll-amount', '0');
+        });
+      }, 150); // Adjust this delay to control how long items take to settle
+
+      setLastScrollY(currentScroll);
     };
 
     container.addEventListener('scroll', handleScroll);
 
     return () => {
       container.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
     };
-  }, []);
+  }, [lastScrollY] as const);
 
   return (
     <Frame>
@@ -70,7 +97,7 @@ const Overlay: React.FC = () => {
             <div className={styles.sectionLabel}>LYRICS</div>
             <p>Hello!</p>
             <p>
-              I’m{' '}
+              I'm{' '}
               <strong>
                 <u>Thanin Kongkiatsophon</u>
               </strong>
@@ -94,12 +121,12 @@ const Overlay: React.FC = () => {
 
           {/* Thanin's Radio Section */}
           <div className={styles.radioSection}>
-            <div className={styles.sectionLabel}>Thanin’s Radio</div>
+            <div className={styles.sectionLabel}>Thanin's Radio</div>
             <div className={styles.radioContent}>
               <div className={styles.imagePlaceholder}></div>
               <h4 className={styles.songName}>Portfolio</h4>
               <p className={styles.artistName}>Thanin Kongkiatsophon</p>
-              <About scrollPosition={scrollPosition} /> {/* Pass scrollPosition prop */}
+              <About scrollY={scrollY} />
             </div>
           </div>
         </div>
