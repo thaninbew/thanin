@@ -28,37 +28,50 @@ const Overlay: React.FC = () => {
         <div className={styles.contentWrapper}>
           {/* Sidebar */}
           <div className={styles.sidebar}>
-            <div className={styles.sidebarItem}>Home</div>
-            <div className={styles.sidebarItem}>About</div>
-            <div className={styles.sidebarItem}>Experiences</div>
-            <div className={styles.sidebarItem}>Projects</div>
-            <div className={styles.sidebarItem}>Contact Me</div>
+            <div className={styles.sectionLabel}>LIBRARY</div>
+            <div className={styles.sidebarItem}>
+              <span>Home</span>
+              <div className={styles.sidebarItemDescription}>Folder ✦ 4 Playlists</div>
+            </div>
+            <div className={styles.sidebarItem}>
+              <span>About</span>
+              <div className={styles.sidebarItemDescription}>Playlist ✦ bew</div>
+            </div>
+            <div className={styles.sidebarItem}>
+              <span>Experiences</span>
+              <div className={styles.sidebarItemDescription}>Playlist ✦ 4 songs</div>
+            </div>
+            <div className={styles.sidebarItem}>
+              <span>Projects</span>
+              <div className={styles.sidebarItemDescription}>Playlist ✦ 3 songs</div>
+            </div>
+            <div className={styles.sidebarItem}>
+              <span>Contact Me</span>
+              <div className={styles.sidebarItemDescription}>Playlist ✦ bew</div>
+            </div>
           </div>
 
           {/* Main Content */}
           <div className={styles.mainContent}>
-            <h1>Hello!</h1>
+            <div className={styles.sectionLabel}>LYRICS</div>
+            <p>Hello!</p>
             <p>
-              I’m <strong>Thanin Kongkiatsophon</strong>, also known as Bew.
+              I’m <strong><u>Thanin Kongkiatsophon</u></strong>, also known as Bew
             </p>
             <p>
-              Software Engineer, Full-Stack Developer, and Current student in
-              Boston, MA.
+              Software Engineer, Full-Stack Developer, and Current student in Boston, MA
             </p>
             <p>
-              Bringing ideas to life with scalable, user-friendly, and creative
-              software solutions.
+              Bringing ideas to life with scalable, user-friendly, and creative software solutions.
             </p>
             <p>
-              <i>
-                ~ See how my experiences and projects combine creativity with
-                technical expertise.
-              </i>
+              <i>↜ See how my experiences and projects combine creativity with technical expertise.</i>
             </p>
           </div>
 
           {/* Thanin's Radio Section */}
           <div className={styles.radioSection}>
+            <div className={styles.sectionLabel}>Thanin’s Radio</div>
             <h3>Thanin’s Radio</h3>
             <p>Portfolio</p>
             <p>About the developer</p>

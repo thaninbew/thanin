@@ -1,6 +1,20 @@
+@font-face {
+  font-family: 'UncutSans';
+  src: url('/fonts/UncutSans-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'UncutSans';
+  src: url('/fonts/UncutSans-Semibold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 body, html {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-family: 'UncutSans', Arial, sans-serif;
   overflow-x: hidden; /* Prevents side scrolling */
   width: 100vw; /* Ensures the body and html take the full viewport width */
   height: 100vh; /* Ensures the body and html take the full viewport height */
