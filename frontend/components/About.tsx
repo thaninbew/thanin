@@ -19,7 +19,6 @@ const About: React.FC<AboutProps> = ({ scrollPosition }) => {
     const expandedStyle = {
       width: `${44 + (100 - 44) * clampedScrollPosition}vh`, // Start at 38vh, expand to 100vh
       height: `${30 + (40 - 30) * clampedScrollPosition}vh`, // Start at 30vh, expand to 40vh
-      borderRadius: `${0.9375 - 0.9375 * clampedScrollPosition}rem`, // Decrease border radius as scrollPosition increases
       transform: `translateX(${clampedScrollPosition * -215}%) translateY(${clampedScrollPosition * 50}%)`, // Move left and slightly down
       zIndex: 10,
     };
