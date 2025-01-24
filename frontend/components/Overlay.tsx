@@ -17,27 +17,23 @@ const Overlay: React.FC = () => {
       const currentScroll = container.scrollTop;
       setScrollY(currentScroll);
 
-      // Add scrolling class to sidebar items with calculated scroll amount
+      // Update sidebar items position
       const sidebarItems = container.querySelectorAll(`.${styles.sidebarItem}`);
-      const scrollDiff = currentScroll - lastScrollY;
+      const viewportHeight = window.innerHeight;
+      const maxScroll = container.scrollHeight - viewportHeight;
+      const isScrollingUp = currentScroll < lastScrollY;
       
-      sidebarItems.forEach((item) => {
-        item.classList.add(styles.scrolling);
-        (item as HTMLElement).style.setProperty('--scroll-amount', String(scrollDiff * 0.1));
-      });
-
-      // Clear previous timeout
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
+      const itemsArray = Array.from(sidebarItems);
+      if (isScrollingUp) {
+        itemsArray.reverse();
       }
-
-      // Set new timeout to remove scrolling class
-      scrollTimeout.current = setTimeout(() => {
-        sidebarItems.forEach((item) => {
-          item.classList.remove(styles.scrolling);
-          (item as HTMLElement).style.setProperty('--scroll-amount', '0');
-        });
-      }, 150); // Adjust this delay to control how long items take to settle
+      
+      itemsArray.forEach((item, index) => {
+        const element = item as HTMLElement;
+        const delay = index * 0.1; // 50ms delay between each item
+        element.style.transitionDelay = `${delay}s`;
+        element.style.transform = `translateY(${currentScroll}px)`;
+      });
 
       setLastScrollY(currentScroll);
     };
@@ -46,11 +42,8 @@ const Overlay: React.FC = () => {
 
     return () => {
       container.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
     };
-  }, [lastScrollY] as const);
+  }, [lastScrollY]);
 
   return (
     <Frame>

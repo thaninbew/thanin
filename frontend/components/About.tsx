@@ -7,11 +7,24 @@ interface AboutProps {
 
 const About: React.FC<AboutProps> = ({ scrollY }) => {
   const aboutRef = useRef<HTMLDivElement>(null);
+
+  // Track dynamic measurements
   const [elementTop, setElementTop] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
+
+  // We'll store pinnedTopPx once, the FIRST time we hit expandEnd
+  // and reuse it for all subsequent fixed phases
+  const [pinnedTopPx, setPinnedTopPx] = useState<number | null>(null);
+
+  // For detecting threshold crossing
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Update element position and viewport height on mount and resize
+  // Add this before getAnimationState
+  const easeOut = (x: number, power: number = 3): number => {
+    return 1 - Math.pow(1 - x, power);
+  };
+
+  // Measure element position & viewport size
   useEffect(() => {
     const updatePositions = () => {
       if (aboutRef.current) {
@@ -40,63 +53,73 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
     setLastScrollY(scrollY);
   }, [scrollY]);
 
-  // Determine animation phase
+  // Calculate our "phases"
   const getAnimationState = () => {
-    const triggerStart = elementTop - viewportHeight * 0.6;  // start expanding ~60% into viewport
-    const expandDuration = 400;
-    const fixedDuration = 800;
-    const expandEnd = triggerStart + expandDuration;
-    const fixedEnd = expandEnd + fixedDuration;
-    const fixedElementPosition = fixedEnd + viewportHeight * 0.2; // remain pinned 20% beyond fixedEnd
-
-    if (scrollY < triggerStart) {
-      return { phase: 'initial', progress: 0 };
-    } else if (scrollY < expandEnd) {
-      // Expanding from smaller to bigger
-      const rawProgress = (scrollY - triggerStart) / expandDuration;
-      const progress = 1 - Math.cos((rawProgress * Math.PI) / 2); // easing
-      return { phase: 'expanding', progress };
-    } else if (scrollY < fixedElementPosition) {
-      // Fully expanded + pinned
-      return { phase: 'fixed', progress: 1 };
-    } else {
-      // Exit phase
-      return { phase: 'exit', progress: 1 };
-    }
-  };
-
-  // Compute inline styles for each phase
-  const getStyles = () => {
     const triggerStart = elementTop - viewportHeight * 0.6;
     const expandDuration = 400;
     const fixedDuration = 800;
     const expandEnd = triggerStart + expandDuration;
     const fixedEnd = expandEnd + fixedDuration;
     const fixedElementPosition = fixedEnd + viewportHeight * 0.2;
+
+    if (scrollY < triggerStart) {
+      return { phase: 'initial', progress: 0, expandEnd };
+    } else if (scrollY < expandEnd) {
+      const rawProgress = (scrollY - triggerStart) / expandDuration;
+      // Use easeOut instead of cosine
+      const progress = easeOut(rawProgress, 5); // Adjust power (3) to control the curve
+      return { phase: 'expanding', progress, expandEnd };
+    } else if (scrollY < fixedElementPosition) {
+      return { phase: 'fixed', progress: 1, expandEnd };
+    } else {
+      return { phase: 'exit', progress: 1, expandEnd };
+    }
+  };
+
+  const { phase, progress, expandEnd } = getAnimationState();
+
+  /**
+   * Measure pinnedTopPx only ONCE — the first time we cross from < expandEnd to >= expandEnd.
+   * If pinnedTopPx is already set, don't overwrite it again.
+   */
+  useEffect(() => {
+    if (pinnedTopPx == null && lastScrollY < expandEnd && scrollY >= expandEnd) {
+      // We haven't measured yet, so measure now
+      if (aboutRef.current) {
+        const rect = aboutRef.current.getBoundingClientRect();
+        // rect.top is how far from top of viewport in px
+        // We'll store that so the 'fixed' phase uses exactly that for 'top'
+        setPinnedTopPx(rect.top);
+      }
+    }
+  }, [scrollY, lastScrollY, expandEnd, pinnedTopPx]);
+
+  // Compute inline styles
+  const getStyles = (): React.CSSProperties => {
+    // For pinnedDistance in "exit" phase
+    const fixedEnd = expandEnd + 800;
+    const fixedElementPosition = fixedEnd + viewportHeight * 0.2;
     const pinnedDistance = fixedElementPosition - expandEnd;
 
-    const { phase, progress } = getAnimationState();
+    // Dimensions
+    const initialWidth = 44;  // vh
+    const finalWidth = 100;   // vh
+    const initialHeight = 30; // vh
+    const finalHeight = 40;   // vh
 
-    // Initial & final dimensions
-    const initialWidth = 44;
-    const finalWidth = 100;
-    const initialHeight = 30;
-    const finalHeight = 40;
-
-    // Final transform shifts
+    // final transform shift
     const finalX = -109;
     const finalY = 0;
 
-    // This sets the pinned top to 10% of the viewport (since 0.6/6 = 0.1 = 10%)
-    const dynamicTopPx = (viewportHeight * 0.6) / 3;
-
-    const baseStyles = {
+    // Base styles
+    const baseStyles: React.CSSProperties = {
       width: `${initialWidth}vh`,
       height: `${initialHeight}vh`,
       transform: 'translateX(0) translateY(0)',
-      position: 'relative' as const,
+      position: 'relative',
       opacity: 1,
       transition: 'all 0.3s ease',
+      marginTop: 0,
     };
 
     switch (phase) {
@@ -106,42 +129,41 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
       case 'expanding': {
         const width = initialWidth + (finalWidth - initialWidth) * progress;
         const height = initialHeight + (finalHeight - initialHeight) * progress;
-        // gradually move from X=0% → X=-109%, Y=0% → Y=0%
         const transform = `translateX(${finalX * progress}%) translateY(${finalY * progress}%)`;
 
         return {
+          ...baseStyles,
           width: `${width}vh`,
           height: `${height}vh`,
           transform,
-          position: 'relative' as const,
-          opacity: 1,
-          transition: 'all 0.3s ease',
         };
       }
 
-      case 'fixed':
-        // Lock in place at top=10% of the viewport
-        return {
+      case 'fixed': {
+        const styles: React.CSSProperties = {
           width: `${finalWidth}vh`,
           height: `${finalHeight}vh`,
           transform: `translateX(${finalX}%) translateY(${finalY}%)`,
-          position: 'fixed' as const,
-          top: `${dynamicTopPx}px`, // pinned top
+          position: 'fixed',
+          top: '23vh',
           opacity: 1,
           transition: 'none',
         };
+        return styles;
+      }
 
-      case 'exit':
-        // Move back into normal flow without shrinking
-        return {
+      case 'exit': {
+        const styles: React.CSSProperties = {
           width: `${finalWidth}vh`,
           height: `${finalHeight}vh`,
           transform: `translateX(${finalX}%) translateY(${finalY}%)`,
-          position: 'relative' as const,
-          marginTop: `${pinnedDistance}px`, // avoids a jump
+          position: 'relative',
+          marginTop: `${pinnedDistance}px`,
           opacity: 1,
           transition: 'none',
         };
+        return styles;
+      }
     }
   };
 
