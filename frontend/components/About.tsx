@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/About.module.css';
+import Experiences from './Experiences';
 
 interface AboutProps {
   scrollY: number;
@@ -181,23 +182,31 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
   };
 
   const showImagePlaceholder = phase === 'fixed' || phase === 'exit';
+  const showExperiences = phase === 'exit';
 
   return (
-    <div ref={aboutRef} className={styles.about} style={getStyles()}>
-      <div className={styles.contentContainer}>
-        <div className={styles.sectionLabel}>About the developer</div>
-        <div className={styles.description}>
-          <p>
-          I'm a software engineer, producer, and musician who combines technical expertise with creative artistry.
-           I’ve worked on analyzing large datasets with machine learning frameworks and fine-tuning AI language models to enhance 
-           their performance and usability.</p>
-           <p>
-           I’m passionate about driving innovation in AI-powered SaaS and exploring how AI can revolutionize music production workflows. 
-          </p>
+    <div className={styles.aboutContainer}>
+      <div ref={aboutRef} className={styles.about} style={getStyles()}>
+        <div className={styles.contentContainer}>
+          <div className={styles.sectionLabel}>About the developer</div>
+          <div className={styles.description}>
+            <p>
+            I'm a software engineer, producer, and musician who combines technical expertise with creative artistry.
+             I've worked on analyzing large datasets with machine learning frameworks and fine-tuning AI language models to enhance 
+             their performance and usability.</p>
+             <p>
+             I'm passionate about driving innovation in AI-powered SaaS and exploring how AI can revolutionize music production workflows. 
+            </p>
+          </div>
         </div>
+        {showImagePlaceholder && (
+          <div className={styles.expandedImagePlaceholder}></div>
+        )}
       </div>
-      {showImagePlaceholder && (
-        <div className={styles.expandedImagePlaceholder}></div>
+      {showExperiences && (
+        <div className={styles.experiencesWrapper}>
+          <Experiences />
+        </div>
       )}
     </div>
   );

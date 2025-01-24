@@ -1,3 +1,8 @@
+.aboutContainer {
+    position: relative;
+    pointer-events: none;
+}
+
 .about {
     margin: 2rem auto; /* Center horizontally and add some margin */
     width: 88%; /* Initial width */
@@ -73,4 +78,22 @@
   color: #000;
   opacity: 0.5; /* Adjust opacity to 70% */
   pointer-events: none;
+}
+
+.experiencesWrapper {
+    margin-top: 4rem;
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+    pointer-events: auto;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
