@@ -25,7 +25,7 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
     window.addEventListener('resize', updatePositions);
     window.addEventListener('scroll', updatePositions);
 
-    // Re-measure after a short delay to ensure accurate initial position
+    // Re-measure after a short delay
     const timeout = setTimeout(updatePositions, 100);
 
     return () => {
@@ -35,40 +35,37 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
     };
   }, []);
 
-  // Update last scroll position
+  // Keep track of last known scroll position
   useEffect(() => {
     setLastScrollY(scrollY);
   }, [scrollY]);
 
-  // Decide which "phase" of the animation we are in
+  // Determine animation phase
   const getAnimationState = () => {
-    const triggerStart = elementTop - viewportHeight * 0.6;  // start expanding when 60% into viewport
-    const expandDuration = 400;                             // expand over 400px
-    const fixedDuration = 800;                              // stay fixed for 800px
+    const triggerStart = elementTop - viewportHeight * 0.6;  // start expanding ~60% into viewport
+    const expandDuration = 400;
+    const fixedDuration = 800;
     const expandEnd = triggerStart + expandDuration;
     const fixedEnd = expandEnd + fixedDuration;
-
-    // We add 20% viewport so the element remains “fixed” a bit beyond the normal fixedEnd
-    const fixedElementPosition = fixedEnd + viewportHeight * 0.2; 
+    const fixedElementPosition = fixedEnd + viewportHeight * 0.2; // remain pinned 20% beyond fixedEnd
 
     if (scrollY < triggerStart) {
       return { phase: 'initial', progress: 0 };
     } else if (scrollY < expandEnd) {
-      // Expanding from smaller size to bigger size
+      // Expanding from smaller to bigger
       const rawProgress = (scrollY - triggerStart) / expandDuration;
-      // A little easing (using 1 - cos(pi/2 * t))
-      const progress = 1 - Math.cos((rawProgress * Math.PI) / 2);
+      const progress = 1 - Math.cos((rawProgress * Math.PI) / 2); // easing
       return { phase: 'expanding', progress };
     } else if (scrollY < fixedElementPosition) {
-      // Fully expanded and pinned/fixed
+      // Fully expanded + pinned
       return { phase: 'fixed', progress: 1 };
     } else {
-      // Past the fixed position => "exit" phase
+      // Exit phase
       return { phase: 'exit', progress: 1 };
     }
   };
 
-  // Generate the inline styles for each animation phase
+  // Compute inline styles for each phase
   const getStyles = () => {
     const triggerStart = elementTop - viewportHeight * 0.6;
     const expandDuration = 400;
@@ -76,28 +73,30 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
     const expandEnd = triggerStart + expandDuration;
     const fixedEnd = expandEnd + fixedDuration;
     const fixedElementPosition = fixedEnd + viewportHeight * 0.2;
-
-    // The distance the page scrolls while the element is actually pinned
-    // (from the end of expansion to the final "release" point).
     const pinnedDistance = fixedElementPosition - expandEnd;
 
     const { phase, progress } = getAnimationState();
 
-    // Desired "fixed" size/position
-    const fixedWidth = '100vh';
-    const fixedHeight = '40vh';
-    const fixedX = -109;      // percent to translate in X
-    const fixedY = 0;         // percent to translate in Y
-    const fixedTop = '20%';   // pinned 20% from top of viewport
+    // Initial & final dimensions
+    const initialWidth = 44;
+    const finalWidth = 100;
+    const initialHeight = 30;
+    const finalHeight = 40;
 
-    // Base styles
+    // Final transform shifts
+    const finalX = -109;
+    const finalY = 0;
+
+    // This sets the pinned top to 10% of the viewport (since 0.6/6 = 0.1 = 10%)
+    const dynamicTopPx = (viewportHeight * 0.6) / 3;
+
     const baseStyles = {
-      width: '44vh',
-      height: '30vh',
+      width: `${initialWidth}vh`,
+      height: `${initialHeight}vh`,
       transform: 'translateX(0) translateY(0)',
       position: 'relative' as const,
       opacity: 1,
-      transition: 'all 0.3s ease'
+      transition: 'all 0.3s ease',
     };
 
     switch (phase) {
@@ -105,42 +104,43 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
         return baseStyles;
 
       case 'expanding': {
-        // Expand from (44vh x 30vh) to (100vh x 40vh), also shift if needed
-        const currentWidth = 44 + (100 - 44) * progress;
-        const currentHeight = 30 + (40 - 30) * progress;
+        const width = initialWidth + (finalWidth - initialWidth) * progress;
+        const height = initialHeight + (finalHeight - initialHeight) * progress;
+        // gradually move from X=0% → X=-109%, Y=0% → Y=0%
+        const transform = `translateX(${finalX * progress}%) translateY(${finalY * progress}%)`;
+
         return {
-          width: `${currentWidth}vh`,
-          height: `${currentHeight}vh`,
-          transform: `translateX(${progress * fixedX}%) translateY(${progress * fixedY}%)`,
+          width: `${width}vh`,
+          height: `${height}vh`,
+          transform,
           position: 'relative' as const,
           opacity: 1,
-          transition: 'all 0.3s ease'
+          transition: 'all 0.3s ease',
         };
       }
 
       case 'fixed':
-        // "Locked" in place
+        // Lock in place at top=10% of the viewport
         return {
-          width: fixedWidth,
-          height: fixedHeight,
-          transform: `translateX(${fixedX}%) translateY(${fixedY}%)`,
+          width: `${finalWidth}vh`,
+          height: `${finalHeight}vh`,
+          transform: `translateX(${finalX}%) translateY(${finalY}%)`,
           position: 'fixed' as const,
-          top: fixedTop,
+          top: `${dynamicTopPx}px`, // pinned top
           opacity: 1,
-          transition: 'none'
+          transition: 'none',
         };
 
       case 'exit':
-        // Return to normal flow, but offset so no jump occurs
+        // Move back into normal flow without shrinking
         return {
-          width: fixedWidth,
-          height: fixedHeight,
-          transform: `translateX(${fixedX}%) translateY(${fixedY}%)`,
+          width: `${finalWidth}vh`,
+          height: `${finalHeight}vh`,
+          transform: `translateX(${finalX}%) translateY(${finalY}%)`,
           position: 'relative' as const,
-          // The magic: we offset it by the distance we've scrolled while pinned
-          marginTop: `${pinnedDistance}px`,
+          marginTop: `${pinnedDistance}px`, // avoids a jump
           opacity: 1,
-          transition: 'none'
+          transition: 'none',
         };
     }
   };
