@@ -103,12 +103,17 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
 
     // Dimensions
     const initialWidth = 44;  // vh
-    const finalWidth = 100;   // vh
+    const finalWidth = 160;   // vh (expanded to cover most of the width)
     const initialHeight = 30; // vh
-    const finalHeight = 40;   // vh
+    const finalHeight = 75;   // vh (viewport height minus header/footer with small margins)
 
-    // final transform shift
-    const finalX = -109;
+    // Text scaling
+    const initialTextSize = 1.2;  // rem
+    const finalTextSize = 1.8;    // rem
+    const currentTextSize = initialTextSize + (finalTextSize - initialTextSize) * progress;
+
+    // final transform shift - adjusted to expand rightward
+    const finalX = -69; // reduced leftward shift
     const finalY = 0;
 
     // Base styles
@@ -120,6 +125,17 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
       opacity: 1,
       transition: 'all 0.3s ease',
       marginTop: 0,
+      fontSize: `${initialTextSize}rem`,
+    };
+
+    // Common expanded styles for both fixed and exit phases
+    const expandedStyles = {
+      width: `${finalWidth}vh`,
+      height: `${finalHeight}vh`,
+      transform: `translateX(${finalX}%) translateY(${finalY}%)`,
+      fontSize: `${finalTextSize}rem`,
+      display: 'flex',
+      gap: '2rem',
     };
 
     switch (phase) {
@@ -136,55 +152,53 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
           width: `${width}vh`,
           height: `${height}vh`,
           transform,
+          fontSize: `${currentTextSize}rem`,
+          display: 'flex',
+          gap: '2rem',
         };
       }
 
       case 'fixed': {
-        const styles: React.CSSProperties = {
-          width: `${finalWidth}vh`,
-          height: `${finalHeight}vh`,
-          transform: `translateX(${finalX}%) translateY(${finalY}%)`,
+        return {
+          ...expandedStyles,
           position: 'fixed',
-          top: '23vh',
+          top: '7.5vh',
           opacity: 1,
           transition: 'none',
         };
-        return styles;
       }
 
       case 'exit': {
-        const styles: React.CSSProperties = {
-          width: `${finalWidth}vh`,
-          height: `${finalHeight}vh`,
-          transform: `translateX(${finalX}%) translateY(${finalY}%)`,
+        return {
+          ...expandedStyles,
           position: 'relative',
           marginTop: `${pinnedDistance}px`,
           opacity: 1,
           transition: 'none',
         };
-        return styles;
       }
     }
   };
 
+  const showImagePlaceholder = phase === 'fixed' || phase === 'exit';
+
   return (
     <div ref={aboutRef} className={styles.about} style={getStyles()}>
-      <div className={styles.sectionLabel}>About the developer</div>
-      <div className={styles.description}>
-        <p>Hello!</p>
-        <p>
-          I'm <strong><u>Thanin Kongkiatsophon</u></strong>, also known as Bew
-        </p>
-        <p>
-          Software Engineer, Full-Stack Developer, and Current student in Boston, MA
-        </p>
-        <p>
-          Bringing ideas to life with scalable, user-friendly, and creative software solutions.
-        </p>
-        <p>
-          <i>↜ See how my experiences and projects combine creativity with technical expertise.</i>
-        </p>
+      <div className={styles.contentContainer}>
+        <div className={styles.sectionLabel}>About the developer</div>
+        <div className={styles.description}>
+          <p>
+          I'm a software engineer, producer, and musician who combines technical expertise with creative artistry.
+           I’ve worked on analyzing large datasets with machine learning frameworks and fine-tuning AI language models to enhance 
+           their performance and usability.</p>
+           <p>
+           I’m passionate about driving innovation in AI-powered SaaS and exploring how AI can revolutionize music production workflows. 
+          </p>
+        </div>
       </div>
+      {showImagePlaceholder && (
+        <div className={styles.expandedImagePlaceholder}></div>
+      )}
     </div>
   );
 };
