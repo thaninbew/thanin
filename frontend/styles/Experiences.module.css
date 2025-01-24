@@ -1,0 +1,80 @@
+.experiences {
+  width: 100%;
+  padding: 2rem;
+  font-family: 'UncutSans', Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.headerImagePlaceholder {
+  width: 200px;
+  height: 200px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0.9375rem;
+  border: 1px solid #000;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.experiencesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.experienceItem {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.9375rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.experienceItem:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.01);
+}
+
+.experienceImagePlaceholder {
+  width: 64px;
+  height: 64px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  border: 1px solid #000;
+  flex-shrink: 0;
+}
+
+.experienceInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.experienceName {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.experienceRole {
+  font-size: 1.2rem;
+  color: rgba(0, 0, 0, 0.7);
+  margin: 0;
+}
+
+.experienceDateRange {
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0;
+} 
