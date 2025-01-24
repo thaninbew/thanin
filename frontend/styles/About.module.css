@@ -23,15 +23,18 @@
     z-index: 10; /* Ensure it is above other content */
     font-size: 1.3rem;
     position: relative; /* Allow it to expand outwards */
+    pointer-events: none;
 }
 
 .description {
     margin-top: 2rem; /* Add margin from the section label */
+    pointer-events: none;
 }
 
 .about p {
   font-size: 1.2rem; /* 16px */
   margin: 0.5rem 0; /* 8px 0 */
+  pointer-events: none;
 }
 
 .sectionLabel {
@@ -42,4 +45,5 @@
   font-family: 'UncutSans', Arial, sans-serif;
   color: #000;
   opacity: 0.5; /* Adjust opacity to 70% */
+  pointer-events: none;
 }
