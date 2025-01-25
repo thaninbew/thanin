@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../styles/Experiences.module.css';
+import ExperiencesPlayer from './ExperiencesPlayer';
 
 interface ExperienceItem {
   id: string;
@@ -46,22 +47,25 @@ const ExperienceItem: React.FC<ExperienceItem> = ({ imageUrl, name, role, dateRa
 
 const Experiences: React.FC = () => {
   return (
-    <div className={styles.experiences}>
-      {/* Header Section */}
-      <div className={styles.header}>
-        <div className={styles.headerImagePlaceholder}></div>
-        <h1 className={styles.title}>Experiences</h1>
-      </div>
+    <div className={styles.experiencesContainer}>
+      <div className={styles.experiences}>
+        {/* Header Section */}
+        <div className={styles.header}>
+          <div className={styles.headerImagePlaceholder}></div>
+          <h1 className={styles.title}>Experiences</h1>
+        </div>
 
-      {/* Experience Items List */}
-      <div className={styles.experiencesList}>
-        {sampleExperiences.map((experience) => (
-          <ExperienceItem
-            key={experience.id}
-            {...experience}
-          />
-        ))}
+        {/* Experience Items List */}
+        <div className={styles.experiencesList}>
+          {sampleExperiences.map((experience) => (
+            <ExperienceItem
+              key={experience.id}
+              {...experience}
+            />
+          ))}
+        </div>
       </div>
+      <ExperiencesPlayer />
     </div>
   );
 };
