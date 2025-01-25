@@ -249,26 +249,24 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
         )}
       </div>
       <div className={`${styles.experiencesWrapper} ${showExperiences ? styles.visible : ''}`}>
-        <div className={styles.sectionWrapper}>
+        <div className={`${styles.sectionWrapper} ${phase === 'fixed' ? 'aboutFixed' : ''}`}>
           <Experiences />
         </div>
-        <div className={`${styles.sectionWrapper} ${showProjects ? styles.fadeIn : ''}`}>
+        <div className={`${styles.sectionWrapper} ${showProjects ? `${styles.fadeIn} projectsVisible` : ''}`}>
           <Projects />
         </div>
-        <div className={`${styles.sectionWrapper} ${showContact ? styles.fadeIn : ''}`}>
+        <div className={`${styles.sectionWrapper} ${showContact ? `${styles.fadeIn} contactVisible` : ''}`}>
           <Contact />
         </div>
         <div className={`${styles.easterEggWrapper} ${styles.fadeIn}`} data-section="easter-egg">
-        <div className={styles.easterEgg}>
-          <h2 className={styles.easterEggTitle}>Congrats on scrolling this far! You’ve unlocked debug mode.</h2>
-          <p className={styles.easterEggText}>
-           Press ↑↑↓↓ B A or click me to return to the top.
-          </p>
+          <div className={styles.easterEgg}>
+            <h2 className={styles.easterEggTitle}>Congrats on scrolling this far! You've unlocked debug mode.</h2>
+            <p className={styles.easterEggText}>
+             Press ↑↑↓↓ B A or click me to return to the top.
+            </p>
+          </div>
         </div>
       </div>
-      </div>
-
-      
     </div>
   );
 };

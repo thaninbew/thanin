@@ -9,9 +9,9 @@
   background-color: transparent;
   font-family: Arial, sans-serif;
   z-index: 1;
-  overflow-y: auto; /* Enable vertical scrolling for the entire container */
-  font-size: 1.3em; /* Increase font size by 1.3x */
-  scroll-behavior: smooth; /* Enable smooth scrolling */
+  overflow-y: auto;
+  font-size: 1.3em;
+  scroll-behavior: smooth;
 }
 
 .contentWrapper {
@@ -22,13 +22,13 @@
   gap: 0.8125rem;
   margin-top: 4rem;
   margin-bottom: 4rem;
-  min-height: 120vh; /* Increased from 200vh to 500vh */
+  min-height: 120vh;
 }
 
 .sidebar {
   position: relative;
   width: 12%;
-  min-height: 500vh; /* Match contentWrapper */
+  min-height: 500vh;
   background: rgba(0, 0, 0, 0.025);
   border: 1px solid black;
   border-radius: 0.9375rem;
