@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "concurrently": "^9.1.2",
-    "docker": "^1.0.0",
     "swr": "^2.3.0"
   },
   "scripts": {
