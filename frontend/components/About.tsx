@@ -216,11 +216,9 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
           <div className={styles.expandedImagePlaceholder}></div>
         )}
       </div>
-      {showExperiences && (
-        <div className={styles.experiencesWrapper}>
-          <Experiences />
-        </div>
-      )}
+      <div className={`${styles.experiencesWrapper} ${showExperiences ? styles.visible : ''}`}>
+        <Experiences />
+      </div>
     </div>
   );
 };

@@ -4,10 +4,9 @@
 }
 
 .about {
-    margin: 2rem auto; /* Center horizontally and add some margin */
-    width: 88%; /* Initial width */
+    width: 89%;
     height: auto;
-    padding: 1.5rem; /* Increase padding */
+    padding: 1.5rem;
     background: linear-gradient(
       to top,
       rgba(241, 247, 252, 0.75),
@@ -19,15 +18,15 @@
       rgba(255, 255, 255, 0.2) 100%
     );
     border: 1px solid black;
-    border-radius: 0.9375rem; /* 15px */
+    border-radius: 0.9375rem;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     font-family: 'UncutSans', Arial, sans-serif;
     font-weight: bold;
     text-align: left;
     transition: all 0.2s ease;
-    z-index: 10; /* Ensure it is above other content */
+    z-index: 10;
     font-size: 1.3rem;
-    position: relative; /* Allow it to expand outwards */
+    position: relative;
     pointer-events: none;
 }
 
@@ -38,7 +37,7 @@
 }
 
 .description {
-    margin-top: 2rem; /* Add margin from the section label */
+    margin-top: 2rem;
     pointer-events: none;
 }
 
@@ -52,48 +51,46 @@
     pointer-events: none;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+.experiencesWrapper {
+    width: 96.5%;
+    margin-top: 2rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s ease;
+    transform: translateY(20px) translateX(0);
+}
+
+.experiencesWrapper.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) translateX(-71.5%);
 }
 
 .about p {
-  font-size: inherit;
-  margin: 1rem 0; /* 8px 0 */
-  pointer-events: none;
-  transition: font-size 0.3s ease;
+    font-size: inherit;
+    margin: 1rem 0;
+    pointer-events: none;
+    transition: font-size 0.3s ease;
 }
-
 
 .sectionLabel {
-  position: absolute;
-  top: 0.5rem; /* Adjust as needed */
-  left: 0.5rem; /* Adjust as needed */
-  font-weight: bold;
-  font-family: 'UncutSans', Arial, sans-serif;
-  color: #000;
-  opacity: 0.5; /* Adjust opacity to 70% */
-  pointer-events: none;
-}
-
-.experiencesWrapper {
-    margin-top: 4rem;
-    opacity: 0;
-    animation: fadeIn 0.5s ease forwards;
-    pointer-events: auto;
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    font-weight: bold;
+    font-family: 'UncutSans', Arial, sans-serif;
+    color: #000;
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
