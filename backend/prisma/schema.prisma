@@ -4,41 +4,42 @@ datasource db {
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
-}
-
-model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  password String
+  provider = "prisma-client-js"
 }
 
 model Project {
-  id            Int      @id @default(autoincrement())
-  name          String
-  positions     String   //store multiple positions in a JSON string
-  description   String
-  githubLink    String?
-  liveLink      String?
-  technologies  String   //could store as comma separated or JSON
-  skills        String
-  starredSkills String?
-  images        String?
-  createdAt     DateTime @default(now())
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  shortDesc   String
+  imageUrl    String?
+  githubUrl   String?
+  liveUrl     String?
+  technologies String[]
+  dateRange   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Experience {
-  id          Int      @id @default(autoincrement())
-  companyName String
-  positions   String
-  location    String?
-  description String?
-  startDate   DateTime
-  endDate     DateTime?
-  technologies  String?
-  skills        String?
+  id          String   @id @default(uuid())
+  name        String
+  role        String
+  description String
+  shortDesc   String
+  imageUrl    String?
+  dateRange   String
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Message {
