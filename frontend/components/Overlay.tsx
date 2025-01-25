@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/Overlay.module.css';
 import Frame from './Frame';
 import About from './About';
+import Contact from './Contact';
 
 const Overlay: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);

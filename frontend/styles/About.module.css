@@ -90,27 +90,30 @@
     opacity: 0;
     transform: translateX(100%);
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sectionWrapper:first-child {
-    opacity: 1;
-    transform: translateX(0);
     margin-bottom: 1rem;
 }
 
-.sectionWrapper:first-child.fadeOut {
-    opacity: 0;
-    transform: translateX(100%);
-}
-
-/* Projects animations */
-.sectionWrapper:last-child {
-    transform: translateX(100%);
-}
-
-.sectionWrapper:last-child.fadeIn {
+/* Experiences is always visible once shown */
+.sectionWrapper:first-child {
     opacity: 1;
     transform: translateX(0);
+}
+
+/* Projects and Contact initial state */
+.sectionWrapper:not(:first-child) {
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animation when becoming visible */
+.sectionWrapper:not(:first-child).fadeIn {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.sectionWrapper:last-child {
+    transform: translateX(100%);
 }
 
 .sectionWrapper:last-child.fadeOut {

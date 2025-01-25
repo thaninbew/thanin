@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/About.module.css';
 import Experiences from './Experiences';
 import Projects from './Projects';
+import Contact from './Contact';
 
 interface AboutProps {
   scrollY: number;
@@ -21,8 +22,9 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
   // For detecting threshold crossing
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Track if we should show Projects
+  // Track if we should show Projects and Contact
   const [showProjects, setShowProjects] = useState(false);
+  const [showContact, setShowContact] = useState(false);
 
   // Add this before getAnimationState
   const easeOut = (x: number, power: number = 3): number => {
@@ -95,7 +97,9 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
   const { phase, progress, expandEnd } = getAnimationState();
 
   // Projects appears after scrolling an additional viewport height after experiences
-  const projectsThreshold = expandEnd + viewportHeight + 900;
+  const projectsThreshold = expandEnd + viewportHeight * 1.7;
+  // Contact appears slightly after Projects
+  const contactThreshold = projectsThreshold + viewportHeight;
 
   /**
    * Measure pinnedTopPx only ONCE — the first time we cross from < expandEnd to >= expandEnd.
@@ -114,12 +118,24 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
   }, [scrollY, lastScrollY, expandEnd, pinnedTopPx]);
 
   useEffect(() => {
-    if (scrollY > projectsThreshold && !showProjects) {
-      setShowProjects(true);
-    } else if (scrollY <= projectsThreshold && showProjects) {
-      setShowProjects(false);
-    }
-  }, [scrollY, projectsThreshold, showProjects]);
+    const handleAnimations = () => {
+      // Projects animation
+      if (scrollY > projectsThreshold && !showProjects) {
+        setShowProjects(true);
+      } else if (scrollY <= projectsThreshold - viewportHeight * 0.1 && showProjects) {
+        setShowProjects(false);
+      }
+
+      // Contact animation
+      if (scrollY > contactThreshold && !showContact) {
+        setShowContact(true);
+      } else if (scrollY <= contactThreshold - viewportHeight * 0.1 && showContact) {
+        setShowContact(false);
+      }
+    };
+
+    handleAnimations();
+  }, [scrollY, projectsThreshold, contactThreshold, showProjects, showContact, viewportHeight]);
 
   // Compute inline styles
   const getStyles = (): React.CSSProperties => {
@@ -238,6 +254,9 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
         </div>
         <div className={`${styles.sectionWrapper} ${showProjects ? styles.fadeIn : ''}`}>
           <Projects />
+        </div>
+        <div className={`${styles.sectionWrapper} ${showContact ? styles.fadeIn : ''}`}>
+          <Contact />
         </div>
       </div>
     </div>
