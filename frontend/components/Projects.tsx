@@ -1,8 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import styles from '../styles/Projects.module.css';
-import { Project } from '../types';
-import { IoPlayBackOutline, IoPlayForwardOutline, IoPlayOutline } from 'react-icons/io5';
+import { FaCode, FaLaptopCode, FaBrain } from 'react-icons/fa';
+import ContentPlayer from './ContentPlayer';
 
 // Example data - this would come from an API in the real implementation
 const sampleProjects = [
@@ -10,6 +10,9 @@ const sampleProjects = [
     id: '1',
     name: 'AI Music Generator',
     description: 'An AI-powered music generation tool',
+    shortDesc: 'Creating the future of AI-assisted music composition',
+    icon: <FaBrain size={24} />,
+    playerGif: '/images/music-visualizer.gif', // Placeholder: colorful audio waveform animation
     technologies: ['Python', 'TensorFlow', 'React'],
     githubUrl: 'https://github.com/example/ai-music',
     dateRange: '2023'
@@ -18,6 +21,9 @@ const sampleProjects = [
     id: '2',
     name: 'Portfolio Website',
     description: 'Personal portfolio with Spotify-inspired design',
+    shortDesc: 'A creative twist on the traditional portfolio',
+    icon: <FaLaptopCode size={24} />,
+    playerGif: '/images/portfolio-demo.gif', // Placeholder: smooth scrolling portfolio demo
     technologies: ['Next.js', 'TypeScript', 'CSS Modules'],
     liveUrl: 'https://portfolio.example.com',
     dateRange: '2023'
@@ -26,6 +32,9 @@ const sampleProjects = [
     id: '3',
     name: 'ML Research Paper',
     description: 'Research on advanced language models',
+    shortDesc: 'Pushing the boundaries of language model capabilities',
+    icon: <FaCode size={24} />,
+    playerGif: '/images/neural-net.gif', // Placeholder: neural network training visualization
     technologies: ['PyTorch', 'Transformers', 'CUDA'],
     githubUrl: 'https://github.com/example/ml-research',
     dateRange: '2022'
@@ -39,64 +48,28 @@ export default function Projects() {
     router.push(`/project/${projectId}`);
   };
 
-  return (
-    <div className={styles.projectsContainer}>
-      <div className={styles.projects}>
-        <div className={styles.header}>
-          <div className={styles.headerTop}>
-            <div className={styles.headerImagePlaceholder}></div>
-            <h1 className={styles.title}>Projects</h1>
-          </div>
-          <p className={styles.description}>
-            A collection of my notable projects and contributions
-          </p>
-        </div>
-
-        <div className={styles.separator}></div>
-
-        <div className={styles.projectsList}>
-          {sampleProjects.map((project) => (
-            <div 
-              key={project.id} 
-              className={styles.projectItem}
-              onClick={() => handleProjectClick(project.id)}
-            >
-              <div className={styles.projectImagePlaceholder}></div>
-              <div className={styles.projectInfo}>
-                <h3 className={styles.projectName}>{project.name}</h3>
-                <p className={styles.projectDescription}>{project.description}</p>
-              </div>
-              <span className={styles.projectDateRange}>{project.dateRange}</span>
-            </div>
-          ))}
-        </div>
+  const renderProject = (project: typeof sampleProjects[0], isActive: boolean) => (
+    <div className={`${styles.projectItem} ${isActive ? styles.active : ''}`}>
+      <div className={styles.projectIcon}>
+        {project.icon}
       </div>
-
-      <div className={styles.projectsPlayer}>
-        <div className={styles.sectionLabel}>Now Playing</div>
-        <div className={styles.playerContent}>
-          <div className={styles.playerImagePlaceholder}></div>
-          <h2 className={styles.playerTitle}>Selected Project</h2>
-          <p className={styles.playerSubtitle}>Click a project to view details</p>
-          
-          <div className={styles.playerControls}>
-            <div className={styles.progressBar}>
-              <div className={styles.progress}></div>
-            </div>
-            <div className={styles.controlButtons}>
-              <button className={styles.controlButton}>
-                <IoPlayBackOutline size={33} />
-              </button>
-              <button className={`${styles.playButton} ${styles.circular}`}>
-                <IoPlayOutline size={33} />
-              </button>
-              <button className={styles.controlButton}>
-                <IoPlayForwardOutline size={33} />
-              </button>
-            </div>
-          </div>
-        </div>
+      <div className={styles.projectInfo}>
+        <h3 className={styles.projectName}>{project.name}</h3>
+        <p className={styles.projectDescription}>{project.description}</p>
       </div>
+      <span className={styles.projectDateRange}>{project.dateRange}</span>
     </div>
+  );
+
+  return (
+    <ContentPlayer
+      items={sampleProjects}
+      onItemClick={handleProjectClick}
+      onHoverChange={() => {}}
+      renderItem={renderProject}
+      title="Projects"
+      description="A collection of my notable projects and contributions"
+      className={styles.projectsContainer}
+    />
   );
 } 
