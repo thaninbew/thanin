@@ -12,10 +12,13 @@ interface AboutProps {
     projects: number;
     contact: number;
   }) => void;
+  onScrollToTop?: () => void;
 }
 
-const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange }) => {
+const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScrollToTop }) => {
   const aboutRef = useRef<HTMLDivElement>(null);
+  const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
+  const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright','arrowleft', 'arrowright', 'b', 'a'];
 
   // Track dynamic measurements
   const [elementTop, setElementTop] = useState(0);
@@ -76,16 +79,7 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange }) => {
     const fixedEnd = expandEnd + fixedDuration;
     const fixedElementPosition = fixedEnd + viewportHeight * 0.2;
 
-    // Add debug logging to help track the values
-    console.log({
-      elementTop,
-      viewportHeight,
-      triggerStart,
-      scrollY,
-      phase: scrollY < triggerStart ? 'initial' : 
-             scrollY < expandEnd ? 'expanding' :
-             scrollY < fixedElementPosition ? 'fixed' : 'exit'
-    });
+  
 
     if (scrollY < triggerStart) {
       return { phase: 'initial', progress: 0, expandEnd };
@@ -155,6 +149,50 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange }) => {
       onSectionPositionsChange(positions);
     }
   }, [expandEnd, projectsThreshold, contactThreshold, viewportHeight, onSectionPositionsChange]);
+
+  // Add Konami code detection
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      
+      // Prevent default behavior for arrow keys
+      if (key.startsWith('arrowleft') || key.startsWith('arrowright')) {
+        event.preventDefault();
+      }
+      
+      console.log('Key pressed:', key);
+      
+      setKonamiSequence(prev => {
+        const newSequence = [...prev, key];
+        // Only keep the last 10 keys pressed
+        if (newSequence.length > 10) {
+          newSequence.shift();
+        }
+        
+        console.log('Current sequence:', newSequence);
+        console.log('Target sequence:', konamiCode);
+        
+        // Check if the sequence matches the Konami code
+        const sequenceMatches = newSequence.join(',') === konamiCode.join(',');
+        console.log('Sequence matches?', sequenceMatches);
+        
+        if (sequenceMatches) {
+          console.log('Konami code activated! Scrolling to top...');
+          onScrollToTop?.();
+          return [];
+        }
+        
+        return newSequence;
+      });
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [onScrollToTop, konamiCode]);
+
+  const handleEasterEggClick = () => {
+    onScrollToTop?.();
+  };
 
   // Compute inline styles
   const getStyles = (): React.CSSProperties => {
@@ -277,11 +315,15 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange }) => {
         <div className={`${styles.sectionWrapper} ${showContact ? `${styles.fadeIn} contactVisible` : ''}`}>
           <Contact />
         </div>
-        <div className={`${styles.easterEggWrapper} ${styles.fadeIn}`} data-section="easter-egg">
+        <div className={`${styles.easterEggWrapper} ${styles.fadeIn}`} 
+          data-section="easter-egg"
+          onClick={handleEasterEggClick}
+          style={{ cursor: 'pointer' }}
+        >
           <div className={styles.easterEgg}>
-            <h2 className={styles.easterEggTitle}>Congrats on scrolling this far! You've unlocked debug mode.</h2>
+            <h2 className={styles.easterEggTitle}>Congrats on scrolling this far! You've unlocked cheat mode.</h2>
             <p className={styles.easterEggText}>
-             Press ↑↑↓↓ B A or click me to return to the top.
+             Press ↑↑↓↓←→←→ B A (konami code!)  or click me to return to the top.
             </p>
           </div>
         </div>

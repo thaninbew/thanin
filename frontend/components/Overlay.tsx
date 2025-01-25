@@ -82,6 +82,15 @@ const Overlay: React.FC = () => {
     }
   };
 
+  const handleScrollToTop = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <Frame>
       <div ref={containerRef} className={styles.container}>
@@ -173,6 +182,7 @@ const Overlay: React.FC = () => {
               <About 
                 scrollY={scrollY} 
                 onSectionPositionsChange={handleSectionPositionsChange}
+                onScrollToTop={handleScrollToTop}
               />
             </div>
           </div>
