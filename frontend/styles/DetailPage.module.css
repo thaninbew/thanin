@@ -1,0 +1,136 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'UncutSans', Arial, sans-serif;
+}
+
+.backButton {
+  background: transparent;
+  border: 1px solid black;
+  padding: 0.5rem 1rem;
+  border-radius: 0.9375rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.backButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateX(-5px);
+}
+
+.content {
+  background: linear-gradient(
+    to top,
+    rgba(241, 247, 252, 0.75),
+    rgba(241, 247, 252, 0.75)
+  ), radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(133, 155, 182, 0.5) 45%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  border: 1px solid black;
+  border-radius: 0.9375rem;
+  padding: 2rem;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 3rem;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: rgba(0, 0, 0, 0.7);
+  margin: 0;
+}
+
+.imageContainer {
+  width: 100%;
+  margin-bottom: 2rem;
+  border-radius: 0.9375rem;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.details {
+  font-size: 1.2rem;
+}
+
+.description {
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.link {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid black;
+  border-radius: 0.9375rem;
+  text-decoration: none;
+  color: black;
+  transition: all 0.3s ease;
+}
+
+.link:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.technologies {
+  margin-bottom: 2rem;
+}
+
+.techList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.techItem {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.5rem 1rem;
+  border-radius: 0.9375rem;
+  font-size: 1rem;
+}
+
+.achievements {
+  margin-top: 2rem;
+}
+
+.achievements ul {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+.achievements li {
+  margin-bottom: 0.5rem;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: rgba(0, 0, 0, 0.7);
+} 

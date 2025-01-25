@@ -1,4 +1,4 @@
-.experiencesContainer {
+.projectsContainer {
   display: flex;
   gap: 0.5rem;
   width: 103%;
@@ -7,7 +7,7 @@
   margin-top: 1rem;
 }
 
-.experiences {
+.projects {
   flex: 3;
   padding: 1.5rem;
   font-family: 'UncutSans', Arial, sans-serif;
@@ -72,12 +72,12 @@
   width: 100%;
 }
 
-.experiencesList {
+.projectsList {
   display: flex;
   flex-direction: column;
 }
 
-.experienceItem {
+.projectItem {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -88,11 +88,11 @@
   cursor: pointer;
 }
 
-.experienceItem:hover {
+.projectItem:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-.experienceImagePlaceholder {
+.projectImagePlaceholder {
   width: 50px;
   height: 50px;
   background: rgba(0, 0, 0, 0.1);
@@ -101,7 +101,7 @@
   margin-bottom: 1.25rem;
 }
 
-.experienceInfo {
+.projectInfo {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -109,7 +109,7 @@
   text-align: left;
 }
 
-.experienceName {
+.projectName {
   font-size: 1.4rem;
   font-weight: bold;
   margin: 0;
@@ -118,7 +118,7 @@
   text-overflow: ellipsis;
 }
 
-.experienceRole {
+.projectDescription {
   font-size: 1.25rem;
   color: rgba(0, 0, 0, 0.7);
   margin: 0;
@@ -127,7 +127,7 @@
   text-overflow: ellipsis;
 }
 
-.experienceDateRange {
+.projectDateRange {
   font-size: 1.25rem;
   color: rgba(0, 0, 0, 0.7);
   text-align: right;
@@ -135,7 +135,7 @@
 }
 
 /* Player Styles */
-.experiencesPlayer {
+.projectsPlayer {
   flex: 1;
   position: relative;
   width: 26%;
@@ -256,7 +256,6 @@
   border-color: black;
 }
 
-/* Option 1: Transparent with outline */
 .playButton {
   width: 55px;
   height: 55px;
@@ -279,26 +278,4 @@
   background: rgba(0, 0, 0, 0.1);
   color: black;
   border-color: black;
-}
-
-/* Option 2: White with outline */
-.playButtonWhite {
-  width: 40px;
-  height: 40px;
-  background: white;
-  color: rgba(0, 0, 0, 0.8);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.playButtonWhite:hover {
-  transform: scale(1.05);
-  background: white;
-  color: black;
-  border-color: rgba(0, 0, 0, 0.5);
 } 
