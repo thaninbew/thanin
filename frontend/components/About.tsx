@@ -99,7 +99,7 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
   // Projects appears after scrolling an additional viewport height after experiences
   const projectsThreshold = expandEnd + viewportHeight * 1.7;
   // Contact appears slightly after Projects
-  const contactThreshold = projectsThreshold + viewportHeight;
+  const contactThreshold = projectsThreshold + viewportHeight * 0.8;
 
   /**
    * Measure pinnedTopPx only ONCE — the first time we cross from < expandEnd to >= expandEnd.
