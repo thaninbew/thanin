@@ -99,7 +99,7 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
   // Projects appears after scrolling an additional viewport height after experiences
   const projectsThreshold = expandEnd + viewportHeight * 1.7;
   // Contact appears slightly after Projects
-  const contactThreshold = projectsThreshold + viewportHeight * 0.8;
+  const contactThreshold = projectsThreshold + viewportHeight * 0.65;
 
   /**
    * Measure pinnedTopPx only ONCE — the first time we cross from < expandEnd to >= expandEnd.
@@ -262,10 +262,7 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
         <div className={styles.easterEgg}>
           <h2 className={styles.easterEggTitle}>Congrats on scrolling this far! You’ve unlocked debug mode.</h2>
           <p className={styles.easterEggText}>
-           Press ↑↑↓↓ B A to return to the top.
-            <br />
-            or scroll back up :D
-            <br />
+           Press ↑↑↓↓ B A or click me to return to the top.
           </p>
         </div>
       </div>
