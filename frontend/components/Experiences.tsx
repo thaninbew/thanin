@@ -51,8 +51,14 @@ const Experiences: React.FC = () => {
       <div className={styles.experiences}>
         {/* Header Section */}
         <div className={styles.header}>
-          <div className={styles.headerImagePlaceholder}></div>
-          <h1 className={styles.title}>Experiences</h1>
+          <div className={styles.headerTop}>
+            <div className={styles.headerImagePlaceholder}></div>
+            <h1 className={styles.title}>Experiences</h1>
+          </div>
+          <p className={styles.description}>
+            A collection of my professional journey and achievements in software engineering and AI
+          </p>
+          <div className={styles.separator} />
         </div>
 
         {/* Experience Items List */}

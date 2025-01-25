@@ -9,7 +9,7 @@
     padding: 1.5rem;
     background: linear-gradient(
       to top,
-      rgba(241, 247, 252, 0.75),
+      rgba(241, 247, 252, 1),
       rgba(241, 247, 252, 0.75)
     ), radial-gradient(
       ellipse at center,
@@ -52,13 +52,16 @@
 }
 
 .experiencesWrapper {
+    position: absolute;
     width: 96.5%;
     margin-top: 2rem;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s ease;
+    transition: opacity 0.1s ease, transform 0.1s ease, visibility 0.1s ease;
     transform: translateY(20px) translateX(0);
+    z-index: 20;
+    left: 0;
 }
 
 .experiencesWrapper.visible {
