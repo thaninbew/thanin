@@ -45,22 +45,6 @@ const Overlay: React.FC = () => {
         element.style.transform = `translateY(${currentScroll}px)`;
       });
 
-      // Check for sections becoming visible
-      const aboutSection = container.querySelector('.aboutFixed');
-      const projectsSection = container.querySelector('.projectsVisible');
-      const contactSection = container.querySelector('.contactVisible');
-
-      // Store positions when sections are fully visible
-      if (aboutSection && !sectionScrollPositions.about) {
-        setSectionScrollPositions(prev => ({ ...prev, about: currentScroll }));
-      }
-      if (projectsSection && !sectionScrollPositions.projects) {
-        setSectionScrollPositions(prev => ({ ...prev, projects: currentScroll }));
-      }
-      if (contactSection && !sectionScrollPositions.contact) {
-        setSectionScrollPositions(prev => ({ ...prev, contact: currentScroll }));
-      }
-
       setLastScrollY(currentScroll);
     };
 
@@ -69,41 +53,30 @@ const Overlay: React.FC = () => {
     return () => {
       container.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY, sectionScrollPositions]);
+  }, [lastScrollY]);
+
+  const handleSectionPositionsChange = (positions: {
+    about: number;
+    experiences: number;
+    projects: number;
+    contact: number;
+  }) => {
+    setSectionScrollPositions(prev => ({
+      ...prev,
+      about: positions.about,
+      experiences: positions.experiences,
+      projects: positions.projects,
+      contact: positions.contact
+    }));
+  };
 
   const scrollToSection = (section: 'home' | 'about' | 'experiences' | 'projects' | 'contact') => {
     if (!containerRef.current) return;
-
-    // Use stored positions if available, otherwise use viewport-based fallback
+    
     const position = sectionScrollPositions[section];
     if (position !== null) {
       containerRef.current.scrollTo({
         top: position,
-        behavior: 'smooth'
-      });
-    } else {
-      // Fallback for initial load before positions are stored
-      const vh = window.innerHeight;
-      let fallbackPosition;
-      switch (section) {
-        case 'home':
-          fallbackPosition = 0;
-          break;
-        case 'about':
-          fallbackPosition = vh * 1;
-          break;
-        case 'experiences':
-          fallbackPosition = vh * 2.5;
-          break;
-        case 'projects':
-          fallbackPosition = vh * 3.5;
-          break;
-        case 'contact':
-          fallbackPosition = vh * 4.2;
-          break;
-      }
-      containerRef.current.scrollTo({
-        top: fallbackPosition,
         behavior: 'smooth'
       });
     }
@@ -197,7 +170,10 @@ const Overlay: React.FC = () => {
               <div className={styles.imagePlaceholder}></div>
               <h4 className={styles.songName}>Portfolio</h4>
               <p className={styles.artistName}>Thanin Kongkiatsophon</p>
-              <About scrollY={scrollY} />
+              <About 
+                scrollY={scrollY} 
+                onSectionPositionsChange={handleSectionPositionsChange}
+              />
             </div>
           </div>
         </div>

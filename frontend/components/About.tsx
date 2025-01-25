@@ -6,9 +6,15 @@ import Contact from './Contact';
 
 interface AboutProps {
   scrollY: number;
+  onSectionPositionsChange?: (positions: {
+    about: number;
+    experiences: number;
+    projects: number;
+    contact: number;
+  }) => void;
 }
 
-const About: React.FC<AboutProps> = ({ scrollY }) => {
+const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange }) => {
   const aboutRef = useRef<HTMLDivElement>(null);
 
   // Track dynamic measurements
@@ -136,6 +142,19 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
 
     handleAnimations();
   }, [scrollY, projectsThreshold, contactThreshold, showProjects, showContact, viewportHeight]);
+
+  // Calculate positions when animation phases change
+  useEffect(() => {
+    if (onSectionPositionsChange) {
+      const positions = {
+        about: expandEnd + viewportHeight * 0.2, // When About starts expanding
+        experiences: expandEnd + viewportHeight * 1.7, // When About is fixed
+        projects: contactThreshold,
+        contact: contactThreshold + viewportHeight * 0.65
+      };
+      onSectionPositionsChange(positions);
+    }
+  }, [expandEnd, projectsThreshold, contactThreshold, viewportHeight, onSectionPositionsChange]);
 
   // Compute inline styles
   const getStyles = (): React.CSSProperties => {
