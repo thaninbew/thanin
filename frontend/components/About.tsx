@@ -56,19 +56,30 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
 
   // Calculate our "phases"
   const getAnimationState = () => {
-    const triggerStart = elementTop - viewportHeight * 0.6;
-    const expandDuration = 400;
-    const fixedDuration = 800;
+    // Start animation when the element is 20% from the top of the viewport
+    const triggerStart = Math.max(elementTop - (viewportHeight * 0.9), 0);
+    const expandDuration = viewportHeight * 0.4;
+    const fixedDuration = viewportHeight * 0.8;
     const expandEnd = triggerStart + expandDuration;
     const fixedEnd = expandEnd + fixedDuration;
     const fixedElementPosition = fixedEnd + viewportHeight * 0.2;
+
+    // Add debug logging to help track the values
+    console.log({
+      elementTop,
+      viewportHeight,
+      triggerStart,
+      scrollY,
+      phase: scrollY < triggerStart ? 'initial' : 
+             scrollY < expandEnd ? 'expanding' :
+             scrollY < fixedElementPosition ? 'fixed' : 'exit'
+    });
 
     if (scrollY < triggerStart) {
       return { phase: 'initial', progress: 0, expandEnd };
     } else if (scrollY < expandEnd) {
       const rawProgress = (scrollY - triggerStart) / expandDuration;
-      // Use easeOut instead of cosine
-      const progress = easeOut(rawProgress, 5); // Adjust power (3) to control the curve
+      const progress = easeOut(rawProgress, 5);
       return { phase: 'expanding', progress, expandEnd };
     } else if (scrollY < fixedElementPosition) {
       return { phase: 'fixed', progress: 1, expandEnd };
@@ -102,24 +113,24 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
     const fixedElementPosition = fixedEnd + viewportHeight * 0.2;
     const pinnedDistance = fixedElementPosition - expandEnd;
 
-    // Dimensions
-    const initialWidth = 44;  // vh
-    const finalWidth = 160;   // vh (expanded to cover most of the width)
+    // Dimensions - width based on parent container percentage
+    const initialWidth = 89;  // % of parent container
+    const finalWidth = 80;    // vw of viewport width
     const initialHeight = 30; // vh
-    const finalHeight = 75;   // vh (viewport height minus header/footer with small margins)
+    const finalHeight = 75;   // vh
 
     // Text scaling
     const initialTextSize = 1.2;  // rem
     const finalTextSize = 1.8;    // rem
     const currentTextSize = initialTextSize + (finalTextSize - initialTextSize) * progress;
 
-    // final transform shift - adjusted to expand rightward
-    const finalX = -69; // reduced leftward shift
+    // final transform shift - based on percentage
+    const finalX = -69; // percentage shift relative to element width
     const finalY = 0;
 
     // Base styles
     const baseStyles: React.CSSProperties = {
-      width: `${initialWidth}vh`,
+      width: `${initialWidth}%`,
       height: `${initialHeight}vh`,
       transform: 'translateX(0) translateY(0)',
       position: 'relative',
@@ -131,7 +142,7 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
 
     // Common expanded styles for both fixed and exit phases
     const expandedStyles = {
-      width: `${finalWidth}vh`,
+      width: `${finalWidth}vw`,
       height: `${finalHeight}vh`,
       transform: `translateX(${finalX}%) translateY(${finalY}%)`,
       fontSize: `${finalTextSize}rem`,
@@ -144,13 +155,15 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
         return baseStyles;
 
       case 'expanding': {
-        const width = initialWidth + (finalWidth - initialWidth) * progress;
+        const width = progress < 0.5 
+          ? `${initialWidth}%`  // Use % for first half of animation
+          : `${finalWidth}vw`;  // Switch to vw for second half
         const height = initialHeight + (finalHeight - initialHeight) * progress;
         const transform = `translateX(${finalX * progress}%) translateY(${finalY * progress}%)`;
 
         return {
           ...baseStyles,
-          width: `${width}vh`,
+          width,
           height: `${height}vh`,
           transform,
           fontSize: `${currentTextSize}rem`,
