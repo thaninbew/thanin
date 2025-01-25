@@ -1,17 +1,9 @@
 import React from 'react';
-import styles from '../styles/Experiences.module.css';
-import ExperiencesPlayer from './ExperiencesPlayer';
-
-interface ExperienceItem {
-  id: string;
-  imageUrl?: string;  // Optional as we'll use placeholder for now
-  name: string;
-  role: string;
-  dateRange: string;
-}
+import ListSection from './ListSection';
+import { ListItem } from '../types/common';
 
 // Example data - this would come from an API in the real implementation
-const sampleExperiences: ExperienceItem[] = [
+const sampleExperiences: ListItem[] = [
   {
     id: '1',
     name: 'Cursor',
@@ -32,47 +24,13 @@ const sampleExperiences: ExperienceItem[] = [
   }
 ];
 
-const ExperienceItem: React.FC<ExperienceItem> = ({ imageUrl, name, role, dateRange }) => {
-  return (
-    <div className={styles.experienceItem}>
-      <div className={styles.experienceImagePlaceholder}></div>
-      <div className={styles.experienceInfo}>
-        <h3 className={styles.experienceName}>{name}</h3>
-        <p className={styles.experienceRole}>{role}</p>
-        <p className={styles.experienceDateRange}>{dateRange}</p>
-      </div>
-    </div>
-  );
-};
-
 const Experiences: React.FC = () => {
   return (
-    <div className={styles.experiencesContainer}>
-      <div className={styles.experiences}>
-        {/* Header Section */}
-        <div className={styles.header}>
-          <div className={styles.headerTop}>
-            <div className={styles.headerImagePlaceholder}></div>
-            <h1 className={styles.title}>Experiences</h1>
-          </div>
-          <p className={styles.description}>
-            A collection of my professional journey and achievements in software engineering and AI
-          </p>
-          <div className={styles.separator} />
-        </div>
-
-        {/* Experience Items List */}
-        <div className={styles.experiencesList}>
-          {sampleExperiences.map((experience) => (
-            <ExperienceItem
-              key={experience.id}
-              {...experience}
-            />
-          ))}
-        </div>
-      </div>
-      <ExperiencesPlayer />
-    </div>
+    <ListSection
+      title="Experiences"
+      description="A collection of my professional journey and achievements in software engineering and AI"
+      items={sampleExperiences}
+    />
   );
 };
 

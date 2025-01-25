@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/About.module.css';
 import Experiences from './Experiences';
+import Projects from './Projects';
 
 interface AboutProps {
   scrollY: number;
@@ -218,6 +219,7 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
       </div>
       <div className={`${styles.experiencesWrapper} ${showExperiences ? styles.visible : ''}`}>
         <Experiences />
+        <Projects />
       </div>
     </div>
   );
