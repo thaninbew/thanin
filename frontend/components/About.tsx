@@ -258,7 +258,20 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
         <div className={`${styles.sectionWrapper} ${showContact ? styles.fadeIn : ''}`}>
           <Contact />
         </div>
+        <div className={`${styles.easterEggWrapper} ${styles.fadeIn}`} data-section="easter-egg">
+        <div className={styles.easterEgg}>
+          <h2 className={styles.easterEggTitle}>Congrats on scrolling this far! You’ve unlocked debug mode.</h2>
+          <p className={styles.easterEggText}>
+           Press ↑↑↓↓ B A to return to the top.
+            <br />
+            or scroll back up :D
+            <br />
+          </p>
+        </div>
       </div>
+      </div>
+
+      
     </div>
   );
 };
