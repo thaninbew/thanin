@@ -36,6 +36,8 @@ export default function ContentPlayer<T extends ContentItem>({
 
   const resetProgress = useCallback(() => {
     if (progressRef.current) {
+      // Reset width first
+      progressRef.current.style.width = '0%';
       // Remove all classes first
       progressRef.current.className = styles.progress;
       // Force reflow
@@ -101,7 +103,14 @@ export default function ContentPlayer<T extends ContentItem>({
   const handleHover = useCallback((item: T | null) => {
     setHoveredItem(item);
     onHoverChange(item);
-  }, [onHoverChange]);
+    // Reset progress bar when hovering over a new item
+    if (item && progressRef.current) {
+      progressRef.current.style.width = '0%';
+      progressRef.current.className = styles.progress;
+      void progressRef.current.offsetHeight;
+      progressRef.current.className = `${styles.progress} ${isPlaying ? styles.progressRunning : styles.progressPaused}`;
+    }
+  }, [onHoverChange, isPlaying]);
 
   const displayedItem = hoveredItem || currentItem;
 
