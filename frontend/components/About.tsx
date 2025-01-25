@@ -126,7 +126,7 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
 
     // final transform shift - based on percentage
     const finalX = -69; // percentage shift relative to element width
-    const finalY = 0;
+    const finalY = 2;
 
     // Base styles
     const baseStyles: React.CSSProperties = {
