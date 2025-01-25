@@ -21,6 +21,9 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
   // For detecting threshold crossing
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  // Track if we should show Projects
+  const [showProjects, setShowProjects] = useState(false);
+
   // Add this before getAnimationState
   const easeOut = (x: number, power: number = 3): number => {
     return 1 - Math.pow(1 - x, power);
@@ -91,6 +94,9 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
 
   const { phase, progress, expandEnd } = getAnimationState();
 
+  // Projects appears after scrolling an additional viewport height after experiences
+  const projectsThreshold = expandEnd + viewportHeight + 900;
+
   /**
    * Measure pinnedTopPx only ONCE — the first time we cross from < expandEnd to >= expandEnd.
    * If pinnedTopPx is already set, don't overwrite it again.
@@ -106,6 +112,14 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
       }
     }
   }, [scrollY, lastScrollY, expandEnd, pinnedTopPx]);
+
+  useEffect(() => {
+    if (scrollY > projectsThreshold && !showProjects) {
+      setShowProjects(true);
+    } else if (scrollY <= projectsThreshold && showProjects) {
+      setShowProjects(false);
+    }
+  }, [scrollY, projectsThreshold, showProjects]);
 
   // Compute inline styles
   const getStyles = (): React.CSSProperties => {
@@ -205,11 +219,12 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
           <div className={styles.sectionLabel}>About the developer</div>
           <div className={styles.description}>
             <p>
-            I'm a software engineer, producer, and musician who combines technical expertise with creative artistry.
-             I've worked on analyzing large datasets with machine learning frameworks and fine-tuning AI language models to enhance 
-             their performance and usability.</p>
-             <p>
-             I'm passionate about driving innovation in AI-powered SaaS and exploring how AI can revolutionize music production workflows. 
+              I'm a software engineer, producer, and musician who combines technical expertise with creative artistry.
+              I've worked on analyzing large datasets with machine learning frameworks and fine-tuning AI language models to enhance 
+              their performance and usability.
+            </p>
+            <p>
+              I'm passionate about driving innovation in AI-powered SaaS and exploring how AI can revolutionize music production workflows. 
             </p>
           </div>
         </div>
@@ -218,8 +233,12 @@ const About: React.FC<AboutProps> = ({ scrollY }) => {
         )}
       </div>
       <div className={`${styles.experiencesWrapper} ${showExperiences ? styles.visible : ''}`}>
-        <Experiences />
-        <Projects />
+        <div className={styles.sectionWrapper}>
+          <Experiences />
+        </div>
+        <div className={`${styles.sectionWrapper} ${showProjects ? styles.fadeIn : ''}`}>
+          <Projects />
+        </div>
       </div>
     </div>
   );

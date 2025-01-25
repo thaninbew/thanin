@@ -24,7 +24,7 @@
     font-weight: bold;
     text-align: left;
     transition: all 0.2s ease;
-    z-index: 10;
+    z-index: 30;
     font-size: 1.3rem;
     position: relative;
     pointer-events: none;
@@ -58,10 +58,13 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.1s ease, transform 0.1s ease, visibility 0.1s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s ease;
     transform: translateY(20px) translateX(0);
     z-index: 20;
     left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 .experiencesWrapper.visible {
@@ -69,6 +72,52 @@
     visibility: visible;
     pointer-events: auto;
     transform: translateY(0) translateX(-71.5%);
+}
+
+.experiencesContent {
+    display: flex;
+    gap: 2rem;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    position: relative;
+}
+
+.experiencesContent.slideProjects {
+    transform: translateX(-100%);
+}
+
+.sectionWrapper {
+    width: 100%;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 2rem;
+}
+
+/* Experiences animations */
+.sectionWrapper:first-child {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.sectionWrapper:first-child.fadeOut {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+/* Projects animations */
+.sectionWrapper:last-child {
+    transform: translateX(100%);
+}
+
+.sectionWrapper:last-child.fadeIn {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.sectionWrapper:last-child.fadeOut {
+    opacity: 0;
+    transform: translateX(100%);
 }
 
 .about p {
