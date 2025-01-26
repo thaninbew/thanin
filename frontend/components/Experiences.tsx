@@ -49,7 +49,7 @@ export default function Experiences() {
   }, []);
 
   const handleExperienceClick = (experienceId: string) => {
-    router.push(`/experience/${experienceId}`);
+    window.location.href = `/experience/${experienceId}`;
   };
 
   const renderExperience = (experience: Experience, isActive: boolean) => (

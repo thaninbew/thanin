@@ -49,7 +49,7 @@ export default function Projects() {
   }, []);
 
   const handleProjectClick = (projectId: string) => {
-    router.push(`/project/${projectId}`);
+    window.location.href = `/project/${projectId}`;
   };
 
   const renderProject = (project: Project, isActive: boolean) => (
