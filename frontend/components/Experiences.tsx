@@ -49,8 +49,8 @@ export default function Experiences() {
   }, []);
 
   const handleExperienceClick = (experienceId: string | undefined) => {
-    if (!experienceId) return;
-    router.push(`/experience/${experienceId}`);
+    if (!experienceId || experienceId === 'null') return;
+    router.push(`/experience/${experienceId}`, { scroll: false });
   };
 
   const renderExperience = (experience: Experience, isActive: boolean) => {

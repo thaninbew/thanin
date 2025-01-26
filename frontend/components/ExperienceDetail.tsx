@@ -27,10 +27,6 @@ export default function ExperienceDetail({ experience }: Props) {
 
   const handleBack = () => {
     router.back();
-    // Prevent scroll restoration
-    if (typeof window !== 'undefined') {
-      window.history.scrollRestoration = 'manual';
-    }
   };
 
   return (

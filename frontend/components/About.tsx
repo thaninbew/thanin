@@ -161,12 +161,16 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
       const newPositions = {
         about: expandEnd + viewportHeight * 0.2,
         experiences: expandEnd + viewportHeight * 1.7,
-        projects: projectsThreshold,
+        projects: projectsThreshold + viewportHeight * 0.7,
         contact: contactThreshold + viewportHeight * 0.65
       };
       
-      positionsRef.current = newPositions;
-      setSectionPositions(newPositions);
+      // Only update if positions actually changed
+      if (JSON.stringify(positionsRef.current) !== JSON.stringify(newPositions)) {
+        positionsRef.current = newPositions;
+        setSectionPositions(newPositions);
+        onSectionPositionsChange?.(newPositions);
+      }
     };
 
     // Initial update
@@ -175,11 +179,13 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
     const debouncedUpdate = debounce(update, 100);
     window.addEventListener('resize', debouncedUpdate);
     window.addEventListener('scroll', debouncedUpdate);
+    
     return () => {
       window.removeEventListener('resize', debouncedUpdate);
       window.removeEventListener('scroll', debouncedUpdate);
+      debouncedUpdate.cancel();
     };
-  }, [viewportHeight, expandEnd, projectsThreshold, contactThreshold]);
+  }, [viewportHeight, expandEnd, projectsThreshold, contactThreshold, onSectionPositionsChange]);
 
   // Update click handler to use scrollIntoView
   const handleSectionClick = (section: keyof typeof sectionPositions) => {

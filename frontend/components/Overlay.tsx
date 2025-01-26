@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styles from '../styles/Overlay.module.css';
 import Frame from './Frame';
 import About from './About';
@@ -20,6 +20,8 @@ const Overlay: React.FC = () => {
     projects: null as number | null,
     contact: null as number | null
   });
+
+  const positionsRef = useRef(sectionScrollPositions);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -57,25 +59,26 @@ const Overlay: React.FC = () => {
     };
   }, [lastScrollY]);
 
-  const handleSectionPositionsChange = (positions: {
+  const handleSectionPositionsChange = useCallback((positions: {
     about: number;
     experiences: number;
     projects: number;
     contact: number;
   }) => {
+    positionsRef.current = {
+      ...positionsRef.current,
+      ...positions
+    };
     setSectionScrollPositions(prev => ({
       ...prev,
-      about: positions.about,
-      experiences: positions.experiences,
-      projects: positions.projects,
-      contact: positions.contact
+      ...positions
     }));
-  };
+  }, []);
 
   const scrollToSection = (section: 'home' | 'about' | 'experiences' | 'projects' | 'contact') => {
     if (!containerRef.current) return;
     
-    const position = sectionScrollPositions[section];
+    const position = positionsRef.current[section];
     if (position !== null) {
       containerRef.current.scrollTo({
         top: position,

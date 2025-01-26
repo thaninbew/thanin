@@ -49,8 +49,8 @@ export default function Projects() {
   }, []);
 
   const handleProjectClick = (projectId: string | undefined) => {
-    if (!projectId) return;
-    router.push(`/project/${projectId}`);
+    if (!projectId || projectId === 'null') return;
+    router.push(`/project/${projectId}`, { scroll: false });
   };
 
   const renderProject = (project: Project, isActive: boolean) => {
