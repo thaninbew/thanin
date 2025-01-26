@@ -381,17 +381,24 @@ export default function AdminDashboard() {
                       checked={item.published}
                       onChange={async () => {
                         try {
-                          await fetch(`http://localhost:3001/api/${activeTab}/${item.id}`, {
+                          const formData = new FormData();
+                          formData.append('published', (!item.published).toString());
+                          
+                          const res = await fetch(`http://localhost:3001/api/${activeTab}/${item.id}`, {
                             method: 'PUT',
                             headers: {
-                              'Content-Type': 'application/json',
                               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
                             },
-                            body: JSON.stringify({ published: !item.published }),
+                            body: formData,
                           });
+
+                          if (!res.ok) throw new Error('Failed to update published state');
+                          
+                          showNotification(`Item ${item.published ? 'unpublished' : 'published'} successfully`, 'success');
                           fetchItems();
                         } catch (error) {
                           showNotification('Error updating published state', 'error');
+                          console.error('Update error:', error);
                         }
                       }}
                     />
