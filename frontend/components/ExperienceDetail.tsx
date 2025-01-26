@@ -103,7 +103,7 @@ export default function ExperienceDetail({ experience }: Props) {
               <span 
                 key={index} 
                 className={styles.tag}
-                style={{ borderColor: textColor + '20' }}
+                style={{ borderColor: textColor }}
               >
                 {tech}
               </span>
@@ -112,35 +112,39 @@ export default function ExperienceDetail({ experience }: Props) {
         </div>
       </div>
 
-      <div className={styles.descriptionContainer}>
-        <div className={styles.containerContent}>
-          <h3 className={styles.sectionTitle}>Description</h3>
-          <p className={styles.description}>{experience.description}</p>
-        </div>
-      </div>
+      <div className={styles.contentLayout}>
+        <div className={styles.contentLeft}>
+          <div className={styles.descriptionContainer}>
+            <div className={styles.containerContent}>
+              <h3 className={styles.sectionTitle}>Description</h3>
+              <p className={styles.description}>{experience.description}</p>
+            </div>
+          </div>
 
-      <div className={styles.learningContainer}>
-        <div className={styles.containerContent}>
-          <h3 className={styles.sectionTitle}>Learning Outcomes</h3>
-          <ul className={styles.learningOutcomes}>
-            {experience.learningOutcomes.map((outcome, index) => (
-              <li key={index}>{outcome}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {experience.gifUrl && (
-        <div className={styles.gifContainer}>
-          <div className={styles.containerContent}>
-            <img 
-              src={experience.gifUrl} 
-              alt={`${experience.company} demo`} 
-              className={styles.gif}
-            />
+          <div className={styles.learningContainer}>
+            <div className={styles.containerContent}>
+              <h3 className={styles.sectionTitle}>Learning Outcomes</h3>
+              <ul className={styles.learningOutcomes}>
+                {experience.learningOutcomes.map((outcome, index) => (
+                  <li key={index}>{outcome}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-      )}
+
+        {experience.gifUrl && (
+          <div className={styles.gifContainer}>
+            <div className={styles.containerContent}>
+              <img 
+                src={experience.gifUrl} 
+                alt={`${experience.company} demo`} 
+                className={styles.gif}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 } 

@@ -1,15 +1,15 @@
 .pageWrapper {
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .backButton {
   background: none;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   cursor: pointer;
   padding: 0.5rem 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   opacity: 0.8;
   transition: opacity 0.2s;
 }
@@ -18,22 +18,36 @@
   opacity: 1;
 }
 
-.headerContainer,
+.headerContainer {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
 .technologiesContainer,
 .descriptionContainer,
 .learningContainer,
 .gifContainer {
-  margin-bottom: 2rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  border: 2px solid;
   border-radius: 16px;
   backdrop-filter: blur(10px);
   overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .containerContent {
-  padding: 2rem;
-  max-width: 1200px;
+  padding: 1.3rem;
+  max-width: 1400px;
   margin: 0 auto;
+}
+
+.technologiesContainer {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+}
+
+.technologiesContainer .containerContent {
+  padding: 0.5rem;
 }
 
 .headerContent {
@@ -41,6 +55,8 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .headerLeft {
@@ -50,8 +66,8 @@
 }
 
 .mainImage {
-  width: 120px;
-  height: 120px;
+  width: 160px;
+  height: 160px;
   border-radius: 12px;
   object-fit: cover;
 }
@@ -59,22 +75,23 @@
 .titleSection {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 4rem;
   margin: 0;
+  line-height: 1.1;
 }
 
 .role {
-  font-size: 1.5rem;
+  font-size: 2rem;
   margin: 0;
   opacity: 0.8;
 }
 
 .dateRange {
-  font-size: 1rem;
+  font-size: 1.2rem;
   opacity: 0.6;
   margin: 0;
 }
@@ -87,42 +104,44 @@
 .link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
   text-decoration: none;
   transition: all 0.2s;
   background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid;
+  font-size: 1.1rem;
+  color: inherit;
 }
 
 .link:hover {
   background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .sectionTitle {
-  font-size: 1.2rem;
-  margin: 0 0 1rem 0;
+  font-size: 1.6rem;
+  margin: 0 0 1.25rem 0;
 }
 
 .description {
-  line-height: 1.6;
+  line-height: 1.7;
   margin: 0;
+  font-size: 1.2rem;
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .tag {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid;
 }
 
 .learningOutcomes {
@@ -132,9 +151,11 @@
 }
 
 .learningOutcomes li {
-  margin-bottom: 0.5rem;
-  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1.75rem;
   position: relative;
+  font-size: 1.2rem;
+  line-height: 1.6;
 }
 
 .learningOutcomes li:before {
@@ -144,11 +165,27 @@
   opacity: 0.4;
 }
 
+/* Content layout with gif */
+.contentLayout {
+  display: grid;
+  grid-template-columns: 1fr 600px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.contentLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .gif {
   width: 100%;
-  height: auto;
-  display: block;
+  aspect-ratio: 16/9;
   border-radius: 8px;
+  position: sticky;
+  top: 1rem;
+  object-fit: cover;
 }
 
 .loading {
@@ -156,7 +193,26 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+}
+
+@media (max-width: 1200px) {
+  .contentLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .gif {
+    position: static;
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .role {
+    font-size: 1.8rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -171,5 +227,13 @@
 
   .links {
     justify-content: center;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .role {
+    font-size: 1.6rem;
   }
 } 

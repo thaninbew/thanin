@@ -132,13 +132,12 @@ export default function ProjectDetail({ project }: Props) {
 
       <div className={styles.technologiesContainer}>
         <div className={styles.containerContent}>
-          <h3 className={styles.sectionTitle}>Technologies</h3>
           <div className={styles.tags}>
             {project.technologies.map((tech, index) => (
               <span 
                 key={index} 
                 className={styles.tag}
-                style={{ borderColor: textColor + '20' }}
+                style={{ borderColor: textColor }}
               >
                 {tech}
               </span>
@@ -147,35 +146,39 @@ export default function ProjectDetail({ project }: Props) {
         </div>
       </div>
 
-      <div className={styles.descriptionContainer}>
-        <div className={styles.containerContent}>
-          <h3 className={styles.sectionTitle}>Description</h3>
-          <p className={styles.description}>{project.description}</p>
-        </div>
-      </div>
+      <div className={styles.contentLayout}>
+        <div className={styles.contentLeft}>
+          <div className={styles.descriptionContainer}>
+            <div className={styles.containerContent}>
+              <h3 className={styles.sectionTitle}>Description</h3>
+              <p className={styles.description}>{project.description}</p>
+            </div>
+          </div>
 
-      <div className={styles.learningContainer}>
-        <div className={styles.containerContent}>
-          <h3 className={styles.sectionTitle}>Learning Outcomes</h3>
-          <ul className={styles.learningOutcomes}>
-            {project.learningOutcomes.map((outcome, index) => (
-              <li key={index}>{outcome}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {project.gifUrl && (
-        <div className={styles.gifContainer}>
-          <div className={styles.containerContent}>
-            <img 
-              src={project.gifUrl} 
-              alt={`${project.name} demo`} 
-              className={styles.gif}
-            />
+          <div className={styles.learningContainer}>
+            <div className={styles.containerContent}>
+              <h3 className={styles.sectionTitle}>Learning Outcomes</h3>
+              <ul className={styles.learningOutcomes}>
+                {project.learningOutcomes.map((outcome, index) => (
+                  <li key={index}>{outcome}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-      )}
+
+        {project.gifUrl && (
+          <div className={styles.gifContainer}>
+            <div className={styles.containerContent}>
+              <img 
+                src={project.gifUrl} 
+                alt={`${project.name} demo`} 
+                className={styles.gif}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 } 
