@@ -1,54 +1,69 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from '../styles/Experiences.module.css';
-import { FaLaptopCode, FaRobot, FaGoogle } from 'react-icons/fa';
+import { FaBuilding } from 'react-icons/fa';
 import ContentPlayer from './ContentPlayer';
 
-// Example data - this would come from an API in the real implementation
-const sampleExperiences = [
-  {
-    id: '1',
-    name: 'Cursor',
-    role: 'Software Engineer Intern',
-    description: 'Building the future of AI-powered development',
-    shortDesc: 'Revolutionizing code editing with AI',
-    icon: <FaLaptopCode size={24} />,
-    playerGif: '/images/cursor-demo.gif', // Placeholder: IDE with AI suggestions animation
-    dateRange: '05/2023 - 08/2023'
-  },
-  {
-    id: '2',
-    name: 'Anthropic',
-    role: 'Machine Learning Engineer',
-    description: 'Developing advanced language models',
-    shortDesc: 'Pushing AI safety and capabilities forward',
-    icon: <FaRobot size={24} />,
-    playerGif: '/images/ai-training.gif', // Placeholder: AI model training visualization
-    dateRange: '01/2023 - 04/2023'
-  },
-  {
-    id: '3',
-    name: 'Google',
-    role: 'Software Engineer',
-    description: 'Working on large-scale infrastructure',
-    shortDesc: 'Building scalable cloud solutions',
-    icon: <FaGoogle size={24} />,
-    playerGif: '/images/cloud-infra.gif', // Placeholder: cloud infrastructure animation
-    dateRange: '06/2022 - Present'
-  }
-];
+interface Experience {
+  id: string;
+  name: string;
+  role: string;
+  description: string;
+  shortDesc: string;
+  imageUrl?: string;
+  gifUrl?: string;
+  githubUrl?: string;
+  liveUrl?: string;
+  technologies: string[];
+  learningOutcomes: string[];
+  dateRange: string;
+  position: number;
+  published: boolean;
+}
 
 export default function Experiences() {
   const router = useRouter();
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchExperiences = async () => {
+      try {
+        const res = await fetch('http://localhost:3001/api/experiences');
+        const data = await res.json();
+        // Filter only published experiences and sort by position
+        const publishedExperiences = data
+          .filter((experience: Experience) => experience.published)
+          .sort((a: Experience, b: Experience) => a.position - b.position);
+        setExperiences(publishedExperiences);
+      } catch (err) {
+        setError('Failed to load experiences');
+        console.error('Error fetching experiences:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExperiences();
+  }, []);
 
   const handleExperienceClick = (experienceId: string) => {
     router.push(`/experience/${experienceId}`);
   };
 
-  const renderExperience = (experience: typeof sampleExperiences[0], isActive: boolean) => (
+  const renderExperience = (experience: Experience, isActive: boolean) => (
     <div className={`${styles.experienceItem} ${isActive ? styles.active : ''}`}>
       <div className={styles.experienceIcon}>
-        {experience.icon}
+        {experience.imageUrl ? (
+          <img 
+            src={experience.imageUrl} 
+            alt={experience.name}
+            className={styles.experienceImage}
+          />
+        ) : (
+          <FaBuilding size={24} />
+        )}
       </div>
       <div className={styles.experienceInfo}>
         <h3 className={styles.experienceName}>{experience.name}</h3>
@@ -58,9 +73,13 @@ export default function Experiences() {
     </div>
   );
 
+  if (loading) return <div>Loading experiences...</div>;
+  if (error) return <div>{error}</div>;
+  if (experiences.length === 0) return <div>No experiences available.</div>;
+
   return (
     <ContentPlayer
-      items={sampleExperiences}
+      items={experiences}
       onItemClick={handleExperienceClick}
       onHoverChange={() => {}}
       renderItem={renderExperience}

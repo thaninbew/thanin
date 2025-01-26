@@ -5,8 +5,18 @@ import styles from '../styles/ContentPlayer.module.css';
 interface ContentItem {
   id: string;
   name: string;
+  role?: string;
+  description: string;
   shortDesc: string;
-  playerGif: string;
+  imageUrl?: string;
+  gifUrl?: string;
+  githubUrl?: string;
+  liveUrl?: string;
+  technologies: string[];
+  learningOutcomes: string[];
+  dateRange: string;
+  position: number;
+  published: boolean;
 }
 
 interface ContentPlayerProps<T extends ContentItem> {
@@ -14,9 +24,9 @@ interface ContentPlayerProps<T extends ContentItem> {
   onItemClick: (id: string) => void;
   onHoverChange: (item: T | null) => void;
   renderItem: (item: T, isActive: boolean) => React.ReactNode;
-  className?: string;
   title: string;
   description: string;
+  className?: string;
 }
 
 export default function ContentPlayer<T extends ContentItem>({
@@ -147,7 +157,7 @@ export default function ContentPlayer<T extends ContentItem>({
           <div 
             className={styles.playerImagePlaceholder}
             style={{
-              backgroundImage: `url(${displayedItem.playerGif})`,
+              backgroundImage: `url(${displayedItem.gifUrl})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}
