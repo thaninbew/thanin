@@ -30,9 +30,9 @@ export default function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/projects');
+        const res = await fetch('/api/projects');
+        if (!res.ok) throw new Error('Failed to fetch projects');
         const data = await res.json();
-        // Filter only published projects and sort by position
         const publishedProjects = data
           .filter((project: Project) => project.published)
           .sort((a: Project, b: Project) => a.position - b.position);
@@ -48,12 +48,24 @@ export default function Projects() {
     fetchProjects();
   }, []);
 
-  const handleProjectClick = (projectId: string) => {
-    window.location.href = `/project/${projectId}`;
+  const handleProjectClick = async (projectId: string) => {
+    try {
+      await router.push(`/project/${projectId}`);
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
   };
 
   const renderProject = (project: Project, isActive: boolean) => (
-    <div className={`${styles.projectItem} ${isActive ? styles.active : ''}`}>
+    <div 
+      className={`${styles.projectItem} ${isActive ? styles.active : ''}`}
+      onClick={() => handleProjectClick(project.id)}
+      role="button"
+      tabIndex={0}
+      onKeyPress={(e) => {
+        if (e.key === 'Enter') handleProjectClick(project.id);
+      }}
+    >
       <div className={styles.projectIcon}>
         {project.imageUrl ? (
           <img 

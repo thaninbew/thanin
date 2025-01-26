@@ -30,9 +30,9 @@ export default function Experiences() {
   useEffect(() => {
     const fetchExperiences = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/experiences');
+        const res = await fetch('/api/experiences');
+        if (!res.ok) throw new Error('Failed to fetch experiences');
         const data = await res.json();
-        // Filter only published experiences and sort by position
         const publishedExperiences = data
           .filter((experience: Experience) => experience.published)
           .sort((a: Experience, b: Experience) => a.position - b.position);
@@ -48,12 +48,24 @@ export default function Experiences() {
     fetchExperiences();
   }, []);
 
-  const handleExperienceClick = (experienceId: string) => {
-    window.location.href = `/experience/${experienceId}`;
+  const handleExperienceClick = async (experienceId: string) => {
+    try {
+      await router.push(`/experience/${experienceId}`);
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
   };
 
   const renderExperience = (experience: Experience, isActive: boolean) => (
-    <div className={`${styles.experienceItem} ${isActive ? styles.active : ''}`}>
+    <div 
+      className={`${styles.experienceItem} ${isActive ? styles.active : ''}`}
+      onClick={() => handleExperienceClick(experience.id)}
+      role="button"
+      tabIndex={0}
+      onKeyPress={(e) => {
+        if (e.key === 'Enter') handleExperienceClick(experience.id);
+      }}
+    >
       <div className={styles.experienceIcon}>
         {experience.imageUrl ? (
           <img 
