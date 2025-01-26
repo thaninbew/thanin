@@ -8,7 +8,6 @@ export interface AuthRequest extends Request {
   user?: {
     id: string;
     email: string;
-    isAdmin: boolean;
   };
 }
 
@@ -31,19 +30,18 @@ export const authenticateToken = async (
       email: string;
     };
 
-    const user = await prisma.user.findUnique({
+    const admin = await prisma.admin.findUnique({
       where: { id: decoded.id },
     });
 
-    if (!user) {
+    if (!admin) {
       res.status(401).json({ error: 'Invalid token.' });
       return;
     }
 
     req.user = {
-      id: user.id,
-      email: user.email,
-      isAdmin: user.isAdmin,
+      id: admin.id,
+      email: admin.email,
     };
 
     next();
@@ -57,7 +55,7 @@ export const requireAdmin = (
   res: Response,
   next: NextFunction
 ): void => {
-  if (!req.user?.isAdmin) {
+  if (!req.user) {
     res.status(403).json({ error: 'Access denied. Admin privileges required.' });
     return;
   }

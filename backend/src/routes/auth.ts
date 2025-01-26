@@ -1,4 +1,4 @@
-import { Router, Request } from 'express';
+import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -7,26 +7,17 @@ import asyncHandler from 'express-async-handler';
 const router = Router();
 const prisma = new PrismaClient();
 
-interface TypedRequestBody<T> extends Request {
-  body: T;
-}
-
-interface RegisterBody {
-  email: string;
-  password: string;
-}
-
-// Register new admin user (this should be protected or removed in production)
+// Register new admin (this should be protected or removed in production)
 router.post('/register', asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  // Check if user already exists
-  const existingUser = await prisma.user.findUnique({
+  // Check if admin already exists
+  const existingAdmin = await prisma.admin.findUnique({
     where: { email },
   });
 
-  if (existingUser) {
-    res.status(400).json({ error: 'User already exists' });
+  if (existingAdmin) {
+    res.status(400).json({ error: 'Admin already exists' });
     return;
   }
 
@@ -34,18 +25,17 @@ router.post('/register', asyncHandler(async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  // Create user
-  const user = await prisma.user.create({
+  // Create admin
+  const admin = await prisma.admin.create({
     data: {
       email,
       password: hashedPassword,
-      isAdmin: true, // First user is admin
     },
   });
 
   // Create token
   const token = jwt.sign(
-    { id: user.id, email: user.email },
+    { id: admin.id, email: admin.email },
     process.env.JWT_SECRET!,
     { expiresIn: '24h' }
   );
@@ -57,18 +47,18 @@ router.post('/register', asyncHandler(async (req, res) => {
 router.post('/login', asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  // Check if user exists
-  const user = await prisma.user.findUnique({
+  // Check if admin exists
+  const admin = await prisma.admin.findUnique({
     where: { email },
   });
 
-  if (!user) {
+  if (!admin) {
     res.status(400).json({ error: 'Invalid credentials' });
     return;
   }
 
   // Check password
-  const validPassword = await bcrypt.compare(password, user.password);
+  const validPassword = await bcrypt.compare(password, admin.password);
   if (!validPassword) {
     res.status(400).json({ error: 'Invalid credentials' });
     return;
@@ -76,12 +66,12 @@ router.post('/login', asyncHandler(async (req, res) => {
 
   // Create token
   const token = jwt.sign(
-    { id: user.id, email: user.email },
+    { id: admin.id, email: admin.email },
     process.env.JWT_SECRET!,
     { expiresIn: '24h' }
   );
 
-  res.json({ token, isAdmin: user.isAdmin });
+  res.json({ token, isAdmin: true });
 }));
 
 export default router;
