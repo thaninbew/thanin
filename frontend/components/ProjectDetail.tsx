@@ -29,6 +29,8 @@ export default function ProjectDetail({ project }: Props) {
   const router = useRouter();
 
   const handleBack = () => {
+    // Store a flag in sessionStorage to indicate we're returning from projects
+    sessionStorage.setItem('returnTo', 'projects');
     router.back();
   };
 

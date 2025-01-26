@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, forwardRef, useImperativeHandle } from 'react';
 import styles from '../styles/Overlay.module.css';
 import Frame from './Frame';
 import About from './About';
 import Contact from './Contact';
 
-const Overlay: React.FC = () => {
+const Overlay = forwardRef((props, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState(0);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -95,6 +95,20 @@ const Overlay: React.FC = () => {
       });
     }
   };
+
+  useImperativeHandle(ref, () => ({
+    scrollToSection: (section: 'home' | 'about' | 'experiences' | 'projects' | 'contact') => {
+      if (!containerRef.current) return;
+      
+      const position = positionsRef.current[section];
+      if (position !== null) {
+        containerRef.current.scrollTo({
+          top: position,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }));
 
   return (
     <Frame>
@@ -195,6 +209,6 @@ const Overlay: React.FC = () => {
       </div>
     </Frame>
   );
-};
+});
 
 export default Overlay;
