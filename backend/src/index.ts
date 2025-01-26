@@ -10,6 +10,7 @@ dotenv.config();
 
 const app = express();
 const prisma = new PrismaClient();
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
@@ -32,23 +33,39 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 });
 
 // Connect to database and start server
-async function main() {
+async function startServer() {
   try {
     await prisma.$connect();
     console.log('Connected to database');
+    
+    const server = app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+
+    // Handle graceful shutdown
+    process.on('SIGTERM', () => {
+      console.log('SIGTERM signal received: closing HTTP server');
+      server.close(() => {
+        prisma.$disconnect();
+        console.log('HTTP server closed');
+        process.exit(0);
+      });
+    });
+
+    process.on('SIGINT', () => {
+      console.log('SIGINT signal received: closing HTTP server');
+      server.close(() => {
+        prisma.$disconnect();
+        console.log('HTTP server closed');
+        process.exit(0);
+      });
+    });
+
   } catch (error) {
-    console.error('Database connection failed:', error);
+    console.error('Error starting server:', error);
+    await prisma.$disconnect();
     process.exit(1);
   }
 }
 
-main()
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
-
-export default app;
+startServer();

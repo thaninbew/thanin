@@ -37,9 +37,23 @@ export default function AdminDashboard() {
   const handleProjectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
+    
+    // Convert technologies string to array
+    const technologiesArray = projectForm.technologies
+      .split(',')
+      .map(t => t.trim())
+      .filter(t => t.length > 0);
+
+    // Add all fields except technologies
     Object.entries(projectForm).forEach(([key, value]) => {
-      formData.append(key, value);
+      if (key !== 'technologies') {
+        formData.append(key, value);
+      }
     });
+    
+    // Add properly formatted technologies
+    formData.append('technologies', JSON.stringify(technologiesArray));
+    
     if (file) {
       formData.append('image', file);
     }
