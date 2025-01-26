@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import styles from '../styles/Experiences.module.css';
 import { FaBuilding } from 'react-icons/fa';
 import ContentPlayer from './ContentPlayer';
+import { useRouter } from 'next/navigation';
 
 interface Experience {
   id: string;
@@ -25,15 +25,16 @@ export default function Experiences() {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchExperiences = async () => {
       try {
         const res = await fetch('http://localhost:3001/api/experiences');
+        if (!res.ok) throw new Error('Failed to fetch experiences');
         const data = await res.json();
-        // Filter only published experiences and sort by position
         const publishedExperiences = data
-          .filter((experience: Experience) => experience.published)
+          .filter((experience: Experience) => experience.published && experience.id)
           .sort((a: Experience, b: Experience) => a.position - b.position);
         setExperiences(publishedExperiences);
       } catch (err) {
@@ -47,20 +48,22 @@ export default function Experiences() {
     fetchExperiences();
   }, []);
 
-  const handleExperienceClick = (experienceId: string) => {
+  const handleExperienceClick = (experienceId: string | undefined) => {
     if (!experienceId) return;
-    window.location.href = `/experience/${experienceId}`;
+    router.push(`/experience/${experienceId}`);
   };
 
   const renderExperience = (experience: Experience, isActive: boolean) => {
-    if (!experience || !experience.id) return null;
+    if (!experience?.id) return null;
     
     return (
-      <Link 
-        href={`/experience/${experience.id}`}
+      <div 
         className={`${styles.experienceItem} ${isActive ? styles.active : ''}`}
         role="button"
         tabIndex={0}
+        onClick={() => experience.id && handleExperienceClick(experience.id)}
+        onKeyDown={(e) => e.key === 'Enter' && experience.id && handleExperienceClick(experience.id)}
+        aria-label={`View ${experience.name} experience details`}
       >
         <div className={styles.experienceIcon}>
           {experience.imageUrl ? (
@@ -78,13 +81,13 @@ export default function Experiences() {
           <p className={styles.experienceRole}>{experience.role}</p>
         </div>
         <span className={styles.experienceDateRange}>{experience.dateRange}</span>
-      </Link>
+      </div>
     );
   };
 
   if (loading) return <div>Loading experiences...</div>;
   if (error) return <div>{error}</div>;
-  if (experiences.length === 0) return <div>No experiences available.</div>;
+  if (!experiences.length) return <div>No experiences available.</div>;
 
   return (
     <ContentPlayer

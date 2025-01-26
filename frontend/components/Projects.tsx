@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import styles from '../styles/Projects.module.css';
 import { FaCode } from 'react-icons/fa';
 import ContentPlayer from './ContentPlayer';
+import { useRouter } from 'next/navigation';
 
 interface Project {
   id: string;
@@ -25,15 +25,16 @@ export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         const res = await fetch('http://localhost:3001/api/projects');
+        if (!res.ok) throw new Error('Failed to fetch projects');
         const data = await res.json();
-        // Filter only published projects and sort by position
         const publishedProjects = data
-          .filter((project: Project) => project.published)
+          .filter((project: Project) => project.published && project.id)
           .sort((a: Project, b: Project) => a.position - b.position);
         setProjects(publishedProjects);
       } catch (err) {
@@ -47,20 +48,22 @@ export default function Projects() {
     fetchProjects();
   }, []);
 
-  const handleProjectClick = (projectId: string) => {
+  const handleProjectClick = (projectId: string | undefined) => {
     if (!projectId) return;
-    window.location.href = `/project/${projectId}`;
+    router.push(`/project/${projectId}`);
   };
 
   const renderProject = (project: Project, isActive: boolean) => {
-    if (!project || !project.id) return null;
+    if (!project?.id) return null;
     
     return (
-      <Link 
-        href={`/project/${project.id}`}
+      <div 
         className={`${styles.projectItem} ${isActive ? styles.active : ''}`}
         role="button"
         tabIndex={0}
+        onClick={() => project.id && handleProjectClick(project.id)}
+        onKeyDown={(e) => e.key === 'Enter' && project.id && handleProjectClick(project.id)}
+        aria-label={`View ${project.name} project details`}
       >
         <div className={styles.projectIcon}>
           {project.imageUrl ? (
@@ -78,13 +81,13 @@ export default function Projects() {
           <p className={styles.projectDescription}>{project.shortDesc}</p>
         </div>
         <span className={styles.projectDateRange}>{project.dateRange}</span>
-      </Link>
+      </div>
     );
   };
 
   if (loading) return <div>Loading projects...</div>;
   if (error) return <div>{error}</div>;
-  if (projects.length === 0) return <div>No projects available.</div>;
+  if (!projects.length) return <div>No projects available.</div>;
 
   return (
     <ContentPlayer

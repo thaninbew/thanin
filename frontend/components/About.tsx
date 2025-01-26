@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styles from '../styles/About.module.css';
 import Experiences from './Experiences';
 import Projects from './Projects';
@@ -138,7 +138,7 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
   }, [scrollY, projectsThreshold, contactThreshold, showProjects, showContact, viewportHeight]);
 
   // Calculate positions when animation phases change
-  useEffect(() => {
+  const updateSectionPositions = useCallback(() => {
     if (onSectionPositionsChange) {
       const positions = {
         about: expandEnd + viewportHeight * 0.2, // When About starts expanding
@@ -149,6 +149,18 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
       onSectionPositionsChange(positions);
     }
   }, [expandEnd, projectsThreshold, contactThreshold, viewportHeight, onSectionPositionsChange]);
+
+  useEffect(() => {
+    const updateSectionPositionsDebounced = () => {
+      // Debounce to 1 frame (16ms)
+      animationRef.current = requestAnimationFrame(() => {
+        updateSectionPositions();
+      });
+    };
+
+    window.addEventListener('scroll', updateSectionPositionsDebounced);
+    return () => window.removeEventListener('scroll', updateSectionPositionsDebounced);
+  }, [updateSectionPositions]);
 
   // Add Konami code detection
   useEffect(() => {
@@ -279,6 +291,8 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
           transition: 'none',
         };
       }
+      default:
+        return baseStyles;
     }
   };
 
