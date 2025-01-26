@@ -25,11 +25,20 @@ interface Props {
 export default function ExperienceDetail({ experience }: Props) {
   const router = useRouter();
 
+  const handleBack = () => {
+    router.back();
+    // Prevent scroll restoration
+    if (typeof window !== 'undefined') {
+      window.history.scrollRestoration = 'manual';
+    }
+  };
+
   return (
     <div className={styles.container}>
       <button 
         className={styles.backButton}
-        onClick={() => router.back()}
+        onClick={handleBack}
+        aria-label="Go back"
       >
         ← Back
       </button>

@@ -3,6 +3,7 @@ import styles from '../styles/About.module.css';
 import Experiences from './Experiences';
 import Projects from './Projects';
 import Contact from './Contact';
+import { debounce } from 'lodash';
 
 interface AboutProps {
   scrollY: number;
@@ -17,6 +18,9 @@ interface AboutProps {
 
 const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScrollToTop }) => {
   const aboutRef = useRef<HTMLDivElement>(null);
+  const experiencesRef = useRef<HTMLDivElement>(null);
+  const projectsRef = useRef<HTMLDivElement>(null);
+  const contactRef = useRef<HTMLDivElement>(null);
   const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
   const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright','arrowleft', 'arrowright', 'b', 'a'];
 
@@ -137,30 +141,63 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
     handleAnimations();
   }, [scrollY, projectsThreshold, contactThreshold, showProjects, showContact, viewportHeight]);
 
-  // Calculate positions when animation phases change
-  const updateSectionPositions = useCallback(() => {
-    if (onSectionPositionsChange) {
-      const positions = {
-        about: expandEnd + viewportHeight * 0.2, // When About starts expanding
-        experiences: expandEnd + viewportHeight * 1.7, // When About is fixed
-        projects: contactThreshold,
+  // Add these at the top
+  const positionsRef = useRef({
+    about: 0,
+    experiences: 0,
+    projects: 0,
+    contact: 0
+  });
+  const [sectionPositions, setSectionPositions] = useState({
+    about: 0,
+    experiences: 0,
+    projects: 0,
+    contact: 0
+  });
+
+  // Update positions with debounce but keep ref updated
+  useEffect(() => {
+    const update = () => {
+      const newPositions = {
+        about: expandEnd + viewportHeight * 0.2,
+        experiences: expandEnd + viewportHeight * 1.7,
+        projects: projectsThreshold,
         contact: contactThreshold + viewportHeight * 0.65
       };
-      onSectionPositionsChange(positions);
-    }
-  }, [expandEnd, projectsThreshold, contactThreshold, viewportHeight, onSectionPositionsChange]);
-
-  useEffect(() => {
-    const updateSectionPositionsDebounced = () => {
-      // Debounce to 1 frame (16ms)
-      animationRef.current = requestAnimationFrame(() => {
-        updateSectionPositions();
-      });
+      
+      positionsRef.current = newPositions;
+      setSectionPositions(newPositions);
     };
 
-    window.addEventListener('scroll', updateSectionPositionsDebounced);
-    return () => window.removeEventListener('scroll', updateSectionPositionsDebounced);
-  }, [updateSectionPositions]);
+    // Initial update
+    update();
+
+    const debouncedUpdate = debounce(update, 100);
+    window.addEventListener('resize', debouncedUpdate);
+    window.addEventListener('scroll', debouncedUpdate);
+    return () => {
+      window.removeEventListener('resize', debouncedUpdate);
+      window.removeEventListener('scroll', debouncedUpdate);
+    };
+  }, [viewportHeight, expandEnd, projectsThreshold, contactThreshold]);
+
+  // Update click handler to use scrollIntoView
+  const handleSectionClick = (section: keyof typeof sectionPositions) => {
+    const refs = {
+      about: aboutRef,
+      experiences: experiencesRef,
+      projects: projectsRef,
+      contact: contactRef
+    };
+
+    const targetRef = refs[section];
+    if (targetRef?.current) {
+      targetRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
 
   // Add Konami code detection
   useEffect(() => {
@@ -320,13 +357,13 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
         )}
       </div>
       <div className={`${styles.experiencesWrapper} ${showExperiences ? styles.visible : ''}`}>
-        <div className={`${styles.sectionWrapper} ${phase === 'fixed' ? 'aboutFixed' : ''}`}>
+        <div ref={experiencesRef} className={`${styles.sectionWrapper} ${phase === 'fixed' ? 'aboutFixed' : ''}`}>
           <Experiences />
         </div>
-        <div className={`${styles.sectionWrapper} ${showProjects ? `${styles.fadeIn} projectsVisible` : ''}`}>
+        <div ref={projectsRef} className={`${styles.sectionWrapper} ${showProjects ? `${styles.fadeIn} projectsVisible` : ''}`}>
           <Projects />
         </div>
-        <div className={`${styles.sectionWrapper} ${showContact ? `${styles.fadeIn} contactVisible` : ''}`}>
+        <div ref={contactRef} className={`${styles.sectionWrapper} ${showContact ? `${styles.fadeIn} contactVisible` : ''}`}>
           <Contact />
         </div>
         <div className={`${styles.easterEggWrapper} ${styles.fadeIn}`} 
