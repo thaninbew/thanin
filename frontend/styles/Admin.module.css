@@ -291,4 +291,18 @@ input:checked + .slider:before {
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+.previewImage {
+  margin: 10px 0;
+  max-width: 200px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.previewImage img {
+  width: 100%;
+  height: auto;
+  display: block;
 } 

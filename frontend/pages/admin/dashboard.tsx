@@ -110,6 +110,9 @@ export default function AdminDashboard() {
     published: false,
   });
 
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [gifFile, setGifFile] = useState<File | null>(null);
+
   useEffect(() => {
     setMounted(true);
     const token = localStorage.getItem('adminToken');
@@ -148,27 +151,54 @@ export default function AdminDashboard() {
     ) return;
 
     const newIndex = direction === 'up' ? index - 1 : index + 1;
-    [items[index], items[newIndex]] = [items[newIndex], items[index]];
+    const newItems = [...items];
+    [newItems[index], newItems[newIndex]] = [newItems[newIndex], newItems[index]];
 
+    // Update local state first for immediate feedback
     if (activeTab === 'projects') {
-      setProjects(items as Project[]);
+      setProjects(newItems as Project[]);
     } else {
-      setExperiences(items as Experience[]);
+      setExperiences(newItems as Experience[]);
     }
 
     try {
-      await fetch(`http://localhost:3001/api/${activeTab}/reorder`, {
+      const orderedIds = newItems.map(item => item.id);
+      console.log('Attempting to reorder with IDs:', orderedIds);
+
+      const res = await fetch(`http://localhost:3001/api/${activeTab}/reorder`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
         },
-        body: JSON.stringify({
-          orderedIds: items.map(item => item.id),
-        }),
+        body: JSON.stringify({ orderedIds }),
       });
+
+      const data = await res.json();
+      
+      if (!res.ok) {
+        console.error('Server error response:', data);
+        throw new Error(data.error || 'Failed to update order');
+      }
+
+      console.log('Reorder success:', data);
+      showNotification('Order updated successfully', 'success');
     } catch (error) {
-      showNotification('Error updating order', 'error');
+      console.error('Full reorder error:', error);
+      
+      // Revert local state on error
+      if (activeTab === 'projects') {
+        setProjects([...projects]);
+      } else {
+        setExperiences([...experiences]);
+      }
+      
+      showNotification(
+        error instanceof Error 
+          ? `Error updating order: ${error.message}` 
+          : 'Error updating order',
+        'error'
+      );
     }
   };
 
@@ -264,9 +294,12 @@ export default function AdminDashboard() {
       .filter(t => t.length > 0);
     formData.append('learningOutcomes', JSON.stringify(learningOutcomes));
 
-    // Handle file if present
-    if (file) {
-      formData.append('image', file);
+    // Handle files
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    if (gifFile) {
+      formData.append('gif', gifFile);
     }
 
     try {
@@ -607,17 +640,27 @@ export default function AdminDashboard() {
               </div>
               <div className={styles.formGroup}>
                 <label>Image:</label>
+                {editingItem?.imageUrl && (
+                  <div className={styles.previewImage}>
+                    <img src={editingItem.imageUrl} alt="Current" />
+                  </div>
+                )}
                 <input
                   type="file"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
                   accept="image/*"
                 />
               </div>
               <div className={styles.formGroup}>
                 <label>GIF:</label>
+                {editingItem?.gifUrl && (
+                  <div className={styles.previewImage}>
+                    <img src={editingItem.gifUrl} alt="Current GIF" />
+                  </div>
+                )}
                 <input
                   type="file"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  onChange={(e) => setGifFile(e.target.files?.[0] || null)}
                   accept="image/gif"
                 />
               </div>
