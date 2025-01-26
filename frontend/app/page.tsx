@@ -6,10 +6,9 @@ const Home: React.FC = () => {
   return (
     <div>
       <BackgroundLayers />
-      {/* Overlay */}
       <Overlay />
     </div>
   );
 };
 
-export default Home;
+export default Home; 

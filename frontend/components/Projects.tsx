@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import styles from '../styles/Projects.module.css';
 import { FaCode } from 'react-icons/fa';
 import ContentPlayer from './ContentPlayer';
@@ -22,7 +22,6 @@ interface Project {
 }
 
 export default function Projects() {
-  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,29 +48,39 @@ export default function Projects() {
   }, []);
 
   const handleProjectClick = (projectId: string) => {
+    if (!projectId) return;
     window.location.href = `/project/${projectId}`;
   };
 
-  const renderProject = (project: Project, isActive: boolean) => (
-    <div className={`${styles.projectItem} ${isActive ? styles.active : ''}`}>
-      <div className={styles.projectIcon}>
-        {project.imageUrl ? (
-          <img 
-            src={project.imageUrl} 
-            alt={project.name}
-            className={styles.projectImage}
-          />
-        ) : (
-          <FaCode size={24} />
-        )}
-      </div>
-      <div className={styles.projectInfo}>
-        <h3 className={styles.projectName}>{project.name}</h3>
-        <p className={styles.projectDescription}>{project.shortDesc}</p>
-      </div>
-      <span className={styles.projectDateRange}>{project.dateRange}</span>
-    </div>
-  );
+  const renderProject = (project: Project, isActive: boolean) => {
+    if (!project || !project.id) return null;
+    
+    return (
+      <Link 
+        href={`/project/${project.id}`}
+        className={`${styles.projectItem} ${isActive ? styles.active : ''}`}
+        role="button"
+        tabIndex={0}
+      >
+        <div className={styles.projectIcon}>
+          {project.imageUrl ? (
+            <img 
+              src={project.imageUrl} 
+              alt={project.name}
+              className={styles.projectImage}
+            />
+          ) : (
+            <FaCode size={24} />
+          )}
+        </div>
+        <div className={styles.projectInfo}>
+          <h3 className={styles.projectName}>{project.name}</h3>
+          <p className={styles.projectDescription}>{project.shortDesc}</p>
+        </div>
+        <span className={styles.projectDateRange}>{project.dateRange}</span>
+      </Link>
+    );
+  };
 
   if (loading) return <div>Loading projects...</div>;
   if (error) return <div>{error}</div>;
