@@ -43,7 +43,18 @@ router.post(
   requireAdmin,
   upload.single('image'),
   asyncHandler(async (req, res) => {
-    const { name, description, shortDesc, githubUrl, liveUrl, technologies, dateRange } = req.body;
+    const { 
+      name, 
+      role,
+      description, 
+      shortDesc, 
+      githubUrl, 
+      liveUrl, 
+      technologies, 
+      learningOutcomes,
+      dateRange,
+      published 
+    } = req.body;
 
     let imageUrl = null;
     if (req.file) {
@@ -61,13 +72,17 @@ router.post(
     const project = await prisma.project.create({
       data: {
         name,
+        role: role || null,
         description,
         shortDesc,
         imageUrl,
-        githubUrl,
-        liveUrl,
+        githubUrl: githubUrl || null,
+        liveUrl: liveUrl || null,
         technologies: technologies ? JSON.parse(technologies) : [],
+        learningOutcomes: learningOutcomes ? JSON.parse(learningOutcomes) : [],
         dateRange,
+        published: published === 'true',
+        position: 0, // Default position for new items
       },
     });
 
@@ -82,7 +97,18 @@ router.put(
   requireAdmin,
   upload.single('image'),
   asyncHandler(async (req, res) => {
-    const { name, description, shortDesc, githubUrl, liveUrl, technologies, dateRange } = req.body;
+    const { 
+      name, 
+      role,
+      description, 
+      shortDesc, 
+      githubUrl, 
+      liveUrl, 
+      technologies, 
+      learningOutcomes,
+      dateRange,
+      published 
+    } = req.body;
 
     let imageUrl = undefined;
     if (req.file) {
@@ -101,13 +127,16 @@ router.put(
       where: { id: req.params.id },
       data: {
         name,
+        role: role || null,
         description,
         shortDesc,
         ...(imageUrl && { imageUrl }),
-        githubUrl,
-        liveUrl,
-        technologies: technologies ? JSON.parse(technologies) : undefined,
+        githubUrl: githubUrl || null,
+        liveUrl: liveUrl || null,
+        ...(technologies && { technologies: JSON.parse(technologies) }),
+        ...(learningOutcomes && { learningOutcomes: JSON.parse(learningOutcomes) }),
         dateRange,
+        ...(published !== undefined && { published: published === 'true' }),
       },
     });
 
@@ -136,14 +165,39 @@ router.put(
   asyncHandler(async (req, res) => {
     const { orderedIds } = req.body;
     
-    const updatePromises = orderedIds.map((id: string, index: number) => 
-      prisma.project.update({
-        where: { id },
-        data: { position: index }
-      })
+    // Validate input
+    if (!Array.isArray(orderedIds)) {
+      res.status(400).json({ error: 'orderedIds must be an array' });
+      return;
+    }
+
+    // Verify all IDs exist before updating
+    const existingProjects = await prisma.project.findMany({
+      where: {
+        id: {
+          in: orderedIds
+        }
+      },
+      select: {
+        id: true
+      }
+    });
+
+    if (existingProjects.length !== orderedIds.length) {
+      res.status(400).json({ error: 'Some project IDs do not exist' });
+      return;
+    }
+
+    // Update positions in a transaction to ensure consistency
+    await prisma.$transaction(
+      orderedIds.map((id, index) => 
+        prisma.project.update({
+          where: { id },
+          data: { position: index }
+        })
+      )
     );
 
-    await Promise.all(updatePromises);
     res.json({ success: true });
   })
 );

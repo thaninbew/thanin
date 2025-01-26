@@ -235,20 +235,36 @@ export default function AdminDashboard() {
     const formData = new FormData();
     const currentForm = activeTab === 'projects' ? projectForm : experienceForm;
     
-    Object.entries(currentForm).forEach(([key, value]) => {
-      if (key === 'technologies' && typeof value === 'string') {
-        const techArray = value.split(',').map(t => t.trim()).filter(t => t.length > 0);
-        formData.append(key, JSON.stringify(techArray));
-      } else if (key === 'learningOutcomes' && typeof value === 'string') {
-        const outcomesArray = value.split(',').map(t => t.trim()).filter(t => t.length > 0);
-        formData.append(key, JSON.stringify(outcomesArray));
-      } else if (key === 'role' && activeTab === 'projects' && !value) {
-        // Don't append empty role for projects as it's optional
-      } else {
-        formData.append(key, value.toString());
-      }
-    });
+    // Handle basic fields
+    formData.append('name', currentForm.name);
+    formData.append('description', currentForm.description);
+    formData.append('shortDesc', currentForm.shortDesc);
+    formData.append('dateRange', currentForm.dateRange);
+    formData.append('published', currentForm.published.toString());
+    
+    // Handle role (required for experiences, optional for projects)
+    if (activeTab === 'experiences' || (activeTab === 'projects' && currentForm.role)) {
+      formData.append('role', currentForm.role);
+    }
 
+    // Handle URLs
+    if (currentForm.githubUrl) formData.append('githubUrl', currentForm.githubUrl);
+    if (currentForm.liveUrl) formData.append('liveUrl', currentForm.liveUrl);
+
+    // Handle technologies and learning outcomes
+    const technologies = currentForm.technologies
+      .split(',')
+      .map(t => t.trim())
+      .filter(t => t.length > 0);
+    formData.append('technologies', JSON.stringify(technologies));
+
+    const learningOutcomes = currentForm.learningOutcomes
+      .split(',')
+      .map(t => t.trim())
+      .filter(t => t.length > 0);
+    formData.append('learningOutcomes', JSON.stringify(learningOutcomes));
+
+    // Handle file if present
     if (file) {
       formData.append('image', file);
     }
@@ -271,6 +287,7 @@ export default function AdminDashboard() {
       fetchItems();
     } catch (error) {
       showNotification(`Error ${editingItem ? 'updating' : 'creating'} item`, 'error');
+      console.error('Save error:', error);
     }
     setLoading(false);
   };

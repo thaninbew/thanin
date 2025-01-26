@@ -43,7 +43,18 @@ router.post(
   requireAdmin,
   upload.single('image'),
   asyncHandler(async (req, res) => {
-    const { name, role, description, shortDesc, dateRange } = req.body;
+    const { 
+      name, 
+      role, 
+      description, 
+      shortDesc, 
+      githubUrl,
+      liveUrl,
+      technologies,
+      learningOutcomes,
+      dateRange,
+      published 
+    } = req.body;
 
     let imageUrl = null;
     if (req.file) {
@@ -65,7 +76,13 @@ router.post(
         description,
         shortDesc,
         imageUrl,
+        githubUrl: githubUrl || null,
+        liveUrl: liveUrl || null,
+        technologies: technologies ? JSON.parse(technologies) : [],
+        learningOutcomes: learningOutcomes ? JSON.parse(learningOutcomes) : [],
         dateRange,
+        published: published === 'true',
+        position: 0, // Default position for new items
       },
     });
 
@@ -80,7 +97,18 @@ router.put(
   requireAdmin,
   upload.single('image'),
   asyncHandler(async (req, res) => {
-    const { name, role, description, shortDesc, dateRange } = req.body;
+    const { 
+      name, 
+      role, 
+      description, 
+      shortDesc, 
+      githubUrl,
+      liveUrl,
+      technologies,
+      learningOutcomes,
+      dateRange,
+      published 
+    } = req.body;
 
     let imageUrl = undefined;
     if (req.file) {
@@ -103,11 +131,59 @@ router.put(
         description,
         shortDesc,
         ...(imageUrl && { imageUrl }),
+        githubUrl: githubUrl || null,
+        liveUrl: liveUrl || null,
+        ...(technologies && { technologies: JSON.parse(technologies) }),
+        ...(learningOutcomes && { learningOutcomes: JSON.parse(learningOutcomes) }),
         dateRange,
+        ...(published !== undefined && { published: published === 'true' }),
       },
     });
 
     res.json(experience);
+  })
+);
+
+// Add update ordering endpoint
+router.put(
+  '/reorder',
+  authenticateToken,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const { orderedIds } = req.body;
+    
+    // Validate input
+    if (!Array.isArray(orderedIds)) {
+      res.status(400).json({ error: 'orderedIds must be an array' });
+      return;
+    }
+
+    // Verify all IDs exist before updating
+    const existingExperiences = await prisma.experience.findMany({
+      where: {
+        id: {
+          in: orderedIds
+        }
+      },
+      select: {
+        id: true
+      }
+    });
+
+    if (existingExperiences.length !== orderedIds.length) {
+      res.status(400).json({ error: 'Some experience IDs do not exist' });
+      return;
+    }
+
+    const updatePromises = orderedIds.map((id: string, index: number) => 
+      prisma.experience.update({
+        where: { id },
+        data: { position: index }
+      })
+    );
+
+    await Promise.all(updatePromises);
+    res.json({ success: true });
   })
 );
 
