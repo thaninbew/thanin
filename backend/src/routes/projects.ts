@@ -19,7 +19,7 @@ const upload = multer({
 // Get all projects
 router.get('/', asyncHandler(async (req, res) => {
   const projects = await prisma.project.findMany({
-    orderBy: { createdAt: 'desc' },
+    orderBy: { position: 'asc' },
   });
   res.json(projects);
 }));
@@ -125,6 +125,26 @@ router.delete(
       where: { id: req.params.id },
     });
     res.json({ message: 'Project deleted successfully' });
+  })
+);
+
+// Add update ordering endpoint
+router.put(
+  '/reorder',
+  authenticateToken,
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const { orderedIds } = req.body;
+    
+    const updatePromises = orderedIds.map((id: string, index: number) => 
+      prisma.project.update({
+        where: { id },
+        data: { position: index }
+      })
+    );
+
+    await Promise.all(updatePromises);
+    res.json({ success: true });
   })
 );
 

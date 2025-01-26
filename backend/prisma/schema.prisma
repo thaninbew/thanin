@@ -10,13 +10,18 @@ generator client {
 model Project {
   id          String   @id @default(uuid())
   name        String
+  role        String?
   description String
   shortDesc   String
   imageUrl    String?
+  gifUrl      String?
   githubUrl   String?
   liveUrl     String?
   technologies String[]
+  learningOutcomes String[]
   dateRange   String
+  position    Int      @default(0)
+  published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -28,7 +33,14 @@ model Experience {
   description String
   shortDesc   String
   imageUrl    String?
+  gifUrl      String?
+  githubUrl   String?
+  liveUrl     String?
+  technologies String[]
+  learningOutcomes String[]
   dateRange   String
+  position    Int      @default(0)
+  published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
