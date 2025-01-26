@@ -155,15 +155,18 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
     contact: 0
   });
 
+  // Add these at the top
+  const calculateSectionPositions = (expandEnd: number, viewportHeight: number, projectsThreshold: number, contactThreshold: number) => ({
+    about: expandEnd + viewportHeight * 0.2,
+    experiences: expandEnd + viewportHeight * 1.7,
+    projects: projectsThreshold + viewportHeight * 0.7,
+    contact: contactThreshold + viewportHeight * 0.65
+  });
+
   // Update positions with debounce but keep ref updated
   useEffect(() => {
     const update = () => {
-      const newPositions = {
-        about: expandEnd + viewportHeight * 0.2,
-        experiences: expandEnd + viewportHeight * 1.7,
-        projects: projectsThreshold + viewportHeight * 0.7,
-        contact: contactThreshold + viewportHeight * 0.65
-      };
+      const newPositions = calculateSectionPositions(expandEnd, viewportHeight, projectsThreshold, contactThreshold);
       
       // Only update if positions actually changed
       if (JSON.stringify(positionsRef.current) !== JSON.stringify(newPositions)) {

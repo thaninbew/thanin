@@ -78,10 +78,16 @@ const Overlay = forwardRef((props, ref) => {
   const scrollToSection = (section: 'home' | 'about' | 'experiences' | 'projects' | 'contact') => {
     if (!containerRef.current) return;
     
+    // Get viewport height
+    const viewportHeight = window.innerHeight;
+    
+    // Get current positions from About component
     const position = positionsRef.current[section];
     if (position !== null) {
+      // Apply the same viewport-based offset as the sidebar buttons
+      const offset = viewportHeight * 0.1;
       containerRef.current.scrollTo({
-        top: position,
+        top: position - offset,
         behavior: 'smooth'
       });
     }
@@ -97,17 +103,7 @@ const Overlay = forwardRef((props, ref) => {
   };
 
   useImperativeHandle(ref, () => ({
-    scrollToSection: (section: 'home' | 'about' | 'experiences' | 'projects' | 'contact') => {
-      if (!containerRef.current) return;
-      
-      const position = positionsRef.current[section];
-      if (position !== null) {
-        containerRef.current.scrollTo({
-          top: position,
-          behavior: 'smooth'
-        });
-      }
-    }
+    scrollToSection
   }));
 
   return (
