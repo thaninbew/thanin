@@ -226,7 +226,7 @@ export default function AdminDashboard() {
       // It's an Experience
       setExperienceForm({
         ...commonFields,
-        role: item.role,
+        role: item.role || '',
       });
     }
     setIsModalOpen(true);

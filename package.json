@@ -5,6 +5,7 @@
     "@mui/icons-material": "^6.4.1",
     "@mui/material": "^6.4.1",
     "@types/react-beautiful-dnd": "^13.1.8",
+    "colorthief": "^2.6.0",
     "concurrently": "^9.1.2",
     "swr": "^2.3.0"
   },

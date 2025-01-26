@@ -3,6 +3,8 @@
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import styles from '../styles/DetailPage.module.css';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import ColorThief from 'colorthief';
 
 interface Project {
   id: string;
@@ -27,6 +29,27 @@ interface Props {
 
 export default function ProjectDetail({ project }: Props) {
   const router = useRouter();
+  const [dominantColor, setDominantColor] = useState<[number, number, number]>([0, 0, 0]);
+  const [textColor, setTextColor] = useState('white');
+
+  useEffect(() => {
+    if (project.imageUrl) {
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.src = project.imageUrl;
+
+      img.onload = () => {
+        const colorThief = new ColorThief();
+        const color = colorThief.getColor(img);
+        setDominantColor(color);
+        
+        // Calculate brightness to determine text color
+        const [r, g, b] = color;
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        setTextColor(brightness > 128 ? '#000000' : '#ffffff');
+      };
+    }
+  }, [project.imageUrl]);
 
   const handleBack = () => {
     // Store a flag in sessionStorage to indicate we're returning from projects
@@ -34,19 +57,35 @@ export default function ProjectDetail({ project }: Props) {
     router.back();
   };
 
+  const rgbaBackground = `rgba(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]}, 0.3)`;
+  const rgbaBackgroundDarker = `rgba(${dominantColor[0]}, ${dominantColor[1]}, ${dominantColor[2]}, 0.8)`;
+
   return (
-    <div className={styles.container}>
+    <div 
+      className={styles.pageWrapper}
+      style={{
+        background: `radial-gradient(circle at center, ${rgbaBackground} 0%, ${rgbaBackgroundDarker} 100%)`,
+        color: textColor
+      }}
+    >
+      {project.imageUrl && (
+        <div style={{ display: 'none' }}>
+          <img src={project.imageUrl} alt="" />
+        </div>
+      )}
+
       <button 
         className={styles.backButton}
         onClick={handleBack}
         aria-label="Go back"
+        style={{ color: textColor }}
       >
         ← Back
       </button>
 
-      <div className={styles.content}>
-        <div className={styles.mainSection}>
-          <div className={styles.header}>
+      <div className={styles.headerContainer}>
+        <div className={styles.containerContent}>
+          <div className={styles.headerContent}>
             <div className={styles.headerLeft}>
               {project.imageUrl && (
                 <img 
@@ -68,6 +107,7 @@ export default function ProjectDetail({ project }: Props) {
                   target="_blank" 
                   rel="noopener noreferrer"
                   className={styles.link}
+                  style={{ borderColor: textColor + '20' }}
                 >
                   <FaGithub size={24} />
                   <span>View on GitHub</span>
@@ -79,6 +119,7 @@ export default function ProjectDetail({ project }: Props) {
                   target="_blank" 
                   rel="noopener noreferrer"
                   className={styles.link}
+                  style={{ borderColor: textColor + '20' }}
                 >
                   <FaExternalLinkAlt size={20} />
                   <span>View Live Demo</span>
@@ -86,47 +127,55 @@ export default function ProjectDetail({ project }: Props) {
               )}
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className={styles.mainContent}>
-            <div className={styles.leftColumn}>
-              <section className={styles.section}>
-                <h3 className={styles.sectionTitle}>Description</h3>
-                <p className={styles.description}>{project.description}</p>
-              </section>
-
-              <section className={styles.section}>
-                <h3 className={styles.sectionTitle}>Technologies</h3>
-                <div className={styles.tags}>
-                  {project.technologies.map((tech, index) => (
-                    <span key={index} className={styles.tag}>{tech}</span>
-                  ))}
-                </div>
-              </section>
-
-              <section className={styles.section}>
-                <h3 className={styles.sectionTitle}>Learning Outcomes</h3>
-                <ul className={styles.learningOutcomes}>
-                  {project.learningOutcomes.map((outcome, index) => (
-                    <li key={index}>{outcome}</li>
-                  ))}
-                </ul>
-              </section>
-            </div>
-
-            <div className={styles.rightColumn}>
-              {project.gifUrl && (
-                <div className={styles.gifContainer}>
-                  <img 
-                    src={project.gifUrl} 
-                    alt={`${project.name} demo`} 
-                    className={styles.gif}
-                  />
-                </div>
-              )}
-            </div>
+      <div className={styles.technologiesContainer}>
+        <div className={styles.containerContent}>
+          <h3 className={styles.sectionTitle}>Technologies</h3>
+          <div className={styles.tags}>
+            {project.technologies.map((tech, index) => (
+              <span 
+                key={index} 
+                className={styles.tag}
+                style={{ borderColor: textColor + '20' }}
+              >
+                {tech}
+              </span>
+            ))}
           </div>
         </div>
       </div>
+
+      <div className={styles.descriptionContainer}>
+        <div className={styles.containerContent}>
+          <h3 className={styles.sectionTitle}>Description</h3>
+          <p className={styles.description}>{project.description}</p>
+        </div>
+      </div>
+
+      <div className={styles.learningContainer}>
+        <div className={styles.containerContent}>
+          <h3 className={styles.sectionTitle}>Learning Outcomes</h3>
+          <ul className={styles.learningOutcomes}>
+            {project.learningOutcomes.map((outcome, index) => (
+              <li key={index}>{outcome}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {project.gifUrl && (
+        <div className={styles.gifContainer}>
+          <div className={styles.containerContent}>
+            <img 
+              src={project.gifUrl} 
+              alt={`${project.name} demo`} 
+              className={styles.gif}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 } 
