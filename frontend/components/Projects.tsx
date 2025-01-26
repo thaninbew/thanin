@@ -49,20 +49,20 @@ export default function Projects() {
   }, []);
 
   const handleProjectClick = (projectId: string | undefined) => {
-    if (!projectId) return;
+    if (!projectId || projectId === 'null') return;
     router.push(`/project/${projectId}`);
   };
 
   const renderProject = (project: Project, isActive: boolean) => {
-    if (!project?.id) return null;
+    if (!project?.id || project.id === 'null') return null;
     
     return (
       <div 
         className={`${styles.projectItem} ${isActive ? styles.active : ''}`}
         role="button"
         tabIndex={0}
-        onClick={() => project.id && handleProjectClick(project.id)}
-        onKeyDown={(e) => e.key === 'Enter' && project.id && handleProjectClick(project.id)}
+        onClick={() => project.id && project.id !== 'null' && handleProjectClick(project.id)}
+        onKeyDown={(e) => e.key === 'Enter' && project.id && project.id !== 'null' && handleProjectClick(project.id)}
         aria-label={`View ${project.name} project details`}
       >
         <div className={styles.projectIcon}>

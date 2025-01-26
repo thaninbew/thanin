@@ -49,20 +49,20 @@ export default function Experiences() {
   }, []);
 
   const handleExperienceClick = (experienceId: string | undefined) => {
-    if (!experienceId) return;
+    if (!experienceId || experienceId === 'null') return;
     router.push(`/experience/${experienceId}`);
   };
 
   const renderExperience = (experience: Experience, isActive: boolean) => {
-    if (!experience?.id) return null;
+    if (!experience?.id || experience.id === 'null') return null;
     
     return (
       <div 
         className={`${styles.experienceItem} ${isActive ? styles.active : ''}`}
         role="button"
         tabIndex={0}
-        onClick={() => experience.id && handleExperienceClick(experience.id)}
-        onKeyDown={(e) => e.key === 'Enter' && experience.id && handleExperienceClick(experience.id)}
+        onClick={() => experience.id && experience.id !== 'null' && handleExperienceClick(experience.id)}
+        onKeyDown={(e) => e.key === 'Enter' && experience.id && experience.id !== 'null' && handleExperienceClick(experience.id)}
         aria-label={`View ${experience.name} experience details`}
       >
         <div className={styles.experienceIcon}>
