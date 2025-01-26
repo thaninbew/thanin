@@ -93,15 +93,16 @@
 }
 
 .projectIcon {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 0.25rem;
-  color: rgba(0, 0, 0, 0.7);
-  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.8);
+  overflow: hidden;
+  border-radius: 4px;
+  position: relative;
 }
 
 .projectItem:hover .projectIcon {
@@ -150,6 +151,16 @@
   color: rgba(0, 0, 0, 0.7);
   text-align: right;
   white-space: nowrap;
+}
+
+.projectImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /* Player Styles */
