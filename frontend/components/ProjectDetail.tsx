@@ -4,7 +4,12 @@ import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import styles from '../styles/DetailPage.module.css';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import ColorThief from 'colorthief';
+import ColorThief from 'colorthief/dist/color-thief.mjs';
+
+interface LearningOutcome {
+  header: string;
+  description: string;
+}
 
 interface Project {
   id: string;
@@ -14,10 +19,11 @@ interface Project {
   shortDesc: string;
   imageUrl?: string;
   gifUrl?: string;
+  extraImages?: string[];
   githubUrl?: string;
   liveUrl?: string;
   technologies: string[];
-  learningOutcomes: string[];
+  learningOutcomes: LearningOutcome[];
   dateRange: string;
   position: number;
   published: boolean;
@@ -40,13 +46,19 @@ export default function ProjectDetail({ project }: Props) {
 
       img.onload = () => {
         const colorThief = new ColorThief();
-        const color = colorThief.getColor(img);
-        setDominantColor(color);
-        
-        // Calculate brightness to determine text color
-        const [r, g, b] = color;
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        setTextColor(brightness > 128 ? '#000000' : '#ffffff');
+        try {
+          const color = colorThief.getColor(img);
+          setDominantColor(color);
+          
+          // Calculate brightness
+          const [r, g, b] = color;
+          const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+          setTextColor(brightness > 128 ? '#000000' : '#ffffff');
+        } catch (error) {
+          console.error('Color extraction failed:', error);
+          setDominantColor([0, 0, 0]);
+          setTextColor('#ffffff');
+        }
       };
     }
   }, [project.imageUrl]);
@@ -83,7 +95,7 @@ export default function ProjectDetail({ project }: Props) {
         ← Back
       </button>
 
-      <div className={styles.headerContainer}>
+     
         <div className={styles.containerContent}>
           <div className={styles.headerContent}>
             <div className={styles.headerLeft}>
@@ -128,7 +140,6 @@ export default function ProjectDetail({ project }: Props) {
             </div>
           </div>
         </div>
-      </div>
 
       <div className={styles.technologiesContainer}>
         <div className={styles.containerContent}>
@@ -158,26 +169,47 @@ export default function ProjectDetail({ project }: Props) {
           <div className={styles.learningContainer}>
             <div className={styles.containerContent}>
               <h3 className={styles.sectionTitle}>Learning Outcomes</h3>
-              <ul className={styles.learningOutcomes}>
-                {project.learningOutcomes.map((outcome, index) => (
-                  <li key={index}>{outcome}</li>
+              <div className={styles.learningOutcomes}>
+                {project.learningOutcomes?.map((outcome, index) => (
+                  <div key={index} className={styles.learningOutcome}>
+                    <h4 className={styles.learningHeader}>{outcome.header}</h4>
+                    <p className={styles.learningDescription}>{outcome.description}</p>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
         </div>
 
-        {project.gifUrl && (
-          <div className={styles.gifContainer}>
-            <div className={styles.containerContent}>
-              <img 
-                src={project.gifUrl} 
-                alt={`${project.name} demo`} 
-                className={styles.gif}
-              />
+        <div className={styles.rightContent}>
+          {project.gifUrl && (
+            <div className={styles.gifContainer}>
+              <div className={styles.containerContent}>
+                <img 
+                  src={project.gifUrl} 
+                  alt={`${project.name} demo`} 
+                  className={styles.gif}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+          
+          {project.extraImages && project.extraImages.length > 0 && (
+            <div className={styles.extraImagesContainer}>
+              {project.extraImages.map((imageUrl, index) => (
+                <div key={index} className={styles.imageContainer}>
+                  <div className={styles.containerContent}>
+                    <img 
+                      src={imageUrl} 
+                      alt={`${project.name} additional view ${index + 1}`} 
+                      className={styles.extraImage}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

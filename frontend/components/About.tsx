@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/About.module.css';
 import Experiences from './Experiences';
 import Projects from './Projects';
 import Contact from './Contact';
-import { debounce } from 'lodash';
 
 interface AboutProps {
   scrollY: number;
@@ -18,9 +17,6 @@ interface AboutProps {
 
 const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScrollToTop }) => {
   const aboutRef = useRef<HTMLDivElement>(null);
-  const experiencesRef = useRef<HTMLDivElement>(null);
-  const projectsRef = useRef<HTMLDivElement>(null);
-  const contactRef = useRef<HTMLDivElement>(null);
   const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
   const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright','arrowleft', 'arrowright', 'b', 'a'];
 
@@ -141,72 +137,18 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
     handleAnimations();
   }, [scrollY, projectsThreshold, contactThreshold, showProjects, showContact, viewportHeight]);
 
-  // Add these at the top
-  const positionsRef = useRef({
-    about: 0,
-    experiences: 0,
-    projects: 0,
-    contact: 0
-  });
-  const [sectionPositions, setSectionPositions] = useState({
-    about: 0,
-    experiences: 0,
-    projects: 0,
-    contact: 0
-  });
-
-  // Add these at the top
-  const calculateSectionPositions = (expandEnd: number, viewportHeight: number, projectsThreshold: number, contactThreshold: number) => ({
-    about: expandEnd + viewportHeight * 0.2,
-    experiences: expandEnd + viewportHeight * 1.7,
-    projects: projectsThreshold + viewportHeight * 0.7,
-    contact: contactThreshold + viewportHeight * 0.65
-  });
-
-  // Update positions with debounce but keep ref updated
+  // Calculate positions when animation phases change
   useEffect(() => {
-    const update = () => {
-      const newPositions = calculateSectionPositions(expandEnd, viewportHeight, projectsThreshold, contactThreshold);
-      
-      // Only update if positions actually changed
-      if (JSON.stringify(positionsRef.current) !== JSON.stringify(newPositions)) {
-        positionsRef.current = newPositions;
-        setSectionPositions(newPositions);
-        onSectionPositionsChange?.(newPositions);
-      }
-    };
-
-    // Initial update
-    update();
-
-    const debouncedUpdate = debounce(update, 100);
-    window.addEventListener('resize', debouncedUpdate);
-    window.addEventListener('scroll', debouncedUpdate);
-    
-    return () => {
-      window.removeEventListener('resize', debouncedUpdate);
-      window.removeEventListener('scroll', debouncedUpdate);
-      debouncedUpdate.cancel();
-    };
-  }, [viewportHeight, expandEnd, projectsThreshold, contactThreshold, onSectionPositionsChange]);
-
-  // Update click handler to use scrollIntoView
-  const handleSectionClick = (section: keyof typeof sectionPositions) => {
-    const refs = {
-      about: aboutRef,
-      experiences: experiencesRef,
-      projects: projectsRef,
-      contact: contactRef
-    };
-
-    const targetRef = refs[section];
-    if (targetRef?.current) {
-      targetRef.current.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
+    if (onSectionPositionsChange) {
+      const positions = {
+        about: expandEnd + viewportHeight * 0.2, // When About starts expanding
+        experiences: expandEnd + viewportHeight * 1.7, // When About is fixed
+        projects: contactThreshold,
+        contact: contactThreshold + viewportHeight * 0.65
+      };
+      onSectionPositionsChange(positions);
     }
-  };
+  }, [expandEnd, projectsThreshold, contactThreshold, viewportHeight, onSectionPositionsChange]);
 
   // Add Konami code detection
   useEffect(() => {
@@ -337,6 +279,7 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
           transition: 'none',
         };
       }
+
       default:
         return baseStyles;
     }
@@ -366,13 +309,13 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
         )}
       </div>
       <div className={`${styles.experiencesWrapper} ${showExperiences ? styles.visible : ''}`}>
-        <div ref={experiencesRef} className={`${styles.sectionWrapper} ${phase === 'fixed' ? 'aboutFixed' : ''}`}>
+        <div className={`${styles.sectionWrapper} ${phase === 'fixed' ? 'aboutFixed' : ''}`}>
           <Experiences />
         </div>
-        <div ref={projectsRef} className={`${styles.sectionWrapper} ${showProjects ? `${styles.fadeIn} projectsVisible` : ''}`}>
+        <div className={`${styles.sectionWrapper} ${showProjects ? `${styles.fadeIn} projectsVisible` : ''}`}>
           <Projects />
         </div>
-        <div ref={contactRef} className={`${styles.sectionWrapper} ${showContact ? `${styles.fadeIn} contactVisible` : ''}`}>
+        <div className={`${styles.sectionWrapper} ${showContact ? `${styles.fadeIn} contactVisible` : ''}`}>
           <Contact />
         </div>
         <div className={`${styles.easterEggWrapper} ${styles.fadeIn}`} 

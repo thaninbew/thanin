@@ -18,16 +18,13 @@
   opacity: 1;
 }
 
-.headerContainer {
-  margin-bottom: 1rem;
-  width: 100%;
-}
+/* Remove .headerContainer class entirely */
 
 .technologiesContainer,
 .descriptionContainer,
 .learningContainer,
 .gifContainer {
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem; /* Reduced from 1rem to match the gap */
   border: 2px solid;
   border-radius: 16px;
   backdrop-filter: blur(10px);
@@ -38,7 +35,7 @@
 .containerContent {
   padding: 1.3rem;
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 0;  /* Remove auto margin */
 }
 
 .technologiesContainer {
@@ -56,20 +53,33 @@
   align-items: flex-start;
   gap: 2rem;
   max-width: 1400px;
-  margin: 0 auto;
+  padding-left: 0;  /* Remove left padding */
+  width: 100%; /* Add this to ensure full width */
 }
 
 .headerLeft {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;  /* Reduce gap from 2rem to 1rem */
   align-items: center;
+  margin-right: 1rem; /* Add left margin */
 }
 
 .mainImage {
   width: 160px;
   height: 160px;
-  border-radius: 12px;
+  border-radius: 16px; /* Match other containers */
   object-fit: cover;
+  border: 2px solid; /* Match other containers */
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.links {
+  display: flex;
+  gap: 1rem;
+  position: absolute;
+  margin-top:1rem;
+  right: 1rem;
 }
 
 .titleSection {
@@ -145,30 +155,62 @@
 }
 
 .learningOutcomes {
-  list-style-type: none;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.learningOutcome {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.learningHeader {
+  font-size: 1.3rem;
   margin: 0;
+  opacity: 0.9;
 }
 
-.learningOutcomes li {
-  margin-bottom: 0.75rem;
-  padding-left: 1.75rem;
-  position: relative;
-  font-size: 1.2rem;
+.learningDescription {
+  font-size: 1.1rem;
   line-height: 1.6;
+  margin: 0;
+  opacity: 0.8;
 }
 
-.learningOutcomes li:before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  opacity: 0.4;
+.rightContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 600px;
+}
+
+.extraImagesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.imageContainer {
+  border: 2px solid;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.extraImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
 }
 
 /* Content layout with gif */
 .contentLayout {
   display: grid;
-  grid-template-columns: 1fr 600px;
+  grid-template-columns: minmax(0, 1fr) min-content;
   gap: 1.5rem;
   align-items: start;
 }
@@ -176,29 +218,26 @@
 .contentLeft {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-}
-
-.gif {
+  gap: 0.75rem;
   width: 100%;
-  aspect-ratio: 16/9;
-  border-radius: 8px;
-  position: sticky;
-  top: 1rem;
-  object-fit: cover;
 }
 
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  font-size: 1.4rem;
+.descriptionContainer,
+.learningContainer {
+  width: 100%;
+}
+
+.gifContainer {
+  width: 600px;
 }
 
 @media (max-width: 1200px) {
   .contentLayout {
     grid-template-columns: 1fr;
+  }
+  
+  .contentLeft {
+    grid-template-columns: 1fr; /* Force single column on smaller screens */
   }
 
   .gif {
@@ -212,6 +251,22 @@
 
   .role {
     font-size: 1.8rem;
+  }
+
+  .learningContainer {
+    max-width: 100%; /* Allow full width on smaller screens */
+  }
+
+  .gifContainer {
+    width: 100%;
+  }
+
+  .rightContent {
+    width: 100%;
+  }
+  
+  .extraImagesContainer {
+    max-width: 100%;
   }
 }
 
@@ -236,4 +291,4 @@
   .role {
     font-size: 1.6rem;
   }
-} 
+}

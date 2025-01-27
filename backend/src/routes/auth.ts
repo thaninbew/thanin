@@ -7,7 +7,7 @@ import asyncHandler from 'express-async-handler';
 const router = Router();
 const prisma = new PrismaClient();
 
-// // Register new admin (this should be protected or removed in production)
+// // // Register new admin (this should be protected or removed in production)
 // router.post('/register', asyncHandler(async (req, res) => {
 //   const { email, password } = req.body;
 

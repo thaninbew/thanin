@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from '../../styles/Admin.module.css';
 
+interface LearningOutcome {
+  id?: string;
+  header: string;
+  description: string;
+  position: number;
+}
+
 interface Project {
   id: string;
   name: string;
@@ -10,10 +17,11 @@ interface Project {
   shortDesc: string;
   imageUrl?: string;
   gifUrl?: string;
+  extraImages?: string[];
   githubUrl?: string;
   liveUrl?: string;
   technologies: string[];
-  learningOutcomes: string[];
+  learningOutcomes: LearningOutcome[];
   dateRange: string;
   position: number;
   published: boolean;
@@ -28,10 +36,11 @@ interface Experience {
   shortDesc: string;
   imageUrl?: string;
   gifUrl?: string;
+  extraImages?: string[];
   githubUrl?: string;
   liveUrl?: string;
   technologies: string[];
-  learningOutcomes: string[];
+  learningOutcomes: LearningOutcome[];
   dateRange: string;
   position: number;
   published: boolean;
@@ -48,7 +57,7 @@ interface ProjectForm {
   githubUrl: string;
   liveUrl: string;
   technologies: string;
-  learningOutcomes: string;
+  learningOutcomes: LearningOutcome[];
   dateRange: string;
   published: boolean;
 }
@@ -61,7 +70,7 @@ interface ExperienceForm {
   githubUrl: string;
   liveUrl: string;
   technologies: string;
-  learningOutcomes: string;
+  learningOutcomes: LearningOutcome[];
   dateRange: string;
   published: boolean;
 }
@@ -92,7 +101,7 @@ export default function AdminDashboard() {
     githubUrl: '',
     liveUrl: '',
     technologies: '',
-    learningOutcomes: '',
+    learningOutcomes: [],
     dateRange: '',
     published: false,
   });
@@ -105,7 +114,7 @@ export default function AdminDashboard() {
     githubUrl: '',
     liveUrl: '',
     technologies: '',
-    learningOutcomes: '',
+    learningOutcomes: [],
     dateRange: '',
     published: false,
   });
@@ -211,19 +220,24 @@ export default function AdminDashboard() {
       dateRange: item.dateRange,
       published: item.published,
       technologies: Array.isArray(item.technologies) ? item.technologies.join(', ') : '',
-      learningOutcomes: Array.isArray(item.learningOutcomes) ? item.learningOutcomes.join(', ') : '',
+      learningOutcomes: Array.isArray(item.learningOutcomes) 
+        ? item.learningOutcomes.map(outcome => ({
+            id: outcome.id,
+            header: outcome.header,
+            description: outcome.description,
+            position: outcome.position
+          }))
+        : [],
       githubUrl: item.githubUrl || '',
       liveUrl: item.liveUrl || '',
     };
 
     if ('technologies' in item && Array.isArray(item.technologies)) {
-      // It's a Project
       setProjectForm({
         ...commonFields,
         role: item.role || '',
       });
     } else if ('role' in item) {
-      // It's an Experience
       setExperienceForm({
         ...commonFields,
         role: item.role || '',
@@ -259,6 +273,62 @@ export default function AdminDashboard() {
     setItemToDelete(null);
   };
 
+  const handleAddLearningOutcome = () => {
+    const currentForm = activeTab === 'projects' ? projectForm : experienceForm;
+    const newOutcome: LearningOutcome = {
+      header: '',
+      description: '',
+      position: currentForm.learningOutcomes.length,
+    };
+
+    if (activeTab === 'projects') {
+      setProjectForm({
+        ...projectForm,
+        learningOutcomes: [...projectForm.learningOutcomes, newOutcome],
+      });
+    } else {
+      setExperienceForm({
+        ...experienceForm,
+        learningOutcomes: [...experienceForm.learningOutcomes, newOutcome],
+      });
+    }
+  };
+
+  const handleRemoveLearningOutcome = (index: number) => {
+    if (activeTab === 'projects') {
+      setProjectForm({
+        ...projectForm,
+        learningOutcomes: projectForm.learningOutcomes.filter((_, i) => i !== index),
+      });
+    } else {
+      setExperienceForm({
+        ...experienceForm,
+        learningOutcomes: experienceForm.learningOutcomes.filter((_, i) => i !== index),
+      });
+    }
+  };
+
+  const handleLearningOutcomeChange = (index: number, field: 'header' | 'description', value: string) => {
+    const currentForm = activeTab === 'projects' ? projectForm : experienceForm;
+    const updatedOutcomes = [...currentForm.learningOutcomes];
+    updatedOutcomes[index] = {
+      ...updatedOutcomes[index],
+      [field]: value,
+    };
+
+    if (activeTab === 'projects') {
+      setProjectForm({
+        ...projectForm,
+        learningOutcomes: updatedOutcomes,
+      });
+    } else {
+      setExperienceForm({
+        ...experienceForm,
+        learningOutcomes: updatedOutcomes,
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -270,29 +340,44 @@ export default function AdminDashboard() {
     formData.append('description', currentForm.description);
     formData.append('shortDesc', currentForm.shortDesc);
     formData.append('dateRange', currentForm.dateRange);
-    formData.append('published', currentForm.published.toString());
+    // Only append published state if we're creating a new item or explicitly changing it
+    if (!editingItem || currentForm.published !== editingItem.published) {
+      formData.append('published', currentForm.published.toString());
+    }
     
-    // Handle role (required for experiences, optional for projects)
     if (activeTab === 'experiences' || (activeTab === 'projects' && currentForm.role)) {
       formData.append('role', currentForm.role);
     }
 
-    // Handle URLs
     if (currentForm.githubUrl) formData.append('githubUrl', currentForm.githubUrl);
     if (currentForm.liveUrl) formData.append('liveUrl', currentForm.liveUrl);
 
-    // Handle technologies and learning outcomes
     const technologies = currentForm.technologies
       .split(',')
       .map(t => t.trim())
       .filter(t => t.length > 0);
     formData.append('technologies', JSON.stringify(technologies));
 
-    const learningOutcomes = currentForm.learningOutcomes
-      .split(',')
-      .map(t => t.trim())
-      .filter(t => t.length > 0);
-    formData.append('learningOutcomes', JSON.stringify(learningOutcomes));
+    // Add learning outcomes as JSON string
+    if (activeTab === 'projects') {
+      formData.append('learningOutcomes', JSON.stringify(
+        projectForm.learningOutcomes
+          .filter(lo => lo.header.trim() && lo.description.trim())
+          .map((lo, index) => ({
+            ...lo,
+            position: index
+          }))
+      ));
+    } else {
+      formData.append('learningOutcomes', JSON.stringify(
+        experienceForm.learningOutcomes
+          .filter(lo => lo.header.trim() && lo.description.trim())
+          .map((lo, index) => ({
+            ...lo,
+            position: index
+          }))
+      ));
+    }
 
     // Handle files
     if (imageFile) {
@@ -326,7 +411,8 @@ export default function AdminDashboard() {
   };
 
   const resetForm = () => {
-    setFile(null);
+    setImageFile(null);
+    setGifFile(null);
     setEditingItem(null);
     if (activeTab === 'projects') {
       setProjectForm({
@@ -337,7 +423,7 @@ export default function AdminDashboard() {
         githubUrl: '',
         liveUrl: '',
         technologies: '',
-        learningOutcomes: '',
+        learningOutcomes: [], // Reset to empty array
         dateRange: '',
         published: false,
       });
@@ -350,7 +436,7 @@ export default function AdminDashboard() {
         githubUrl: '',
         liveUrl: '',
         technologies: '',
-        learningOutcomes: '',
+        learningOutcomes: [], // Reset to empty array
         dateRange: '',
         published: false,
       });
@@ -458,6 +544,51 @@ export default function AdminDashboard() {
             ))}
           </tbody>
         </table>
+      </div>
+    );
+  };
+
+  const renderLearningOutcomesForm = () => {
+    const currentForm = activeTab === 'projects' ? projectForm : experienceForm;
+    
+    return (
+      <div className={styles.formGroup}>
+        <label>Learning Outcomes:</label>
+        <div className={styles.learningOutcomesList}>
+          {currentForm.learningOutcomes.map((outcome, index) => (
+            <div key={index} className={styles.learningOutcomeItem}>
+              <div className={styles.learningOutcomeHeader}>
+                <input
+                  type="text"
+                  placeholder="Outcome Header"
+                  value={outcome.header}
+                  onChange={(e) => handleLearningOutcomeChange(index, 'header', e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className={styles.removeButton}
+                  onClick={() => handleRemoveLearningOutcome(index)}
+                >
+                  ×
+                </button>
+              </div>
+              <textarea
+                placeholder="Outcome Description"
+                value={outcome.description}
+                onChange={(e) => handleLearningOutcomeChange(index, 'description', e.target.value)}
+                required
+              />
+            </div>
+          ))}
+          <button
+            type="button"
+            className={styles.addButton}
+            onClick={handleAddLearningOutcome}
+          >
+            + Add Learning Outcome
+          </button>
+        </div>
       </div>
     );
   };
@@ -609,20 +740,7 @@ export default function AdminDashboard() {
                   required
                 />
               </div>
-              <div className={styles.formGroup}>
-                <label>Learning Outcomes (comma-separated):</label>
-                <textarea
-                  value={activeTab === 'projects' ? projectForm.learningOutcomes : experienceForm.learningOutcomes}
-                  onChange={(e) => {
-                    if (activeTab === 'projects') {
-                      setProjectForm({ ...projectForm, learningOutcomes: e.target.value });
-                    } else {
-                      setExperienceForm({ ...experienceForm, learningOutcomes: e.target.value });
-                    }
-                  }}
-                  required
-                />
-              </div>
+              {renderLearningOutcomesForm()}
               <div className={styles.formGroup}>
                 <label>Date Range:</label>
                 <input

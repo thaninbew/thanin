@@ -103,6 +103,13 @@ router.put(
 router.get('/:id', asyncHandler(async (req, res) => {
   const project = await prisma.project.findUnique({
     where: { id: req.params.id },
+    include: {
+      learningOutcomes: {
+        orderBy: {
+          position: 'asc'
+        }
+      }
+    }
   });
   if (!project) {
     res.status(404).json({ error: 'Project not found' });
@@ -147,6 +154,8 @@ router.post(
       gifUrl = await uploadToCloudinary(files.gif[0], 'projects/gifs');
     }
 
+    const parsedLearningOutcomes = JSON.parse(learningOutcomes || '[]');
+
     const project = await prisma.project.create({
       data: {
         name,
@@ -158,11 +167,20 @@ router.post(
         githubUrl: githubUrl || null,
         liveUrl: liveUrl || null,
         technologies: technologies ? JSON.parse(technologies) : [],
-        learningOutcomes: learningOutcomes ? JSON.parse(learningOutcomes) : [],
+        learningOutcomes: {
+          create: parsedLearningOutcomes.map((outcome: any) => ({
+            header: outcome.header,
+            description: outcome.description,
+            position: outcome.position
+          }))
+        },
         dateRange,
         published: published === 'true',
         position: 0, // Default position for new items
       },
+      include: {
+        learningOutcomes: true
+      }
     });
 
     res.json(project);
@@ -192,32 +210,62 @@ router.put(
       published 
     } = req.body;
 
+    // Validate required fields
+    if (!name) {
+      res.status(400).json({ error: 'Name is a required field' });
+      return;
+    }
+
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     
     const updateData: any = {
       name,
-      role: role || null,
-      description,
-      shortDesc,
+      role: role || '',
+      description: description || '',
+      shortDesc: shortDesc || '',
       githubUrl: githubUrl || null,
       liveUrl: liveUrl || null,
-      ...(technologies && { technologies: JSON.parse(technologies) }),
-      ...(learningOutcomes && { learningOutcomes: JSON.parse(learningOutcomes) }),
-      dateRange,
-      ...(published !== undefined && { published: published === 'true' }),
+      technologies: technologies ? JSON.parse(technologies) : [],
+      dateRange: dateRange || '',
+      published: published === 'true'
     };
 
-    if (files.image) {
+    if (files?.image) {
       updateData.imageUrl = await uploadToCloudinary(files.image[0], 'projects/images');
     }
 
-    if (files.gif) {
+    if (files?.gif) {
       updateData.gifUrl = await uploadToCloudinary(files.gif[0], 'projects/gifs');
     }
 
+    // First, delete existing learning outcomes
+    await prisma.learningOutcome.deleteMany({
+      where: {
+        projectId: req.params.id
+      }
+    });
+
+    // Then update the project with new learning outcomes
+    const parsedLearningOutcomes = JSON.parse(learningOutcomes || '[]');
     const project = await prisma.project.update({
       where: { id: req.params.id },
-      data: updateData,
+      data: {
+        ...updateData,
+        learningOutcomes: {
+          create: parsedLearningOutcomes.map((outcome: any) => ({
+            header: outcome.header || '',
+            description: outcome.description || '',
+            position: outcome.position
+          }))
+        }
+      },
+      include: {
+        learningOutcomes: {
+          orderBy: {
+            position: 'asc'
+          }
+        }
+      }
     });
 
     res.json(project);

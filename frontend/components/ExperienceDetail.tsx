@@ -5,6 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import ColorThief from 'colorthief';
 
+interface LearningOutcome {
+  header: string;
+  description: string;
+}
+
 interface Experience {
   id: string;
   company: string;
@@ -13,8 +18,9 @@ interface Experience {
   shortDesc: string;
   imageUrl?: string;
   gifUrl?: string;
+  extraImages?: string[];
   technologies: string[];
-  learningOutcomes: string[];
+  learningOutcomes: LearningOutcome[];
   dateRange: string;
   position: number;
   published: boolean;
@@ -124,26 +130,47 @@ export default function ExperienceDetail({ experience }: Props) {
           <div className={styles.learningContainer}>
             <div className={styles.containerContent}>
               <h3 className={styles.sectionTitle}>Learning Outcomes</h3>
-              <ul className={styles.learningOutcomes}>
-                {experience.learningOutcomes.map((outcome, index) => (
-                  <li key={index}>{outcome}</li>
+              <div className={styles.learningOutcomes}>
+                {experience.learningOutcomes?.map((outcome, index) => (
+                  <div key={index} className={styles.learningOutcome}>
+                    <h4 className={styles.learningHeader}>{outcome.header}</h4>
+                    <p className={styles.learningDescription}>{outcome.description}</p>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
         </div>
 
-        {experience.gifUrl && (
-          <div className={styles.gifContainer}>
-            <div className={styles.containerContent}>
-              <img 
-                src={experience.gifUrl} 
-                alt={`${experience.company} demo`} 
-                className={styles.gif}
-              />
+        <div className={styles.rightContent}>
+          {experience.gifUrl && (
+            <div className={styles.gifContainer}>
+              <div className={styles.containerContent}>
+                <img 
+                  src={experience.gifUrl} 
+                  alt={`${experience.company} demo`} 
+                  className={styles.gif}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+          
+          {experience.extraImages && experience.extraImages.length > 0 && (
+            <div className={styles.extraImagesContainer}>
+              {experience.extraImages.map((imageUrl, index) => (
+                <div key={index} className={styles.imageContainer}>
+                  <div className={styles.containerContent}>
+                    <img 
+                      src={imageUrl} 
+                      alt={`${experience.company} additional view ${index + 1}`} 
+                      className={styles.extraImage}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
