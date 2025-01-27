@@ -220,8 +220,8 @@ export default function AdminDashboard() {
       role: item.role || '',
       description: item.description || '',
       shortDesc: item.shortDesc || '',
-      githubUrl: item.githubUrl || '',
-      liveUrl: item.liveUrl || '',
+      githubUrl: item.githubUrl || '',  // Ensure we don't pass null
+      liveUrl: item.liveUrl || '',      // Ensure we don't pass null
       technologies: Array.isArray(item.technologies) ? item.technologies.join(', ') : '',
       learningOutcomes: Array.isArray(item.learningOutcomes) 
         ? item.learningOutcomes.map(outcome => ({
@@ -234,6 +234,8 @@ export default function AdminDashboard() {
       dateRange: item.dateRange || '',
       published: Boolean(item.published)
     };
+
+    console.log('Setting form data:', formData); // Debug log
 
     if (activeTab === 'projects') {
       setProjectForm(formData);
@@ -330,8 +332,10 @@ export default function AdminDashboard() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData();
     const currentForm = activeTab === 'projects' ? projectForm : experienceForm;
+    
+    // Create form data
+    const formData = new FormData();
     
     // Handle basic fields
     formData.append('name', currentForm.name);
@@ -341,8 +345,9 @@ export default function AdminDashboard() {
     formData.append('dateRange', currentForm.dateRange);
     formData.append('published', String(currentForm.published));
     
-    if (currentForm.githubUrl) formData.append('githubUrl', currentForm.githubUrl);
-    if (currentForm.liveUrl) formData.append('liveUrl', currentForm.liveUrl);
+    // Handle URLs - send null if empty
+    formData.append('githubUrl', currentForm.githubUrl || '');
+    formData.append('liveUrl', currentForm.liveUrl || '');
 
     // Handle technologies
     formData.append('technologies', JSON.stringify(
@@ -356,7 +361,9 @@ export default function AdminDashboard() {
       currentForm.learningOutcomes
         .filter(lo => lo.header.trim() && lo.description.trim())
         .map((lo, index) => ({
-          ...lo,
+          id: lo.id,
+          header: lo.header.trim(),
+          description: lo.description.trim(),
           position: index
         }))
     ));
@@ -371,6 +378,16 @@ export default function AdminDashboard() {
 
     try {
       const url = `http://localhost:3001/api/${activeTab}${editingItem ? `/${editingItem.id}` : ''}`;
+      
+      // Log the form data for debugging
+      console.log('Form data being sent:', {
+        name: currentForm.name,
+        role: currentForm.role,
+        githubUrl: currentForm.githubUrl,
+        liveUrl: currentForm.liveUrl,
+        // ... other fields
+      });
+
       const res = await fetch(url, {
         method: editingItem ? 'PUT' : 'POST',
         headers: {

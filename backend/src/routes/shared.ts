@@ -42,7 +42,9 @@ export async function handleEntityUpdate(
     technologies,
     learningOutcomes,
     dateRange,
-    published
+    published,
+    githubUrl,
+    liveUrl
   } = req.body;
 
   if (!name) {
@@ -59,6 +61,8 @@ export async function handleEntityUpdate(
     role: role || '',
     description: description || '',
     shortDesc: shortDesc || '',
+    githubUrl: githubUrl || null,
+    liveUrl: liveUrl || null,
     technologies: technologies ? JSON.parse(technologies) : [],
     dateRange: dateRange || '',
     published: Boolean(published)
@@ -136,7 +140,9 @@ export async function handleEntityCreate(
     technologies,
     learningOutcomes,
     dateRange,
-    published
+    published,
+    githubUrl,
+    liveUrl
   } = req.body;
 
   // Validate required fields
@@ -182,6 +188,8 @@ export async function handleEntityCreate(
         shortDesc: shortDesc || '',
         imageUrl,
         gifUrl,
+        githubUrl: githubUrl || null,
+        liveUrl: liveUrl || null,
         technologies: technologies ? JSON.parse(technologies) : [],
         learningOutcomes: {
           create: parsedOutcomes
