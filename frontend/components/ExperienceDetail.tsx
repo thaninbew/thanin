@@ -107,7 +107,6 @@ export default function ExperienceDetail({ experience }: Props) {
 
       <div className={styles.technologiesContainer}>
         <div className={styles.containerContent}>
-          <h3 className={styles.sectionTitle}>Technologies</h3>
           <div className={styles.tags}>
             {experience.technologies.map((tech, index) => (
               <span 
