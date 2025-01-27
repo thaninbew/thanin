@@ -7,8 +7,10 @@ import { useState, useEffect } from 'react';
 import ColorThief from 'colorthief/dist/color-thief.mjs';
 
 interface LearningOutcome {
+  id?: string;
   header: string;
   description: string;
+  position: number;
 }
 
 interface Project {

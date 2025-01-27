@@ -6,19 +6,23 @@ import { useState, useEffect } from 'react';
 import ColorThief from 'colorthief';
 
 interface LearningOutcome {
+  id?: string;
   header: string;
   description: string;
+  position: number;
 }
 
 interface Experience {
   id: string;
-  company: string;
+  name: string;
   role: string;
   description: string;
   shortDesc: string;
   imageUrl?: string;
   gifUrl?: string;
   extraImages?: string[];
+  githubUrl?: string;
+  liveUrl?: string;
   technologies: string[];
   learningOutcomes: LearningOutcome[];
   dateRange: string;
@@ -87,12 +91,12 @@ export default function ExperienceDetail({ experience }: Props) {
               {experience.imageUrl && (
                 <img 
                   src={experience.imageUrl} 
-                  alt={experience.company} 
+                  alt={experience.name} 
                   className={styles.mainImage}
                 />
               )}
               <div className={styles.titleSection}>
-                <h1 className={styles.title}>{experience.company}</h1>
+                <h1 className={styles.title}>{experience.name}</h1>
                 <h2 className={styles.role}>{experience.role}</h2>
                 <p className={styles.dateRange}>{experience.dateRange}</p>
               </div>
@@ -148,7 +152,7 @@ export default function ExperienceDetail({ experience }: Props) {
               <div className={styles.containerContent}>
                 <img 
                   src={experience.gifUrl} 
-                  alt={`${experience.company} demo`} 
+                  alt={`${experience.name} demo`} 
                   className={styles.gif}
                 />
               </div>
@@ -162,7 +166,7 @@ export default function ExperienceDetail({ experience }: Props) {
                   <div className={styles.containerContent}>
                     <img 
                       src={imageUrl} 
-                      alt={`${experience.company} additional view ${index + 1}`} 
+                      alt={`${experience.name} additional view ${index + 1}`} 
                       className={styles.extraImage}
                     />
                   </div>
