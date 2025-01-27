@@ -213,12 +213,15 @@ export default function AdminDashboard() {
 
   const handleEditClick = (item: Item) => {
     setEditingItem(item);
-    const commonFields = {
-      name: item.name,
-      description: item.description,
-      shortDesc: item.shortDesc,
-      dateRange: item.dateRange,
-      published: item.published,
+    
+    // Convert array data to form format
+    const formData = {
+      name: item.name || '',
+      role: item.role || '',
+      description: item.description || '',
+      shortDesc: item.shortDesc || '',
+      githubUrl: item.githubUrl || '',
+      liveUrl: item.liveUrl || '',
       technologies: Array.isArray(item.technologies) ? item.technologies.join(', ') : '',
       learningOutcomes: Array.isArray(item.learningOutcomes) 
         ? item.learningOutcomes.map(outcome => ({
@@ -228,21 +231,16 @@ export default function AdminDashboard() {
             position: outcome.position
           }))
         : [],
-      githubUrl: item.githubUrl || '',
-      liveUrl: item.liveUrl || '',
+      dateRange: item.dateRange || '',
+      published: Boolean(item.published)
     };
 
-    if ('technologies' in item && Array.isArray(item.technologies)) {
-      setProjectForm({
-        ...commonFields,
-        role: item.role || '',
-      });
-    } else if ('role' in item) {
-      setExperienceForm({
-        ...commonFields,
-        role: item.role || '',
-      });
+    if (activeTab === 'projects') {
+      setProjectForm(formData);
+    } else {
+      setExperienceForm(formData);
     }
+    
     setIsModalOpen(true);
   };
 
@@ -337,47 +335,31 @@ export default function AdminDashboard() {
     
     // Handle basic fields
     formData.append('name', currentForm.name);
+    formData.append('role', currentForm.role);
     formData.append('description', currentForm.description);
     formData.append('shortDesc', currentForm.shortDesc);
     formData.append('dateRange', currentForm.dateRange);
-    // Only append published state if we're creating a new item or explicitly changing it
-    if (!editingItem || currentForm.published !== editingItem.published) {
-      formData.append('published', currentForm.published.toString());
-    }
+    formData.append('published', String(currentForm.published));
     
-    if (activeTab === 'experiences' || (activeTab === 'projects' && currentForm.role)) {
-      formData.append('role', currentForm.role);
-    }
-
     if (currentForm.githubUrl) formData.append('githubUrl', currentForm.githubUrl);
     if (currentForm.liveUrl) formData.append('liveUrl', currentForm.liveUrl);
 
-    const technologies = currentForm.technologies
-      .split(',')
-      .map(t => t.trim())
-      .filter(t => t.length > 0);
-    formData.append('technologies', JSON.stringify(technologies));
+    // Handle technologies
+    formData.append('technologies', JSON.stringify(
+      currentForm.technologies.split(',')
+        .map(t => t.trim())
+        .filter(t => t.length > 0)
+    ));
 
-    // Add learning outcomes as JSON string
-    if (activeTab === 'projects') {
-      formData.append('learningOutcomes', JSON.stringify(
-        projectForm.learningOutcomes
-          .filter(lo => lo.header.trim() && lo.description.trim())
-          .map((lo, index) => ({
-            ...lo,
-            position: index
-          }))
-      ));
-    } else {
-      formData.append('learningOutcomes', JSON.stringify(
-        experienceForm.learningOutcomes
-          .filter(lo => lo.header.trim() && lo.description.trim())
-          .map((lo, index) => ({
-            ...lo,
-            position: index
-          }))
-      ));
-    }
+    // Handle learning outcomes
+    formData.append('learningOutcomes', JSON.stringify(
+      currentForm.learningOutcomes
+        .filter(lo => lo.header.trim() && lo.description.trim())
+        .map((lo, index) => ({
+          ...lo,
+          position: index
+        }))
+    ));
 
     // Handle files
     if (imageFile) {
@@ -397,14 +379,17 @@ export default function AdminDashboard() {
         body: formData,
       });
 
-      if (!res.ok) throw new Error('Failed to save item');
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to save item');
+      }
       
       showNotification(`Item ${editingItem ? 'updated' : 'created'} successfully`, 'success');
       setIsModalOpen(false);
       resetForm();
       fetchItems();
     } catch (error) {
-      showNotification(`Error ${editingItem ? 'updating' : 'creating'} item`, 'error');
+      showNotification(`Error ${editingItem ? 'updating' : 'creating'} item: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
       console.error('Save error:', error);
     }
     setLoading(false);
@@ -414,32 +399,24 @@ export default function AdminDashboard() {
     setImageFile(null);
     setGifFile(null);
     setEditingItem(null);
+
+    const emptyForm = {
+      name: '',
+      role: '',
+      description: '',
+      shortDesc: '',
+      githubUrl: '',
+      liveUrl: '',
+      technologies: '',
+      learningOutcomes: [],
+      dateRange: '',
+      published: false,
+    };
+
     if (activeTab === 'projects') {
-      setProjectForm({
-        name: '',
-        role: '',
-        description: '',
-        shortDesc: '',
-        githubUrl: '',
-        liveUrl: '',
-        technologies: '',
-        learningOutcomes: [], // Reset to empty array
-        dateRange: '',
-        published: false,
-      });
+      setProjectForm(emptyForm);
     } else {
-      setExperienceForm({
-        name: '',
-        role: '',
-        description: '',
-        shortDesc: '',
-        githubUrl: '',
-        liveUrl: '',
-        technologies: '',
-        learningOutcomes: [], // Reset to empty array
-        dateRange: '',
-        published: false,
-      });
+      setExperienceForm(emptyForm);
     }
   };
 
@@ -500,15 +477,15 @@ export default function AdminDashboard() {
                       checked={item.published}
                       onChange={async () => {
                         try {
-                          const formData = new FormData();
-                          formData.append('published', (!item.published).toString());
-                          
                           const res = await fetch(`http://localhost:3001/api/${activeTab}/${item.id}`, {
                             method: 'PUT',
                             headers: {
+                              'Content-Type': 'application/json',
                               Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
                             },
-                            body: formData,
+                            body: JSON.stringify({
+                              published: !item.published
+                            }),
                           });
 
                           if (!res.ok) throw new Error('Failed to update published state');

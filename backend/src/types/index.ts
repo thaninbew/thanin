@@ -1,31 +1,38 @@
-export interface User {
-    id: number;
-    username: string;
-    password: string;
-  }
-  
-  export interface Project {
-    id: number;
-    name: string;
-    positions: string;
-    description: string;
-    githubLink?: string;
-    liveLink?: string;
-    technologies: string;
-    skills: string;
-    starredSkills?: string;
-    images?: string;
-  }
-  
-  export interface Experience {
-    id: number;
-    companyName: string;
-    positions: string;
-    location?: string;
-    description?: string;
-    startDate: Date;
-    endDate?: Date;
-    technologies?: string;
-    skills?: string;
-  }
+interface LearningOutcome {
+  id?: string;
+  header: string;
+  description: string;
+  position: number;
+  projectId?: string;
+  experienceId?: string;
+}
+
+interface BaseEntity {
+  id: string;
+  name: string;
+  role?: string;
+  description: string;
+  shortDesc: string;
+  imageUrl?: string;
+  gifUrl?: string;
+  extraImages?: string[];
+  githubUrl?: string;
+  liveUrl?: string;
+  technologies: string[];
+  learningOutcomes: LearningOutcome[];
+  dateRange: string;
+  position: number;
+  published: boolean;
+  updatedAt: string;
+}
+
+interface Project extends BaseEntity {
+  // Project-specific fields if needed
+}
+
+interface Experience extends BaseEntity {
+  role: string; // Required for Experience
+}
+
+export type { LearningOutcome, BaseEntity, Project, Experience };
   
