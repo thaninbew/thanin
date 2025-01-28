@@ -124,7 +124,7 @@ export default function ExperienceDetail({ experience }: Props) {
                   style={{ borderColor: textColor + '20' }}
                 >
                   <FaExternalLinkAlt size={20} />
-                  <span>Experience Link</span>
+                  <span>Link</span>
                 </a>
               )}
             </div>
