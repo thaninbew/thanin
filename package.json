@@ -20,7 +20,8 @@
     "start:backend": "cd backend && npm run start",
     "dev": "concurrently \"npm run dev:frontend\" \"npm dev:backend\"",
     "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && npm run dev"
+    "dev:backend": "cd backend && npm run dev",
+    "db:migrate": "cd backend && npm run db:migrate"
   },
   "devDependencies": {
     "css-loader": "^7.1.2",
