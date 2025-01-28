@@ -9,6 +9,7 @@ import projectRoutes from './routes/projects';
 import experienceRoutes from './routes/experiences';
 import contactRouter from './routes/contact';
 import healthRouter from './routes/health';
+import { Request, Response } from 'express';
 
 dotenv.config();
 
@@ -48,6 +49,11 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
     memoryUsage: process.memoryUsage()
   });
+});
+
+// Add basic root route
+app.get('/', (_req: express.Request, res: express.Response) => {
+  res.send('Backend running');
 });
 
 // Routes
