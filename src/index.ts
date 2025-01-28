@@ -29,10 +29,7 @@ app.use(limiter);
 // Use helmet for security headers
 app.use(helmet());
 
-app.use(cors({
-  origin: '*'
-}));
-
+app.use(cors());
 app.use(express.json());
 
 // Health check route with basic system info
