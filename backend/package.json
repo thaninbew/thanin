@@ -9,7 +9,7 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "heroku-postbuild": "npm run build && npm run db:migrate"
+    "heroku-postbuild": "npm install && npm run build && prisma generate && prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",
@@ -49,5 +49,8 @@
   "engines": {
     "node": "18.x",
     "npm": "9.x"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
   }
 }
