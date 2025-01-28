@@ -1,53 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model Project {
-  id          String   @id @default(uuid())
-  name        String
-  role        String?
-  description String
-  shortDesc   String
-  imageUrl    String?
-  gifUrl      String?
-  extraImages String[]
-  githubUrl   String?
-  liveUrl     String?
-  technologies String[]
+  id               String            @id @default(uuid())
+  name             String
+  description      String
+  shortDesc        String
+  imageUrl         String?
+  githubUrl        String?
+  liveUrl          String?
+  technologies     String[]
+  dateRange        String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  position         Int               @default(0)
+  published        Boolean           @default(false)
+  gifUrl           String?
+  role             String?
+  extraImages      String[]
   learningOutcomes LearningOutcome[]
-  dateRange   String
-  position    Int      @default(0)
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
   @@index([position])
   @@index([published])
 }
 
 model Experience {
-  id          String   @id @default(uuid())
-  name        String
-  role        String
-  description String
-  shortDesc   String
-  imageUrl    String?
-  gifUrl      String?
-  extraImages String[]
-  githubUrl   String?
-  liveUrl     String?
-  technologies String[]
+  id               String            @id @default(uuid())
+  name             String
+  role             String
+  description      String
+  shortDesc        String
+  imageUrl         String?
+  dateRange        String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  position         Int               @default(0)
+  published        Boolean           @default(false)
+  gifUrl           String?
+  githubUrl        String?
+  liveUrl          String?
+  technologies     String[]
+  extraImages      String[]
   learningOutcomes LearningOutcome[]
-  dateRange   String
-  position    Int      @default(0)
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
   @@index([position])
   @@index([published])
@@ -73,14 +73,14 @@ model Admin {
 }
 
 model LearningOutcome {
-  id          String   @id @default(uuid())
-  header      String
-  description String
-  projectId   String?
-  project     Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  id           String      @id @default(uuid())
+  header       String
+  description  String
+  projectId    String?
   experienceId String?
-  experience  Experience? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
-  position    Int      @default(0)
+  position     Int         @default(0)
+  experience   Experience? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  project      Project?    @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@index([position])
   @@index([projectId])
