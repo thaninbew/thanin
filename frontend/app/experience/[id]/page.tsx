@@ -1,15 +1,23 @@
+import { Metadata } from 'next';
 import ExperienceDetail from '../../../components/ExperienceDetail';
+
+interface LearningOutcome {
+  id: string;
+  header: string;
+  description: string;
+  position: number;
+}
 
 interface Experience {
   id: string;
-  company: string;
+  name: string;
   role: string;
   description: string;
   shortDesc: string;
   imageUrl?: string;
   gifUrl?: string;
   technologies: string[];
-  learningOutcomes: string[];
+  learningOutcomes: LearningOutcome[];
   dateRange: string;
   position: number;
   published: boolean;
@@ -27,7 +35,23 @@ async function getExperience(id: string) {
   return res.json();
 }
 
-export default async function ExperiencePage({ params }: { params: { id: string } }) {
+export async function generateMetadata(
+  { params }: { params: { id: string } }
+): Promise<Metadata> {
+  const experience = await getExperience(params.id);
+  
+  return {
+    title: `${experience.role} at ${experience.name}`,
+    description: experience.shortDesc,
+  };
+}
+
+type Props = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default async function ExperiencePage({ params, searchParams }: Props) {
   const experience: Experience = await getExperience(params.id);
   return <ExperienceDetail experience={experience} />;
 } 

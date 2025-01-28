@@ -1,5 +1,14 @@
 import ProjectDetail from '../../../components/ProjectDetail';
 
+interface LearningOutcome {
+  id?: string;
+  header: string;
+  description: string;
+  position: number;
+  projectId?: string;
+  experienceId?: string;
+}
+
 interface Project {
   id: string;
   name: string;
@@ -8,13 +17,15 @@ interface Project {
   shortDesc: string;
   imageUrl?: string;
   gifUrl?: string;
+  extraImages?: string[];
   githubUrl?: string;
   liveUrl?: string;
   technologies: string[];
-  learningOutcomes: string[];
+  learningOutcomes: LearningOutcome[];
   dateRange: string;
   position: number;
   published: boolean;
+  updatedAt: string;
 }
 
 async function getProject(id: string) {

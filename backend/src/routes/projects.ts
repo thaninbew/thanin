@@ -35,14 +35,18 @@ router.post('/',
     { name: 'image', maxCount: 1 },
     { name: 'gif', maxCount: 1 }
   ]),
-  asyncHandler(async (req, res) => handleEntityCreate(req, res, 'project'))
+  asyncHandler(async (req, res) => {
+    await handleEntityCreate(req, res, 'project')
+  })
 );
 
 // Reorder projects - must come before /:id routes
 router.put('/reorder',
   authenticateToken,
   requireAdmin,
-  asyncHandler(async (req, res) => handleReorder(req, res, 'project'))
+  asyncHandler(async (req, res) => {
+    await handleReorder(req, res, 'project')
+  })
 );
 
 // Get single project
@@ -57,7 +61,8 @@ router.get('/:id', asyncHandler(async (req, res) => {
   });
   
   if (!project) {
-    return res.status(404).json({ error: 'Project not found' });
+    res.status(404).json({ error: 'Project not found' })
+    return;
   }
   
   res.json(project);
@@ -71,7 +76,9 @@ router.put('/:id',
     { name: 'image', maxCount: 1 },
     { name: 'gif', maxCount: 1 }
   ]),
-  asyncHandler(async (req, res) => handleEntityUpdate(req, res, 'project'))
+  asyncHandler(async (req, res) => {
+    await handleEntityUpdate(req, res, 'project')
+  })
 );
 
 // Delete project

@@ -21,7 +21,8 @@ router.post('/', asyncHandler(async (req, res) => {
 
   // Validate input
   if (!name || !email || !message) {
-    return res.status(400).json({ error: 'All fields are required' });
+    res.status(400).json({ error: 'All fields are required' })
+    return;
   }
 
   try {

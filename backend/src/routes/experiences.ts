@@ -35,14 +35,18 @@ router.post('/',
     { name: 'image', maxCount: 1 },
     { name: 'gif', maxCount: 1 }
   ]),
-  asyncHandler(async (req, res) => handleEntityCreate(req, res, 'experience'))
+  asyncHandler(async (req, res) => {
+    await handleEntityCreate(req, res, 'experience');
+  })
 );
 
 // Reorder experiences - must come before /:id routes
 router.put('/reorder',
   authenticateToken,
   requireAdmin,
-  asyncHandler(async (req, res) => handleReorder(req, res, 'experience'))
+  asyncHandler(async (req, res) => {
+    await handleReorder(req, res, 'experience');
+  })
 );
 
 // Get single experience
@@ -57,7 +61,8 @@ router.get('/:id', asyncHandler(async (req, res) => {
   });
   
   if (!experience) {
-    return res.status(404).json({ error: 'Experience not found' });
+    res.status(404).json({ error: 'Experience not found' });
+    return;
   }
   
   res.json(experience);
@@ -71,7 +76,9 @@ router.put('/:id',
     { name: 'image', maxCount: 1 },
     { name: 'gif', maxCount: 1 }
   ]),
-  asyncHandler(async (req, res) => handleEntityUpdate(req, res, 'experience'))
+  asyncHandler(async (req, res) => {
+    await handleEntityUpdate(req, res, 'experience');
+  })
 );
 
 // Delete experience
