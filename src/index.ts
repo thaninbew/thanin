@@ -29,14 +29,8 @@ app.use(limiter);
 // Use helmet for security headers
 app.use(helmet());
 
-// CORS configuration
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://thaninbew.dev'] 
-    : 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  origin: '*'
 }));
 
 app.use(express.json());
