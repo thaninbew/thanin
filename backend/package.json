@@ -45,5 +45,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
+  }
 }
