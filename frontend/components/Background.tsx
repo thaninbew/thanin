@@ -4,19 +4,19 @@ import styles from '../styles/Background.module.css';
 const BackgroundLayers: React.FC = () => {
   return (
     <div className={styles.backgroundLayer}>
-      {/* Layer 1: Video Background */}
+      {/* Layer 1: video Background */}
       <video
         className={styles.backgroundVideo}
         autoPlay
         muted
         loop
-        src="/videos/bgloop.mp4" /* Replace with your video path */
+        src="https://res.cloudinary.com/dez4qkb8z/video/upload/v1738030613/bgloop_kjjfvz.mp4" 
       ></video>
 
-      {/* Layer 2: Radial Gradient with 20% Fill and Blur */}
+      {/* Layer 2: radial gradient with 20% fill & blur */}
       <div className={styles.middleLayer}></div>
 
-      {/* Layer 3: Transparent Layer with Both Blurs */}
+      {/* Layer 3: transparent layer with both blurs */}
       <div className={styles.topLayer}></div>
     </div>
   );

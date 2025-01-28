@@ -4,6 +4,7 @@ import styles from '../styles/DetailPage.module.css';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import ColorThief from 'colorthief';
+import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 
 interface LearningOutcome {
   id?: string;
@@ -100,6 +101,32 @@ export default function ExperienceDetail({ experience }: Props) {
                 <h2 className={styles.role}>{experience.role}</h2>
                 <p className={styles.dateRange}>{experience.dateRange}</p>
               </div>
+            </div>
+            <div className={styles.links}>
+              {experience.githubUrl && (
+                <a 
+                  href={experience.githubUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={styles.link}
+                  style={{ borderColor: textColor + '20' }}
+                >
+                  <FaGithub size={24} />
+                  <span>View on GitHub</span>
+                </a>
+              )}
+              {experience.liveUrl && (
+                <a 
+                  href={experience.liveUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={styles.link}
+                  style={{ borderColor: textColor + '20' }}
+                >
+                  <FaExternalLinkAlt size={20} />
+                  <span>Experience Link</span>
+                </a>
+              )}
             </div>
           </div>
         </div>

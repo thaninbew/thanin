@@ -191,7 +191,9 @@ const Overlay = forwardRef((props, ref) => {
           <div className={styles.radioSection}>
             <div className={styles.sectionLabel}>Thanin's Radio</div>
             <div className={styles.radioContent}>
-              <div className={styles.imagePlaceholder}></div>
+              <div className={styles.imagePlaceholder}>
+                <img src="https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg"/>
+              </div>
               <h4 className={styles.songName}>Portfolio</h4>
               <p className={styles.artistName}>Thanin Kongkiatsophon</p>
               <About 

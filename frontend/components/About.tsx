@@ -305,7 +305,9 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
           </div>
         </div>
         {showImagePlaceholder && (
-          <div className={styles.expandedImagePlaceholder}></div>
+          <div className={styles.expandedImagePlaceholder}>
+            <img src= "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg"/>
+          </div>
         )}
       </div>
       <div className={`${styles.experiencesWrapper} ${showExperiences ? styles.visible : ''}`}>
