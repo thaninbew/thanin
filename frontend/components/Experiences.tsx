@@ -30,7 +30,8 @@ export default function Experiences() {
   useEffect(() => {
     const fetchExperiences = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/experiences');
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        const res = await fetch(`${backendUrl}/api/experiences`);
         if (!res.ok) throw new Error('Failed to fetch experiences');
         const data = await res.json();
         const publishedExperiences = data

@@ -24,7 +24,8 @@ interface Experience {
 }
 
 async function getExperience(id: string) {
-  const res = await fetch(`http://localhost:3001/api/experiences/${id}`, {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const res = await fetch(`${backendUrl}/api/experiences/${id}`, {
     next: { revalidate: 60 }
   });
   

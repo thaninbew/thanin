@@ -30,7 +30,8 @@ export default function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/projects');
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        const res = await fetch(`${backendUrl}/api/projects`);
         if (!res.ok) throw new Error('Failed to fetch projects');
         const data = await res.json();
         const publishedProjects = data

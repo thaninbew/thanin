@@ -29,7 +29,8 @@ interface Project {
 }
 
 async function getProject(id: string) {
-  const res = await fetch(`http://localhost:3001/api/projects/${id}`, {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const res = await fetch(`${backendUrl}/api/projects/${id}`, {
     next: { revalidate: 60 }
   });
   
