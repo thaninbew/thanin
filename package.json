@@ -9,7 +9,7 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "heroku-postbuild": "npm install && npm run build && prisma generate && prisma migrate deploy",
+    "heroku-postbuild": "npm install --include=dev && npm run build && prisma generate && prisma migrate deploy",
     "prisma": "prisma"
   },
   "dependencies": {
@@ -28,7 +28,8 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.10.0",
-    "prisma": "^6.2.1"
+    "prisma": "^6.2.1",
+    "typescript": "^5.3.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
