@@ -140,6 +140,7 @@
   align-self: flex-start;
   margin-left: 0.5rem;
   margin-bottom: -0.5rem;
+  text-align: left;
 }
 
 .playerSubtitle {
@@ -148,6 +149,7 @@
   margin: 0;
   align-self: flex-start;
   margin-left: 0.5rem;
+  text-align: left;
 }
 
 .playerControls {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import styles from '../styles/Frame.module.css';
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 import { 
@@ -12,124 +12,6 @@ import {
 
 const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  // Handle scroll progress
-  const handleScroll = useCallback(() => {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollTop = window.scrollY;
-    const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
-    setScrollProgress(Math.min(scrollPercent, 100));
-  }, []);
-
-  // Auto-scroll functionality with smoother scrolling
-  useEffect(() => {
-    let scrollInterval: NodeJS.Timeout;
-    const scrollStep = 2; // Increased scroll step for smoother movement
-
-    if (isPlaying) {
-      scrollInterval = setInterval(() => {
-        const windowHeight = window.innerHeight;
-        const documentHeight = document.documentElement.scrollHeight;
-        const currentScroll = window.scrollY;
-
-        // Check if we're near the bottom
-        if (windowHeight + currentScroll >= documentHeight - 10) {
-          setIsPlaying(false);
-          return;
-        }
-
-        window.scrollBy({
-          top: scrollStep,
-          behavior: 'auto' // Changed to auto for smoother continuous scrolling
-        });
-      }, 20); // Decreased interval for smoother animation
-    }
-
-    return () => {
-      if (scrollInterval) {
-        clearInterval(scrollInterval);
-      }
-    };
-  }, [isPlaying]);
-
-  // Track scroll progress
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial calculation
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [handleScroll]);
-
-  // Navigation functions
-  const scrollToNextSection = () => {
-    const sections = Array.from(document.querySelectorAll('section, [data-section]'));
-    const currentScroll = window.scrollY;
-    const windowHeight = window.innerHeight;
-    
-    // Find the next section
-    for (let i = 0; i < sections.length; i++) {
-      const rect = sections[i].getBoundingClientRect();
-      if (rect.top > 10) { // Small offset to handle rounding
-        window.scrollTo({
-          top: currentScroll + rect.top,
-          behavior: 'smooth'
-        });
-        return;
-      }
-    }
-    
-    // If no next section found, scroll one viewport height
-    window.scrollTo({
-      top: currentScroll + windowHeight,
-      behavior: 'smooth'
-    });
-  };
-
-  const scrollToPrevSection = () => {
-    const sections = Array.from(document.querySelectorAll('section, [data-section]'));
-    const currentScroll = window.scrollY;
-    const windowHeight = window.innerHeight;
-    let prevSectionTop = 0;
-    
-    // Find the previous section
-    for (let i = 0; i < sections.length; i++) {
-      const rect = sections[i].getBoundingClientRect();
-      if (rect.top >= -10) { // Small offset to handle rounding
-        window.scrollTo({
-          top: currentScroll + prevSectionTop,
-          behavior: 'smooth'
-        });
-        return;
-      }
-      prevSectionTop = rect.top;
-    }
-    
-    // If no previous section found, scroll one viewport height up
-    window.scrollTo({
-      top: Math.max(0, currentScroll - windowHeight),
-      behavior: 'smooth'
-    });
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-    setIsPlaying(false);
-  };
-
-  const scrollToBottom = () => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight - window.innerHeight,
-      behavior: 'smooth'
-    });
-    setIsPlaying(false);
-  };
 
   return (
     <div className={styles.frameContainer}>
@@ -166,15 +48,13 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className={styles.playerControls}>
           <button 
             className={styles.controlButton} 
-            onClick={scrollToTop}
-            title="Skip to start"
+            title="Previous track"
           >
             <IoPlaySkipBackOutline size={28} />
           </button>
           <button 
             className={styles.controlButton} 
-            onClick={scrollToPrevSection}
-            title="Previous section"
+            title="Rewind"
           >
             <IoPlayBackOutline size={28} />
           </button>
@@ -190,15 +70,13 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </button>
           <button 
             className={styles.controlButton} 
-            onClick={scrollToNextSection}
-            title="Next section"
+            title="Fast forward"
           >
             <IoPlayForwardOutline size={28} />
           </button>
           <button 
             className={styles.controlButton} 
-            onClick={scrollToBottom}
-            title="Skip to end"
+            title="Next track"
           >
             <IoPlaySkipForwardOutline size={28} />
           </button>
@@ -206,7 +84,7 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className={styles.progressBar}>
           <div 
             className={styles.progress} 
-            style={{ width: `${scrollProgress}%` }}
+            style={{ width: "0%" }}
           />
         </div>
       </div>
