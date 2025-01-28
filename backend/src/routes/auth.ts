@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
+import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -73,5 +74,10 @@ router.post('/login', asyncHandler(async (req, res) => {
 
   res.json({ token, isAdmin: true });
 }));
+
+// Logout
+router.post('/logout', authenticateToken, (req, res) => {
+  res.json({ message: 'Logged out successfully' });
+});
 
 export default router;

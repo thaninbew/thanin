@@ -75,6 +75,8 @@ interface ExperienceForm {
   published: boolean;
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 export default function AdminDashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'projects' | 'experiences'>('projects');
@@ -136,8 +138,8 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       const [projectsRes, experiencesRes] = await Promise.all([
-        fetch('http://localhost:3001/api/projects'),
-        fetch('http://localhost:3001/api/experiences'),
+        fetch(`${API_BASE_URL}/api/projects`),
+        fetch(`${API_BASE_URL}/api/experiences`),
       ]);
 
       const projectsData = await projectsRes.json();
@@ -174,7 +176,7 @@ export default function AdminDashboard() {
       const orderedIds = newItems.map(item => item.id);
       console.log('Attempting to reorder with IDs:', orderedIds);
 
-      const res = await fetch(`http://localhost:3001/api/${activeTab}/reorder`, {
+      const res = await fetch(`${API_BASE_URL}/api/${activeTab}/reorder`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -255,7 +257,7 @@ export default function AdminDashboard() {
     if (!itemToDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:3001/api/${activeTab}/${itemToDelete}`, {
+      const res = await fetch(`${API_BASE_URL}/api/${activeTab}/${itemToDelete}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
@@ -377,17 +379,8 @@ export default function AdminDashboard() {
     }
 
     try {
-      const url = `http://localhost:3001/api/${activeTab}${editingItem ? `/${editingItem.id}` : ''}`;
+      const url = `${API_BASE_URL}/api/${activeTab}${editingItem ? `/${editingItem.id}` : ''}`;
       
-      // Log the form data for debugging
-      console.log('Form data being sent:', {
-        name: currentForm.name,
-        role: currentForm.role,
-        githubUrl: currentForm.githubUrl,
-        liveUrl: currentForm.liveUrl,
-        // ... other fields
-      });
-
       const res = await fetch(url, {
         method: editingItem ? 'PUT' : 'POST',
         headers: {
@@ -398,6 +391,10 @@ export default function AdminDashboard() {
 
       if (!res.ok) {
         const error = await res.json();
+        if (res.status === 401) {
+          router.push('/admin/login');
+          return;
+        }
         throw new Error(error.error || 'Failed to save item');
       }
       
@@ -407,7 +404,6 @@ export default function AdminDashboard() {
       fetchItems();
     } catch (error) {
       showNotification(`Error ${editingItem ? 'updating' : 'creating'} item: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
-      console.error('Save error:', error);
     }
     setLoading(false);
   };
@@ -494,7 +490,7 @@ export default function AdminDashboard() {
                       checked={item.published}
                       onChange={async () => {
                         try {
-                          const res = await fetch(`http://localhost:3001/api/${activeTab}/${item.id}`, {
+                          const res = await fetch(`${API_BASE_URL}/api/${activeTab}/${item.id}`, {
                             method: 'PUT',
                             headers: {
                               'Content-Type': 'application/json',

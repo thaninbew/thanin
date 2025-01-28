@@ -25,6 +25,9 @@ model Project {
   published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([position])
+  @@index([published])
 }
 
 model Experience {
@@ -45,6 +48,9 @@ model Experience {
   published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([position])
+  @@index([published])
 }
 
 model Message {
@@ -53,6 +59,8 @@ model Message {
   email     String
   content   String
   createdAt DateTime @default(now())
+
+  @@index([createdAt])
 }
 
 model Admin {
@@ -60,6 +68,8 @@ model Admin {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
+
+  @@index([email])
 }
 
 model LearningOutcome {
@@ -71,6 +81,10 @@ model LearningOutcome {
   experienceId String?
   experience  Experience? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
   position    Int      @default(0)
+
+  @@index([position])
+  @@index([projectId])
+  @@index([experienceId])
 }
 
 model ContactSubmission {
@@ -79,4 +93,7 @@ model ContactSubmission {
   email     String
   message   String
   createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([email])
 }

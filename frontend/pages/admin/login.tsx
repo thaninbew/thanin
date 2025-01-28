@@ -2,16 +2,22 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from '../../styles/Admin.module.css';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+
     try {
-      const res = await fetch('http://localhost:3001/api/auth/login', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,7 +26,10 @@ export default function AdminLogin() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to login');
+      }
 
       if (data.token && data.isAdmin) {
         localStorage.setItem('adminToken', data.token);
@@ -28,8 +37,10 @@ export default function AdminLogin() {
       } else {
         setError('Unauthorized access');
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to login');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to login');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -46,6 +57,7 @@ export default function AdminLogin() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
         <div className={styles.formGroup}>
@@ -56,10 +68,15 @@ export default function AdminLogin() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
-        <button type="submit" className={styles.button}>
-          Login
+        <button 
+          type="submit" 
+          className={styles.button}
+          disabled={loading}
+        >
+          {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
     </div>

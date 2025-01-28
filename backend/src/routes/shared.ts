@@ -222,45 +222,60 @@ export async function handleReorder(
   const { orderedIds } = req.body;
 
   if (!Array.isArray(orderedIds)) {
-    return res.status(400).json({ error: 'orderedIds must be an array' });
+    return res.status(400).json({ 
+      error: 'Invalid request format',
+      details: 'orderedIds must be an array'
+    });
   }
 
   try {
-    // First verify all IDs exist
-    const existingEntities = await (prisma[entityType] as any).findMany({
-      where: { id: { in: orderedIds } },
-      select: { id: true }
-    });
-
-    if (existingEntities.length !== orderedIds.length) {
-      return res.status(400).json({ 
-        error: `Some ${entityType} IDs do not exist` 
+    // Perform all operations in a transaction
+    const result = await prisma.$transaction(async (tx) => {
+      // First verify all IDs exist
+      const existingEntities = await (tx as any)[entityType].findMany({
+        where: { id: { in: orderedIds } },
+        select: { id: true }
       });
-    }
 
-    // Update positions in a transaction to ensure consistency
-    await prisma.$transaction(
-      orderedIds.map((id: string, index: number) =>
-        (prisma[entityType] as any).update({
-          where: { id },
-          data: { position: index }
-        })
-      )
-    );
+      const existingIds = new Set(existingEntities.map((e: { id: string }) => e.id));
+      const missingIds = orderedIds.filter(id => !existingIds.has(id));
 
-    // Return the updated list
-    const updatedEntities = await (prisma[entityType] as any).findMany({
-      orderBy: { position: 'asc' },
-      include: {
-        learningOutcomes: {
-          orderBy: { position: 'asc' }
-        }
+      if (missingIds.length > 0) {
+        throw new Error(`Invalid ${entityType} IDs: ${missingIds.join(', ')}`);
       }
+
+      // Update positions
+      await Promise.all(
+        orderedIds.map((id: string, index: number) =>
+          (tx as any)[entityType].update({
+            where: { id },
+            data: { position: index }
+          })
+        )
+      );
+
+      // Return the updated list
+      return await (tx as any)[entityType].findMany({
+        orderBy: { position: 'asc' },
+        include: {
+          learningOutcomes: {
+            orderBy: { position: 'asc' }
+          }
+        }
+      });
     });
 
-    return res.json(updatedEntities);
+    return res.json(result);
   } catch (error) {
     console.error(`Error reordering ${entityType}s:`, error);
-    return res.status(500).json({ error: `Failed to reorder ${entityType}s` });
+    if (error instanceof Error) {
+      return res.status(400).json({ 
+        error: `Failed to reorder ${entityType}s`,
+        details: error.message
+      });
+    }
+    return res.status(500).json({ 
+      error: `Internal server error while reordering ${entityType}s`
+    });
   }
 } 
