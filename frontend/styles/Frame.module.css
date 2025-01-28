@@ -6,17 +6,16 @@
 
 .header {
   width: 100%;
-  height: 4.0625rem; /* 65px, increased by 1.3x */
+  height: 4.0625rem;
   border-bottom: 1px solid black;
-  background-color: rgba(255, 255, 255, 0.75); /* 75% white fill */
+  background-color: rgba(255, 255, 255, 0.75);
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 1.625rem; /* 26px, increased by 1.3x */
-  z-index: 10; /* Ensure header is above everything */
-  position: fixed; /* Keep header fixed at the top */
+  z-index: 10;
+  position: fixed;
   top: 0;
-  gap: 1rem;
+  padding-right: 3rem;
 }
 
 .footer {
@@ -27,6 +26,12 @@
   z-index: 10; /* Ensure footer is above everything */
   position: fixed; /* Keep footer fixed at the bottom */
   bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem;
+  gap: 0.5rem;
 }
 
 .iconLink {
@@ -49,4 +54,57 @@
 .icon {
   width: 1.625rem; /* 26px, increased by 1.3x */
   height: 1.625rem; /* 26px, increased by 1.3x */
+}
+
+.playerControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.controlButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+.controlButton:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.playButton {
+  width: 2rem;
+  height: 2rem;
+  padding: 0.25rem;
+}
+
+.progressBar {
+  width: 100%;
+  height: 4px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: black;
+  transition: width 0.3s ease;
+}
+
+.iconContainer {
+  display: flex;
+  gap: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  backdrop-filter: blur(5px);
 }
