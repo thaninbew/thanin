@@ -153,6 +153,7 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
   // Add Konami code detection
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
+      if (!event.key) return; // Add null check for event.key
       const key = event.key.toLowerCase();
       
       // Prevent default behavior for arrow keys

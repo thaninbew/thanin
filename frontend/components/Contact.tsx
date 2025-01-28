@@ -59,6 +59,11 @@ const Contact: React.FC = () => {
     email: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -67,10 +72,40 @@ const Contact: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log(formData);
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+
+    try {
+      const response = await fetch('http://localhost:3001/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      // Clear form on success
+      setFormData({ name: '', email: '', message: '' });
+      setSubmitStatus({
+        type: 'success',
+        message: 'Message sent successfully! I will get back to you soon.'
+      });
+    } catch (error) {
+      setSubmitStatus({
+        type: 'error',
+        message: error instanceof Error ? error.message : 'Failed to send message'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -98,6 +133,11 @@ const Contact: React.FC = () => {
 
           <div className={styles.formSection}>
             <form onSubmit={handleSubmit} className={styles.contactForm}>
+              {submitStatus.type && (
+                <div className={`${styles.submitMessage} ${styles[submitStatus.type]}`}>
+                  {submitStatus.message}
+                </div>
+              )}
               <div className={styles.inputGroup}>
                 <input
                   type="text"
@@ -106,6 +146,8 @@ const Contact: React.FC = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className={styles.input}
+                  required
+                  disabled={isSubmitting}
                 />
               </div>
               <div className={styles.inputGroup}>
@@ -116,6 +158,8 @@ const Contact: React.FC = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={styles.input}
+                  required
+                  disabled={isSubmitting}
                 />
               </div>
               <div className={styles.inputGroup}>
@@ -125,10 +169,16 @@ const Contact: React.FC = () => {
                   value={formData.message}
                   onChange={handleChange}
                   className={`${styles.input} ${styles.messageInput}`}
+                  required
+                  disabled={isSubmitting}
                 />
               </div>
-              <button type="submit" className={styles.submitButton}>
-                Send Message
+              <button 
+                type="submit" 
+                className={styles.submitButton}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>

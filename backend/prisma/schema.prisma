@@ -72,3 +72,11 @@ model LearningOutcome {
   experience  Experience? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
   position    Int      @default(0)
 }
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}

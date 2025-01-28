@@ -197,4 +197,35 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.submitMessage {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.success {
+  background-color: rgba(0, 200, 0, 0.1);
+  color: #006400;
+  border: 1px solid rgba(0, 200, 0, 0.2);
+}
+
+.error {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #640000;
+  border: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: rgba(0, 0, 0, 0.05);
 } 
