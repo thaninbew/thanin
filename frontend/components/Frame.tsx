@@ -141,7 +141,7 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             rel="noopener noreferrer"
             className={styles.iconLink}
           >
-            <FaGithub size={24} className={styles.icon} />
+            <FaGithub size={28} />
           </a>
           <a 
             href="https://linkedin.com/in/thaninbew" 
@@ -149,7 +149,7 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             rel="noopener noreferrer"
             className={styles.iconLink}
           >
-            <FaLinkedin size={24} className={styles.icon} />
+            <FaLinkedin size={28} />
           </a>
           <a 
             href="mailto:bewxtt@gmail.com"
@@ -157,7 +157,7 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             rel="noopener noreferrer"
             className={styles.iconLink}
           >
-            <FaEnvelope size={24} className={styles.icon} />
+            <FaEnvelope size={28} />
           </a>
         </div>
       </div>
@@ -169,14 +169,14 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             onClick={scrollToTop}
             title="Skip to start"
           >
-            <IoPlaySkipBackOutline size={24} />
+            <IoPlaySkipBackOutline size={28} />
           </button>
           <button 
             className={styles.controlButton} 
             onClick={scrollToPrevSection}
             title="Previous section"
           >
-            <IoPlayBackOutline size={24} />
+            <IoPlayBackOutline size={28} />
           </button>
           <button 
             className={`${styles.controlButton} ${styles.playButton}`}
@@ -184,8 +184,8 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             title={isPlaying ? "Pause" : "Play"}
           >
             {isPlaying ? 
-              <IoPauseCircleOutline size={28} /> : 
-              <IoPlayCircleOutline size={28} />
+              <IoPauseCircleOutline size={36} /> : 
+              <IoPlayCircleOutline size={36} />
             }
           </button>
           <button 
@@ -193,14 +193,14 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             onClick={scrollToNextSection}
             title="Next section"
           >
-            <IoPlayForwardOutline size={24} />
+            <IoPlayForwardOutline size={28} />
           </button>
           <button 
             className={styles.controlButton} 
             onClick={scrollToBottom}
             title="Skip to end"
           >
-            <IoPlaySkipForwardOutline size={24} />
+            <IoPlaySkipForwardOutline size={28} />
           </button>
         </div>
         <div className={styles.progressBar}>
