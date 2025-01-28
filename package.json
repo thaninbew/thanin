@@ -9,7 +9,7 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "heroku-postbuild": "npm install --include=dev && npm run build && prisma generate && prisma migrate deploy",
+    "heroku-postbuild": "rm -rf dist &&npm install --include=dev && npm run build && prisma generate && prisma migrate deploy",
     "prisma": "prisma"
   },
   "dependencies": {
