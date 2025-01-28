@@ -8,6 +8,7 @@ import authRoutes from './routes/auth';
 import projectRoutes from './routes/projects';
 import experienceRoutes from './routes/experiences';
 import contactRouter from './routes/contact';
+import healthRouter from './routes/health';
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/experiences', experienceRoutes);
 app.use('/api/contact', contactRouter);
+app.use('/api', healthRouter);
 
 // Error handling middleware
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
