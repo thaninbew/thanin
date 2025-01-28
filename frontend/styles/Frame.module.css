@@ -16,6 +16,7 @@
   z-index: 10; /* Ensure header is above everything */
   position: fixed; /* Keep header fixed at the top */
   top: 0;
+  gap: 1rem;
 }
 
 .footer {
@@ -28,9 +29,24 @@
   bottom: 0;
 }
 
+.iconLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.iconLink:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
 .icon {
   width: 1.625rem; /* 26px, increased by 1.3x */
   height: 1.625rem; /* 26px, increased by 1.3x */
-  cursor: pointer;
-  margin-left: 1.21875rem; /* 19.5px, increased by 1.3x */
 }
