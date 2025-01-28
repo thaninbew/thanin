@@ -2,8 +2,6 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^6.4.1",
-    "@mui/material": "^6.4.1",
     "@types/react-beautiful-dnd": "^13.1.8",
     "colorthief": "^2.4.0",
     "concurrently": "^9.1.2",
@@ -17,12 +15,12 @@
     "swr": "^2.3.0"
   },
   "scripts": {
-    "start": "concurrently \"yarn start:frontend\" \"yarn start:backend\"",
-    "start:frontend": "cd frontend && yarn build && yarn start:watch",
-    "start:backend": "cd backend && yarn start --port 3001",
-    "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
-    "dev:frontend": "cd frontend && yarn dev",
-    "dev:backend": "cd backend && yarn dev"
+    "start": "concurrently \"npm start:frontend\" \"npm start:backend\"",
+    "start:frontend": "cd frontend && npm run build && npm run start:watch",
+    "start:backend": "cd backend && npm run start --port 3001",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev"
   },
   "devDependencies": {
     "css-loader": "^7.1.2",
