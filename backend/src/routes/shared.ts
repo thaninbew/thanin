@@ -226,6 +226,7 @@ export async function handleReorder(
   }
 
   try {
+    // First verify all IDs exist
     const existingEntities = await (prisma[entityType] as any).findMany({
       where: { id: { in: orderedIds } },
       select: { id: true }
@@ -237,7 +238,8 @@ export async function handleReorder(
       });
     }
 
-    await Promise.all(
+    // Update positions in a transaction to ensure consistency
+    await prisma.$transaction(
       orderedIds.map((id: string, index: number) =>
         (prisma[entityType] as any).update({
           where: { id },
@@ -246,11 +248,19 @@ export async function handleReorder(
       )
     );
 
-    return res.json({ success: true });
+    // Return the updated list
+    const updatedEntities = await (prisma[entityType] as any).findMany({
+      orderBy: { position: 'asc' },
+      include: {
+        learningOutcomes: {
+          orderBy: { position: 'asc' }
+        }
+      }
+    });
+
+    return res.json(updatedEntities);
   } catch (error) {
     console.error(`Error reordering ${entityType}s:`, error);
-    return res.status(500).json({ 
-      error: `Failed to update ${entityType} positions` 
-    });
+    return res.status(500).json({ error: `Failed to reorder ${entityType}s` });
   }
 } 

@@ -27,6 +27,24 @@ router.get('/', asyncHandler(async (req, res) => {
   res.json(projects);
 }));
 
+// Create project
+router.post('/',
+  authenticateToken,
+  requireAdmin,
+  upload.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'gif', maxCount: 1 }
+  ]),
+  asyncHandler(async (req, res) => handleEntityCreate(req, res, 'project'))
+);
+
+// Reorder projects - must come before /:id routes
+router.put('/reorder',
+  authenticateToken,
+  requireAdmin,
+  asyncHandler(async (req, res) => handleReorder(req, res, 'project'))
+);
+
 // Get single project
 router.get('/:id', asyncHandler(async (req, res) => {
   const project = await prisma.project.findUnique({
@@ -45,17 +63,6 @@ router.get('/:id', asyncHandler(async (req, res) => {
   res.json(project);
 }));
 
-// Create project
-router.post('/',
-  authenticateToken,
-  requireAdmin,
-  upload.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'gif', maxCount: 1 }
-  ]),
-  asyncHandler(async (req, res) => handleEntityCreate(req, res, 'project'))
-);
-
 // Update project
 router.put('/:id',
   authenticateToken,
@@ -65,13 +72,6 @@ router.put('/:id',
     { name: 'gif', maxCount: 1 }
   ]),
   asyncHandler(async (req, res) => handleEntityUpdate(req, res, 'project'))
-);
-
-// Reorder projects
-router.put('/reorder',
-  authenticateToken,
-  requireAdmin,
-  asyncHandler(async (req, res) => handleReorder(req, res, 'project'))
 );
 
 // Delete project

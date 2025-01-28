@@ -27,6 +27,24 @@ router.get('/', asyncHandler(async (req, res) => {
   res.json(experiences);
 }));
 
+// Create experience
+router.post('/',
+  authenticateToken,
+  requireAdmin,
+  upload.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'gif', maxCount: 1 }
+  ]),
+  asyncHandler(async (req, res) => handleEntityCreate(req, res, 'experience'))
+);
+
+// Reorder experiences - must come before /:id routes
+router.put('/reorder',
+  authenticateToken,
+  requireAdmin,
+  asyncHandler(async (req, res) => handleReorder(req, res, 'experience'))
+);
+
 // Get single experience
 router.get('/:id', asyncHandler(async (req, res) => {
   const experience = await prisma.experience.findUnique({
@@ -45,17 +63,6 @@ router.get('/:id', asyncHandler(async (req, res) => {
   res.json(experience);
 }));
 
-// Create experience
-router.post('/',
-  authenticateToken,
-  requireAdmin,
-  upload.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'gif', maxCount: 1 }
-  ]),
-  asyncHandler(async (req, res) => handleEntityCreate(req, res, 'experience'))
-);
-
 // Update experience
 router.put('/:id',
   authenticateToken,
@@ -65,13 +72,6 @@ router.put('/:id',
     { name: 'gif', maxCount: 1 }
   ]),
   asyncHandler(async (req, res) => handleEntityUpdate(req, res, 'experience'))
-);
-
-// Reorder experiences
-router.put('/reorder',
-  authenticateToken,
-  requireAdmin,
-  asyncHandler(async (req, res) => handleReorder(req, res, 'experience'))
 );
 
 // Delete experience
