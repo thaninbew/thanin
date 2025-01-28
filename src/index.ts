@@ -15,7 +15,7 @@ dotenv.config();
 
 const app = express();
 const prisma = new PrismaClient();
-const PORT = Number(process.env.PORT) || 3001;
+const PORT = process.env.PORT || 3000;
 
 // Security middleware
 const limiter = rateLimit({
@@ -66,8 +66,8 @@ async function startServer() {
     await prisma.$connect();
     console.log('Connected to database');
     
-    const server = app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    const server = app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
     });
 
     // Handle graceful shutdown
