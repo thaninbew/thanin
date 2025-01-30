@@ -327,7 +327,7 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
           style={{ cursor: 'pointer' }}
         >
           <div className={styles.easterEgg}>
-            <h2 className={styles.easterEggTitle}>Congrats on scrolling this far! You've unlocked cheat mode.</h2>
+            <h2 className={styles.easterEggTitle}>Congrats on scrolling this far! You've unlocked cheats mode.</h2>
             <p className={styles.easterEggText}>
              Press ↑↑↓↓←→←→ B A (konami code!)  or click me to return to the top.
             </p>
