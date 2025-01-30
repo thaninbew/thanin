@@ -182,7 +182,7 @@ const Overlay = forwardRef((props, ref) => {
             <p>
               <i>
                 ↜ See how my experiences and projects combine creativity with
-                technical expertise.
+                technical expertise. Or Scroll! ⤵
               </i>
             </p>
           </div>
