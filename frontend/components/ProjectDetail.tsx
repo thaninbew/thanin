@@ -5,6 +5,7 @@ import styles from '../styles/DetailPage.module.css';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import ColorThief from 'colorthief/dist/color-thief.mjs';
+import { marked } from 'marked';
 
 interface LearningOutcome {
   id?: string;
@@ -164,7 +165,10 @@ export default function ProjectDetail({ project }: Props) {
           <div className={styles.descriptionContainer}>
             <div className={styles.containerContent}>
               <h3 className={styles.sectionTitle}>Description</h3>
-              <p className={styles.description}>{project.description}</p>
+              <div 
+                className={styles.description}
+                dangerouslySetInnerHTML={{ __html: marked(project.description) }}
+              />
             </div>
           </div>
 
@@ -175,7 +179,10 @@ export default function ProjectDetail({ project }: Props) {
                 {project.learningOutcomes?.map((outcome, index) => (
                   <div key={index} className={styles.learningOutcome}>
                     <h4 className={styles.learningHeader}>{outcome.header}</h4>
-                    <p className={styles.learningDescription}>{outcome.description}</p>
+                    <div 
+                      className={styles.learningDescription}
+                      dangerouslySetInnerHTML={{ __html: marked(outcome.description) }}
+                    />
                   </div>
                 ))}
               </div>

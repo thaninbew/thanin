@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from '../../styles/Admin.module.css';
-import MDEditor from '@uiw/react-md-editor';
-import ReactMarkdown from 'react-markdown';
+import dynamic from 'next/dynamic';
+import { marked } from 'marked';
+
+const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
+  ssr: false
+});
 
 interface LearningOutcome {
   id?: string;
@@ -450,7 +454,7 @@ export default function AdminDashboard() {
               <th style={{ width: '100px' }}>Order</th>
               <th>Image</th>
               <th>Name</th>
-              <th>Description</th>
+              <th>Short Description</th>
               <th>Published</th>
               <th>Actions</th>
             </tr>
@@ -487,7 +491,7 @@ export default function AdminDashboard() {
                 </td>
                 <td>{item.name}</td>
                 <td className={styles.description}>
-                  <ReactMarkdown>{item.description}</ReactMarkdown>
+                  {item.shortDesc}
                 </td>
                 <td>
                   <label className={styles.switch}>
@@ -666,17 +670,20 @@ export default function AdminDashboard() {
               </div>
               <div className={styles.formGroup}>
                 <label>Description:</label>
-                <MDEditor
+                <SimpleMDE
                   value={activeTab === 'projects' ? projectForm.description : experienceForm.description}
                   onChange={(value) => {
                     if (activeTab === 'projects') {
-                      setProjectForm({ ...projectForm, description: value || '' });
+                      setProjectForm({ ...projectForm, description: value });
                     } else {
-                      setExperienceForm({ ...experienceForm, description: value || '' });
+                      setExperienceForm({ ...experienceForm, description: value });
                     }
                   }}
-                  preview="edit"
-                  height={200}
+                  options={{
+                    spellChecker: false,
+                    status: false,
+                    minHeight: '200px'
+                  }}
                 />
               </div>
               <div className={styles.formGroup}>
