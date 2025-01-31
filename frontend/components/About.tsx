@@ -144,7 +144,7 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
         about: expandEnd + viewportHeight * 0.2, // When About starts expanding
         experiences: expandEnd + viewportHeight * 1.7, // When About is fixed
         projects: contactThreshold,
-        contact: contactThreshold + viewportHeight * 0.65
+        contact: contactThreshold + viewportHeight * 0.85
       };
       onSectionPositionsChange(positions);
     }
