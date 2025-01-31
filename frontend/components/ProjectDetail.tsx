@@ -164,7 +164,6 @@ export default function ProjectDetail({ project }: Props) {
         <div className={styles.contentLeft}>
           <div className={styles.descriptionContainer}>
             <div className={styles.containerContent}>
-              <h3 className={styles.sectionTitle}>Description</h3>
               <div 
                 className={styles.description}
                 dangerouslySetInnerHTML={{ __html: marked(project.description) }}

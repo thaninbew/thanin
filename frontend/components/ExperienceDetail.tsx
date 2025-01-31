@@ -153,7 +153,6 @@ export default function ExperienceDetail({ experience }: Props) {
         <div className={styles.contentLeft}>
           <div className={styles.descriptionContainer}>
             <div className={styles.containerContent}>
-              <h3 className={styles.sectionTitle}>Description</h3>
               <div 
                 className={styles.description}
                 dangerouslySetInnerHTML={{ __html: marked(experience.description) }}
