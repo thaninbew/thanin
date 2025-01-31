@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import styles from '../../styles/Admin.module.css';
 import dynamic from 'next/dynamic';
@@ -129,6 +129,34 @@ export default function AdminDashboard() {
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [gifFile, setGifFile] = useState<File | null>(null);
+
+  const editorOptions = useMemo(() => {
+    return {
+      spellChecker: false,
+      status: false,
+      minHeight: '200px',
+      toolbar: [
+        'bold',
+        'italic',
+        'heading',
+        '|',
+        'quote',
+        'unordered-list',
+        'ordered-list',
+        '|',
+        'link',
+        'image',
+        '|',
+        'preview',
+        'side-by-side',
+        'fullscreen'
+      ] as const,
+      renderingConfig: {
+        singleLineBreaks: false,
+        codeSyntaxHighlighting: true,
+      }
+    };
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -336,6 +364,14 @@ export default function AdminDashboard() {
       });
     }
   };
+
+  const handleEditorChange = useCallback((value: string) => {
+    if (activeTab === 'projects') {
+      setProjectForm(prev => ({ ...prev, description: value }));
+    } else {
+      setExperienceForm(prev => ({ ...prev, description: value }));
+    }
+  }, [activeTab]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -671,19 +707,10 @@ export default function AdminDashboard() {
               <div className={styles.formGroup}>
                 <label>Description:</label>
                 <SimpleMDE
+                  id={`editor-${activeTab}-${editingItem?.id || 'new'}`}
                   value={activeTab === 'projects' ? projectForm.description : experienceForm.description}
-                  onChange={(value) => {
-                    if (activeTab === 'projects') {
-                      setProjectForm({ ...projectForm, description: value });
-                    } else {
-                      setExperienceForm({ ...experienceForm, description: value });
-                    }
-                  }}
-                  options={{
-                    spellChecker: false,
-                    status: false,
-                    minHeight: '200px'
-                  }}
+                  onChange={handleEditorChange}
+                  options={editorOptions}
                 />
               </div>
               <div className={styles.formGroup}>

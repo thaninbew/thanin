@@ -433,4 +433,24 @@ input:checked + .slider:before {
 .description {
   white-space: pre-line;
   word-wrap: break-word;
-} 
+}
+
+.formGroup :global(.EasyMDEContainer) {
+  width: 100%;
+}
+
+.formGroup :global(.CodeMirror) {
+  min-height: 200px;
+  border-color: #ddd;
+}
+
+.formGroup :global(.editor-toolbar) {
+  border-color: #ddd;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.formGroup :global(.CodeMirror) {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
