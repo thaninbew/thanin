@@ -68,11 +68,11 @@ export default function Experiences() {
       >
         <div className={styles.experienceIcon}>
           {experience.imageUrl ? (
-            <img 
+          <img 
               src={experience.imageUrl} 
-              alt={experience.name}
-              className={styles.experienceImage}
-            />
+            alt={experience.name}
+            className={styles.experienceImage}
+          />
           ) : (
             <FaBuilding size={24} />
           )}

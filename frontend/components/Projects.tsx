@@ -68,11 +68,11 @@ export default function Projects() {
       >
         <div className={styles.projectIcon}>
           {project.imageUrl ? (
-            <img 
+          <img 
               src={project.imageUrl} 
-              alt={project.name}
-              className={styles.projectImage}
-            />
+            alt={project.name}
+            className={styles.projectImage}
+          />
           ) : (
             <FaCode size={24} />
           )}

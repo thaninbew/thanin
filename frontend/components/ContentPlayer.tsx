@@ -129,7 +129,16 @@ export default function ContentPlayer<T extends ContentItem>({
       <div className={styles.content}>
         <div className={styles.header}>
           <div className={styles.headerTop}>
-            <div className={styles.headerImagePlaceholder}></div>
+            <div 
+              className={styles.headerImagePlaceholder}
+              style={{
+                backgroundImage: `url(${title === "Projects" ? 
+                  "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738041361/portfolio/experiences/images/aonbgl1sabrwxandhfg1.jpg" : 
+                  "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738292542/unnamed_acj96f.jpg"})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            ></div>
             <h1 className={styles.title}>{title}</h1>
           </div>
           <p className={styles.description}>{description}</p>
