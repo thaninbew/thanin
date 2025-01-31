@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from '../../styles/Admin.module.css';
+import MDEditor from '@uiw/react-md-editor';
+import ReactMarkdown from 'react-markdown';
 
 interface LearningOutcome {
   id?: string;
@@ -448,6 +450,7 @@ export default function AdminDashboard() {
               <th style={{ width: '100px' }}>Order</th>
               <th>Image</th>
               <th>Name</th>
+              <th>Description</th>
               <th>Published</th>
               <th>Actions</th>
             </tr>
@@ -483,6 +486,9 @@ export default function AdminDashboard() {
                   )}
                 </td>
                 <td>{item.name}</td>
+                <td className={styles.description}>
+                  <ReactMarkdown>{item.description}</ReactMarkdown>
+                </td>
                 <td>
                   <label className={styles.switch}>
                     <input
@@ -660,16 +666,17 @@ export default function AdminDashboard() {
               </div>
               <div className={styles.formGroup}>
                 <label>Description:</label>
-                <textarea
+                <MDEditor
                   value={activeTab === 'projects' ? projectForm.description : experienceForm.description}
-                  onChange={(e) => {
+                  onChange={(value) => {
                     if (activeTab === 'projects') {
-                      setProjectForm({ ...projectForm, description: e.target.value });
+                      setProjectForm({ ...projectForm, description: value || '' });
                     } else {
-                      setExperienceForm({ ...experienceForm, description: e.target.value });
+                      setExperienceForm({ ...experienceForm, description: value || '' });
                     }
                   }}
-                  required
+                  preview="edit"
+                  height={200}
                 />
               </div>
               <div className={styles.formGroup}>
