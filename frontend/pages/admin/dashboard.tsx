@@ -454,7 +454,7 @@ export default function AdminDashboard() {
               <th style={{ width: '100px' }}>Order</th>
               <th>Image</th>
               <th>Name</th>
-              <th>Description</th>
+              <th>Short Description</th>
               <th>Published</th>
               <th>Actions</th>
             </tr>
@@ -491,7 +491,7 @@ export default function AdminDashboard() {
                 </td>
                 <td>{item.name}</td>
                 <td className={styles.description}>
-                  <div dangerouslySetInnerHTML={{ __html: marked(item.description) }} />
+                  {item.shortDesc}
                 </td>
                 <td>
                   <label className={styles.switch}>
