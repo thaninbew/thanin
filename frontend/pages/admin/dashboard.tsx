@@ -444,12 +444,13 @@ export default function AdminDashboard() {
     }
 
     // Handle extra images
-    extraImageFiles.forEach((file, index) => {
-      formData.append(`extraImages`, file);
-    });
-
-    // If we're editing and have existing extra images, pass their URLs
-    if (editingItem?.extraImages) {
+    if (extraImageFiles.length > 0) {
+      // If we have new files, send only those
+      extraImageFiles.forEach(file => {
+        formData.append('extraImages', file);
+      });
+    } else if (extraImagePreviews.length > 0) {
+      // If we don't have new files but have existing images, send those
       formData.append('existingExtraImages', JSON.stringify(extraImagePreviews));
     }
 
