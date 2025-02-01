@@ -837,17 +837,18 @@ export default function AdminDashboard() {
                 />
               </div>
               <div className={styles.formGroup}>
-                <label>GIF:</label>
+                <label>GIF/Image Animation:</label>
                 {editingItem?.gifUrl && (
                   <div className={styles.previewImage}>
-                    <img src={editingItem.gifUrl} alt="Current GIF" />
+                    <img src={editingItem.gifUrl} alt="Current Animation" />
                   </div>
                 )}
                 <input
                   type="file"
                   onChange={(e) => setGifFile(e.target.files?.[0] || null)}
-                  accept="image/gif"
+                  accept="image/*,.gif"
                 />
+                <small className={styles.helperText}>Accepts GIF animations or static images</small>
               </div>
               <div className={styles.formGroup}>
                 <label>Extra Images:</label>
