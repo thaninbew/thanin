@@ -33,7 +33,8 @@ router.post('/',
   requireAdmin,
   upload.fields([
     { name: 'image', maxCount: 1 },
-    { name: 'gif', maxCount: 1 }
+    { name: 'gif', maxCount: 1 },
+    { name: 'extraImages', maxCount: 10 }  // Allow up to 10 extra images
   ]),
   asyncHandler(async (req, res) => {
     await handleEntityCreate(req, res, 'experience');
@@ -74,7 +75,8 @@ router.put('/:id',
   requireAdmin,
   upload.fields([
     { name: 'image', maxCount: 1 },
-    { name: 'gif', maxCount: 1 }
+    { name: 'gif', maxCount: 1 },
+    { name: 'extraImages', maxCount: 10 }  // Allow up to 10 extra images
   ]),
   asyncHandler(async (req, res) => {
     await handleEntityUpdate(req, res, 'experience');

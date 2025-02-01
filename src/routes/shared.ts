@@ -44,7 +44,8 @@ export async function handleEntityUpdate(
     dateRange,
     published,
     githubUrl,
-    liveUrl
+    liveUrl,
+    existingExtraImages
   } = req.body;
 
   if (!name) {
@@ -81,6 +82,22 @@ export async function handleEntityUpdate(
       files.gif[0],
       `${entityType}s/gifs`
     );
+  }
+
+  // Handle extra images
+  if (files?.extraImages) {
+    const uploadPromises = files.extraImages.map(file => 
+      uploadToCloudinary(file, `${entityType}s/extra-images`)
+    );
+    const uploadedUrls = await Promise.all(uploadPromises);
+    const validUrls = uploadedUrls.filter(url => url !== null) as string[];
+    
+    // Combine with existing extra images if any
+    const existingUrls = existingExtraImages ? JSON.parse(existingExtraImages) : [];
+    updateData.extraImages = [...existingUrls, ...validUrls];
+  } else if (existingExtraImages) {
+    // If no new extra images but existing ones are provided
+    updateData.extraImages = JSON.parse(existingExtraImages);
   }
 
   // Parse learning outcomes
@@ -157,6 +174,7 @@ export async function handleEntityCreate(
   try {
     let imageUrl = null;
     let gifUrl = null;
+    let extraImages: string[] = [];
 
     if (files?.image) {
       imageUrl = await uploadToCloudinary(
@@ -170,6 +188,15 @@ export async function handleEntityCreate(
         files.gif[0],
         `${entityType}s/gifs`
       );
+    }
+
+    // Handle extra images
+    if (files?.extraImages) {
+      const uploadPromises = files.extraImages.map(file => 
+        uploadToCloudinary(file, `${entityType}s/extra-images`)
+      );
+      const uploadedUrls = await Promise.all(uploadPromises);
+      extraImages = uploadedUrls.filter(url => url !== null) as string[];
     }
 
     const parsedOutcomes = JSON.parse(learningOutcomes || '[]')
@@ -188,6 +215,7 @@ export async function handleEntityCreate(
         shortDesc: shortDesc || '',
         imageUrl,
         gifUrl,
+        extraImages,
         githubUrl: githubUrl || null,
         liveUrl: liveUrl || null,
         technologies: technologies ? JSON.parse(technologies) : [],
@@ -222,60 +250,32 @@ export async function handleReorder(
   const { orderedIds } = req.body;
 
   if (!Array.isArray(orderedIds)) {
-    return res.status(400).json({ 
-      error: 'Invalid request format',
-      details: 'orderedIds must be an array'
-    });
+    return res.status(400).json({ error: 'orderedIds must be an array' });
   }
 
   try {
-    // Perform all operations in a transaction
-    const result = await prisma.$transaction(async (tx) => {
-      // First verify all IDs exist
-      const existingEntities = await (tx as any)[entityType].findMany({
-        where: { id: { in: orderedIds } },
-        select: { id: true }
-      });
-
-      const existingIds = new Set(existingEntities.map((e: { id: string }) => e.id));
-      const missingIds = orderedIds.filter(id => !existingIds.has(id));
-
-      if (missingIds.length > 0) {
-        throw new Error(`Invalid ${entityType} IDs: ${missingIds.join(', ')}`);
+    // Update positions in transaction
+    await prisma.$transaction(async (tx) => {
+      for (let i = 0; i < orderedIds.length; i++) {
+        await (tx[entityType] as any).update({
+          where: { id: orderedIds[i] },
+          data: { position: i }
+        });
       }
-
-      // Update positions
-      await Promise.all(
-        orderedIds.map((id: string, index: number) =>
-          (tx as any)[entityType].update({
-            where: { id },
-            data: { position: index }
-          })
-        )
-      );
-
-      // Return the updated list
-      return await (tx as any)[entityType].findMany({
-        orderBy: { position: 'asc' },
-        include: {
-          learningOutcomes: {
-            orderBy: { position: 'asc' }
-          }
-        }
-      });
     });
 
-    return res.json(result);
+    const items = await (prisma[entityType] as any).findMany({
+      orderBy: { position: 'asc' },
+      include: {
+        learningOutcomes: {
+          orderBy: { position: 'asc' }
+        }
+      }
+    });
+
+    res.json(items);
   } catch (error) {
     console.error(`Error reordering ${entityType}s:`, error);
-    if (error instanceof Error) {
-      return res.status(400).json({ 
-        error: `Failed to reorder ${entityType}s`,
-        details: error.message
-      });
-    }
-    return res.status(500).json({ 
-      error: `Internal server error while reordering ${entityType}s`
-    });
+    res.status(500).json({ error: `Failed to reorder ${entityType}s` });
   }
 } 
