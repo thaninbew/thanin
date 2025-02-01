@@ -184,7 +184,8 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  width: 600px;
+  width: auto;
+  max-width: 800px; /* Increased from 600px */
 }
 
 .extraImagesContainer {
@@ -211,9 +212,10 @@
 /* Content layout with gif */
 .contentLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) min-content;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 1.5rem;
   align-items: start;
+  max-width: 100%;
 }
 
 .contentLeft {
@@ -221,6 +223,7 @@
   flex-direction: column;
   gap: 0.75rem;
   width: 100%;
+  min-width: 0; /* Add this to allow content to shrink */
 }
 
 .descriptionContainer,
@@ -229,7 +232,14 @@
 }
 
 .gifContainer {
-  width: 600px;
+  width: auto;
+  max-width: 800px; /* Increased from 600px */
+}
+
+.gif {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 @media (max-width: 1200px) {
@@ -238,7 +248,7 @@
   }
   
   .contentLeft {
-    grid-template-columns: 1fr; /* Force single column on smaller screens */
+    grid-template-columns: 1fr;
   }
 
   .gif {
@@ -255,15 +265,17 @@
   }
 
   .learningContainer {
-    max-width: 100%; /* Allow full width on smaller screens */
+    max-width: 100%;
   }
 
   .gifContainer {
     width: 100%;
+    max-width: 100%;
   }
 
   .rightContent {
     width: 100%;
+    max-width: 100%;
   }
   
   .extraImagesContainer {
