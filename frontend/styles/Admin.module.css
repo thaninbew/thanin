@@ -454,3 +454,53 @@ input:checked + .slider:before {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
+
+.extraImagesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.extraImagePreview {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border: 2px solid #e0e0e0;
+}
+
+.extraImagePreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removeImageButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: background-color 0.2s;
+}
+
+.removeImageButton:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.helperText {
+  display: block;
+  color: #666;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}

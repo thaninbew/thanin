@@ -129,6 +129,8 @@ export default function AdminDashboard() {
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [gifFile, setGifFile] = useState<File | null>(null);
+  const [extraImageFiles, setExtraImageFiles] = useState<File[]>([]);
+  const [extraImagePreviews, setExtraImagePreviews] = useState<string[]>([]);
 
   const editorOptions = useMemo(() => {
     return {
@@ -167,6 +169,14 @@ export default function AdminDashboard() {
       fetchItems();
     }
   }, [router]);
+
+  useEffect(() => {
+    if (editingItem) {
+      setExtraImagePreviews(editingItem.extraImages || []);
+    } else {
+      setExtraImagePreviews([]);
+    }
+  }, [editingItem]);
 
   const fetchItems = async () => {
     setLoading(true);
@@ -373,12 +383,25 @@ export default function AdminDashboard() {
     }
   }, [activeTab]);
 
+  const handleExtraImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setExtraImageFiles(prev => [...prev, ...files]);
+    
+    // Create preview URLs for the new images
+    const newPreviews = files.map(file => URL.createObjectURL(file));
+    setExtraImagePreviews(prev => [...prev, ...newPreviews]);
+  };
+
+  const handleRemoveExtraImage = (index: number) => {
+    setExtraImageFiles(prev => prev.filter((_, i) => i !== index));
+    setExtraImagePreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     const currentForm = activeTab === 'projects' ? projectForm : experienceForm;
     
-    // Create form data
     const formData = new FormData();
     
     // Handle basic fields
@@ -420,6 +443,16 @@ export default function AdminDashboard() {
       formData.append('gif', gifFile);
     }
 
+    // Handle extra images
+    extraImageFiles.forEach((file, index) => {
+      formData.append(`extraImages`, file);
+    });
+
+    // If we're editing and have existing extra images, pass their URLs
+    if (editingItem?.extraImages) {
+      formData.append('existingExtraImages', JSON.stringify(extraImagePreviews));
+    }
+
     try {
       const url = `${API_BASE_URL}/api/${activeTab}${editingItem ? `/${editingItem.id}` : ''}`;
       
@@ -453,6 +486,8 @@ export default function AdminDashboard() {
   const resetForm = () => {
     setImageFile(null);
     setGifFile(null);
+    setExtraImageFiles([]);
+    setExtraImagePreviews([]);
     setEditingItem(null);
 
     const emptyForm = {
@@ -812,6 +847,32 @@ export default function AdminDashboard() {
                   onChange={(e) => setGifFile(e.target.files?.[0] || null)}
                   accept="image/gif"
                 />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Extra Images:</label>
+                {extraImagePreviews.length > 0 && (
+                  <div className={styles.extraImagesGrid}>
+                    {extraImagePreviews.map((preview, index) => (
+                      <div key={index} className={styles.extraImagePreview}>
+                        <img src={preview} alt={`Extra image ${index + 1}`} />
+                        <button
+                          type="button"
+                          className={styles.removeImageButton}
+                          onClick={() => handleRemoveExtraImage(index)}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <input
+                  type="file"
+                  onChange={handleExtraImageUpload}
+                  accept="image/*"
+                  multiple
+                />
+                <small className={styles.helperText}>You can select multiple images at once</small>
               </div>
             </form>
             <div className={styles.modalFooter}>
