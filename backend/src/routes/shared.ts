@@ -44,7 +44,8 @@ export async function handleEntityUpdate(
     dateRange,
     published,
     githubUrl,
-    liveUrl
+    liveUrl,
+    existingExtraImages
   } = req.body;
 
   if (!name) {
@@ -81,6 +82,22 @@ export async function handleEntityUpdate(
       files.gif[0],
       `${entityType}s/gifs`
     );
+  }
+
+  // Handle extra images
+  if (files?.extraImages) {
+    const uploadPromises = files.extraImages.map(file => 
+      uploadToCloudinary(file, `${entityType}s/extra-images`)
+    );
+    const uploadedUrls = await Promise.all(uploadPromises);
+    const validUrls = uploadedUrls.filter(url => url !== null) as string[];
+    
+    // Combine with existing extra images if any
+    const existingUrls = existingExtraImages ? JSON.parse(existingExtraImages) : [];
+    updateData.extraImages = [...existingUrls, ...validUrls];
+  } else if (existingExtraImages) {
+    // If no new extra images but existing ones are provided
+    updateData.extraImages = JSON.parse(existingExtraImages);
   }
 
   // Parse learning outcomes
@@ -157,6 +174,7 @@ export async function handleEntityCreate(
   try {
     let imageUrl = null;
     let gifUrl = null;
+    let extraImages: string[] = [];
 
     if (files?.image) {
       imageUrl = await uploadToCloudinary(
@@ -170,6 +188,15 @@ export async function handleEntityCreate(
         files.gif[0],
         `${entityType}s/gifs`
       );
+    }
+
+    // Handle extra images
+    if (files?.extraImages) {
+      const uploadPromises = files.extraImages.map(file => 
+        uploadToCloudinary(file, `${entityType}s/extra-images`)
+      );
+      const uploadedUrls = await Promise.all(uploadPromises);
+      extraImages = uploadedUrls.filter(url => url !== null) as string[];
     }
 
     const parsedOutcomes = JSON.parse(learningOutcomes || '[]')
@@ -188,6 +215,7 @@ export async function handleEntityCreate(
         shortDesc: shortDesc || '',
         imageUrl,
         gifUrl,
+        extraImages,
         githubUrl: githubUrl || null,
         liveUrl: liveUrl || null,
         technologies: technologies ? JSON.parse(technologies) : [],
