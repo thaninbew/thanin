@@ -4,6 +4,7 @@ import '../styles/globals.css';
 export const metadata: Metadata = {
   title: 'Thanin Kongkiatsophon',
   description: 'Personal portfolio website of Thanin (Bew) Kongkiatsophon showcasing projects and experiences',
+  metadataBase: new URL('https://thanin.dev'),
   icons: {
     icon: 'https://res.cloudinary.com/dez4qkb8z/image/upload/v1738383815/portfolio/projects/images/f2yubzhehwn4bqrtfedr.png',
   },
