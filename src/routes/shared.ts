@@ -92,9 +92,7 @@ export async function handleEntityUpdate(
     const uploadedUrls = await Promise.all(uploadPromises);
     const validUrls = uploadedUrls.filter(url => url !== null) as string[];
     
-    // Combine with existing extra images if any
-    const existingUrls = existingExtraImages ? JSON.parse(existingExtraImages) : [];
-    updateData.extraImages = [...existingUrls, ...validUrls];
+    updateData.extraImages = validUrls;
   } else if (existingExtraImages) {
     // If no new extra images but existing ones are provided
     updateData.extraImages = JSON.parse(existingExtraImages);
