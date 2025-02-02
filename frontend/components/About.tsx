@@ -299,13 +299,14 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
         <div className={styles.contentContainer}>
           <div className={styles.sectionLabel}>About the developer</div>
           <div ref={descriptionRef} className={styles.description}>
-            <p><strong>I'm a software engineer, producer, and musician who thrives at the intersection of logic and creativity.</strong></p>
+          <p><strong>I'm a software engineer, producer, and musician</strong> who thrives at the intersection of logic and creativity.</p>
 
-            <p>I turn ideas into reality—whether it's <strong>building full-stack apps</strong>, <strong>designing scalable backends</strong>, or <strong>applying AI/ML in music production</strong>. Over the past year, I've dived deep into <strong>web development, backend architecture, and machine learning</strong>, constantly learning and improving.</p>
+<p>I build <strong>full-stack apps</strong>, <strong>scalable backends</strong>, and explore <strong>AI/ML in music production</strong>. Over the past year, I’ve dived deep into <strong>web development, backend architecture, and machine learning</strong>, constantly learning and improving.</p>
 
-            <p>With a strong foundation in <strong>OOP and algorithms</strong> from <strong>Northeastern University</strong> and hands-on projects, I write clean, scalable code. I push myself to learn fast and adapt—because <em>if not now, then when?</em></p>
+<p>With a strong foundation in <strong>OOP and algorithms</strong> from <strong>Northeastern University</strong>, I write <strong>clean, scalable code</strong> and adapt quickly—because <em>if not now, then when?</em></p>
 
-            <p>I'm currently focused on <strong>AI-powered SaaS</strong> and the future of <strong>AI in music production</strong>, shaping how creators integrate intelligent tools into their workflows.</p>
+<p>Currently focused on <strong>AI-powered SaaS</strong> and pushing the boundaries of <strong>AI in music production</strong>.</p>
+
           </div>
         </div>
 
