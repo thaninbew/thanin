@@ -54,6 +54,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: flex 0.3s ease;
 }
 
 .expandedImagePlaceholder img {

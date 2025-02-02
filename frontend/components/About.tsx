@@ -17,6 +17,8 @@ interface AboutProps {
 
 const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScrollToTop }) => {
   const aboutRef = useRef<HTMLDivElement>(null);
+  const descriptionRef = useRef<HTMLDivElement>(null);
+  const resizeTimeoutRef = useRef<NodeJS.Timeout>();
   const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
   const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright','arrowleft', 'arrowright', 'b', 'a'];
 
@@ -39,6 +41,9 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
   const easeOut = (x: number, power: number = 3): number => {
     return 1 - Math.pow(1 - x, power);
   };
+
+  // Track image width
+  const [imageWidth, setImageWidth] = useState('flex: 1'); // Default full flex
 
   // Measure element position & viewport size
   useEffect(() => {
@@ -289,25 +294,72 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
   const showImagePlaceholder = phase === 'fixed' || phase === 'exit';
   const showExperiences = phase === 'exit';
 
+  useEffect(() => {
+    if (!descriptionRef.current || !aboutRef.current) return;
+
+    const checkOverflow = () => {
+      if (!descriptionRef.current || !aboutRef.current) return;
+
+      const container = aboutRef.current;
+      const content = descriptionRef.current;
+      
+      // Add a small buffer to prevent flickering
+      const overflowThreshold = container.offsetHeight * 0.85;
+      const currentOverflow = content.offsetHeight > overflowThreshold;
+      
+      // Only change if there's a significant difference
+      const significantOverflow = content.offsetHeight > overflowThreshold + 20;
+      const significantUnderflow = content.offsetHeight < overflowThreshold - 20;
+
+      if (significantOverflow && imageWidth === 'flex: 1') {
+        setImageWidth('flex: 0.7');
+      } else if (significantUnderflow && imageWidth === 'flex: 0.7') {
+        setImageWidth('flex: 1');
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      // Clear any existing timeout
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+      
+      // Set a new timeout
+      resizeTimeoutRef.current = setTimeout(checkOverflow, 150);
+    });
+
+    resizeObserver.observe(descriptionRef.current);
+    
+    return () => {
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+      resizeObserver.disconnect();
+    };
+  }, [phase, imageWidth]); // Include imageWidth in dependencies
+
   return (
     <div className={styles.aboutContainer}>
       <div ref={aboutRef} className={styles.about} style={getStyles()}>
         <div className={styles.contentContainer}>
           <div className={styles.sectionLabel}>About the developer</div>
-          <div className={styles.description}>
+          <div ref={descriptionRef} className={styles.description}>
           <p><strong>I'm a software engineer, producer, and musician who thrives at the intersection of logic and creativity.</strong></p>
 
-<p>I take ideas and make them real—whether it’s <strong>building full-stack applications</strong>, <strong>designing scalable backend systems</strong>, <strong>developing AI-powered features</strong>, or <strong>producing and writing music</strong>. Over the past year, I’ve immersed myself in <strong>web development, backend architecture, machine learning, databases, and UI/UX</strong>, learning everything I can through hands-on projects and real-world applications—and I know I can go so much deeper.</p>
+<p>I take ideas and make them real—whether it's <strong>building full-stack applications</strong>, <strong>designing scalable backend systems</strong>, <strong>developing AI-powered features</strong>, or <strong>producing and writing music</strong>. Over the past year, I've immersed myself in <strong>web development, backend architecture, machine learning, databases, and UI/UX</strong>, learning everything I can through hands-on projects and real-world applications—and I know I can go so much deeper.</p>
 
 <p>My foundation in <strong>object-oriented programming and algorithms</strong>, built through my coursework at <strong>Northeastern University</strong> and <strong>persistent learning through projects</strong>, helps me write clean, efficient, and scalable code. But beyond technical skills, I take opportunities seriously. I push myself to learn fast and adapt—because <em>if not now, then when?</em></p>
 
-<p>Right now, I’m especially focused on <strong>AI-powered SaaS</strong> (currently building projects in this space), <strong>creative technology</strong>, and how software can redefine the way we work and create. In particular, I’m interested in <strong>applying AI and ML to music production</strong>—not just following trends, but actively shaping how producers, artists, and engineers can integrate intelligent tools into their creative process in meaningful ways.</p>
+<p>Right now, I'm especially focused on <strong>AI-powered SaaS</strong> (currently building projects in this space), <strong>creative technology</strong>, and how software can redefine the way we work and create. In particular, I'm interested in <strong>applying AI and ML to music production</strong>—not just following trends, but actively shaping how producers, artists, and engineers can integrate intelligent tools into their creative process in meaningful ways.</p>
 
           </div>
         </div>
         {showImagePlaceholder && (
-          <div className={styles.expandedImagePlaceholder}>
-            <img src= "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg"/>
+          <div 
+            className={styles.expandedImagePlaceholder}
+            style={{ [imageWidth.split(': ')[0]]: imageWidth.split(': ')[1] }}
+          >
+            <img src="https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg" alt="Profile" />
           </div>
         )}
       </div>
