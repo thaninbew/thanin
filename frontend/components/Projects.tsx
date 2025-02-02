@@ -97,7 +97,7 @@ export default function Projects() {
       onHoverChange={() => {}}
       renderItem={renderProject}
       title="Projects"
-      description="A collection of my notable projects and contributions"
+      description="A collection of my notable projects and contributions. Click on a project to learn more."
       className={styles.projectsContainer}
     />
   );

@@ -97,7 +97,7 @@ export default function Experiences() {
       onHoverChange={() => {}}
       renderItem={renderExperience}
       title="Experience"
-      description="My professional journey and achievements"
+      description="My professional journey, activities, and achievements. Click on an experience to learn more."
       className={styles.experiencesContainer}
     />
   );
