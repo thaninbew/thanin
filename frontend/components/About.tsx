@@ -295,14 +295,14 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
         <div className={styles.contentContainer}>
           <div className={styles.sectionLabel}>About the developer</div>
           <div className={styles.description}>
-            <p>
-              I'm a software engineer, producer, and musician who combines technical expertise with creative artistry.
-              I've worked on analyzing large datasets with machine learning frameworks and fine-tuning AI language models to enhance 
-              their performance and usability.
-            </p>
-            <p>
-              I'm passionate about driving innovation in AI-powered SaaS and exploring how AI can revolutionize music production workflows. 
-            </p>
+          <p><strong>I'm a software engineer, producer, and musician who thrives at the intersection of logic and creativity.</strong></p>
+
+<p>I take ideas and make them real—whether it’s <strong>building full-stack applications</strong>, <strong>designing scalable backend systems</strong>, <strong>developing AI-powered features</strong>, or <strong>producing and writing music</strong>. Over the past year, I’ve immersed myself in <strong>web development, backend architecture, machine learning, databases, and UI/UX</strong>, learning everything I can through hands-on projects and real-world applications—and I know I can go so much deeper.</p>
+
+<p>My foundation in <strong>object-oriented programming and algorithms</strong>, built through my coursework at <strong>Northeastern University</strong> and <strong>persistent learning through projects</strong>, helps me write clean, efficient, and scalable code. But beyond technical skills, I take opportunities seriously. I push myself to learn fast and adapt—because <em>if not now, then when?</em></p>
+
+<p>Right now, I’m especially focused on <strong>AI-powered SaaS</strong> (currently building projects in this space), <strong>creative technology</strong>, and how software can redefine the way we work and create. In particular, I’m interested in <strong>applying AI and ML to music production</strong>—not just following trends, but actively shaping how producers, artists, and engineers can integrate intelligent tools into their creative process in meaningful ways.</p>
+
           </div>
         </div>
         {showImagePlaceholder && (

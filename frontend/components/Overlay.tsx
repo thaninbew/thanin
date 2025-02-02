@@ -176,13 +176,12 @@ const Overlay = forwardRef((props, ref) => {
               Boston, MA
             </p>
             <p>
-              Bringing ideas to life with scalable, user-friendly, and creative
-              software solutions.
+            I bring ideas to life through scalable, efficient, and creative software solutions.
             </p>
             <p>
               <i>
                 ↜ See how my experiences and projects combine creativity with
-                technical expertise. Or Scroll! ⤵
+                technical expertise. You can also scroll! ⤵
               </i>
             </p>
           </div>
