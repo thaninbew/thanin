@@ -5,6 +5,8 @@
   width: 100vw;
   height: 100vh;
   z-index: -3; /* Ensure it's below everything else */
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .backgroundVideo {
@@ -12,6 +14,11 @@
   height: 100%;
   object-fit: cover;
   z-index: -3;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .middleLayer {
@@ -29,6 +36,7 @@
   opacity: 0.2; /* Set to 20% fill */
   backdrop-filter: blur(20px); /* Background blur */
   z-index: -2;
+  pointer-events: none;
 }
 
 .topLayer {
@@ -39,4 +47,5 @@
   height: 100%;
   backdrop-filter: blur(10px) brightness(1); /* Apply both blurs, no tint */
   z-index: -1;
+  pointer-events: none;
 }

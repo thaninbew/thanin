@@ -10,8 +10,16 @@ const BackgroundLayers: React.FC = () => {
         autoPlay
         muted
         loop
-        src="https://res.cloudinary.com/dez4qkb8z/video/upload/v1738030613/bgloop_kjjfvz.mp4" 
-      ></video>
+        playsInline
+        disablePictureInPicture
+        disableRemotePlayback
+        src="https://res.cloudinary.com/dez4qkb8z/video/upload/v1738030613/bgloop_kjjfvz.mp4"
+      >
+        <source 
+          src="https://res.cloudinary.com/dez4qkb8z/video/upload/v1738030613/bgloop_kjjfvz.mp4" 
+          type="video/mp4" 
+        />
+      </video>
 
       {/* Layer 2: radial gradient with 20% fill & blur */}
       <div className={styles.middleLayer}></div>
