@@ -80,14 +80,11 @@
 }
 
 .mainText {
-  margin-top: 1.5rem;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  line-height: 1.5;
 }
 
-.mainText h1 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
 
 .subtitle {
   font-size: 1rem;
@@ -99,76 +96,130 @@
   margin-top: 1.5rem;
 }
 
+.expandedImagePlaceholder {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 0 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid black;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.expandedImagePlaceholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .content p {
-  font-size: 0.9rem;
+  font-size: 1.2rem;
+  margin-top: 1rem;
   line-height: 1.5;
-  margin-bottom: 0.75rem;
 }
 
-/* Experience styles */
-.experienceList {
+.experienceList, .projectList {
   margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.experienceItem {
+.experienceItem, .projectItem {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.75rem;
   padding: 0.75rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.experienceItem:last-child {
-  border-bottom: none;
+.experienceItem:hover, .projectItem:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
-.experienceItem h3 {
+.experienceIcon, .projectIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.itemImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.itemInfo {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-right: 0.5rem; 
+}
+
+.itemInfo h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemRole, .itemDescription {
   font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 0.25rem;
+  color: rgba(0, 0, 0, 0.7);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.duration {
-  font-size: 0.8rem;
-  opacity: 0.7;
-  margin-bottom: 0.25rem;
+.itemDate {
+  display: none; 
 }
 
-.company {
-  font-size: 0.9rem;
-  font-weight: bold;
-  margin-bottom: 0.25rem;
+@media screen and (min-width: 600px) {
+  .experienceItem, .projectItem {
+    grid-template-columns: auto 1fr auto; 
+  }
+
+  .itemDate {
+    display: block;
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+  }
 }
 
-.description {
-  font-size: 0.85rem;
-  line-height: 1.4;
+@media screen and (min-width: 768px) {
+  .itemInfo h3 {
+    font-size: 1.3rem;
+  }
+
+  .itemRole, .itemDescription {
+    font-size: 1.1rem;
+  }
+
+  .itemDate {
+    font-size: 1.1rem;
+  }
 }
 
-/* Project styles */
-.projectList {
-  margin-top: 1.5rem;
-}
-
-.projectItem {
-  padding: 0.75rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.projectItem:last-child {
-  border-bottom: none;
-}
-
-.projectItem h3 {
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 0.25rem;
-}
-
-.tech {
-  font-size: 0.8rem;
-  opacity: 0.7;
-  margin-bottom: 0.25rem;
-}
-
-/* Contact styles */
 .contactInfo {
   margin-top: 1.5rem;
   display: flex;
