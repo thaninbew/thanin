@@ -1,0 +1,199 @@
+.wrapper {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: transparent;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  padding: 0.75rem;
+  padding-top: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-sizing: border-box;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3rem;
+  background: rgba(241, 247, 252, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.iconContainer {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.iconLink {
+  color: #000;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.iconLink:hover {
+  opacity: 1;
+}
+
+.mainContent, .section {
+  width: 100%;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(
+    to top,
+    rgba(241, 247, 252, 0.75),
+    rgba(241, 247, 252, 0.75)
+  ), radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(133, 155, 182, 0.5) 45%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  border: 1px solid black;
+  border-radius: 0.75rem;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.sectionLabel {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  font-weight: bold;
+  font-family: 'UncutSans', Arial, sans-serif;
+  color: #000;
+  opacity: 0.5;
+  font-size: 0.8rem;
+}
+
+.mainText {
+  margin-top: 1.5rem;
+}
+
+.mainText h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 0.5rem;
+}
+
+.content {
+  margin-top: 1.5rem;
+}
+
+.content p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+/* Experience styles */
+.experienceList {
+  margin-top: 1.5rem;
+}
+
+.experienceItem {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.experienceItem:last-child {
+  border-bottom: none;
+}
+
+.experienceItem h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.duration {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-bottom: 0.25rem;
+}
+
+.company {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.description {
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* Project styles */
+.projectList {
+  margin-top: 1.5rem;
+}
+
+.projectItem {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.projectItem:last-child {
+  border-bottom: none;
+}
+
+.projectItem h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.tech {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-bottom: 0.25rem;
+}
+
+/* Contact styles */
+.contactInfo {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #000;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.contactItem:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.contactItem svg {
+  opacity: 0.7;
+  width: 18px;
+  height: 18px;
+} 

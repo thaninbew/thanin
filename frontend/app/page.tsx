@@ -3,29 +3,45 @@
 import { useEffect, useState } from 'react';
 import Overlay from '../components/Overlay';
 import MobileOverlay from '../components/MobileOverlay';
-import { isMobileOrTablet } from '../utils/deviceDetection';
+import PhoneOverlay from '../components/PhoneOverlay';
 import Background from '../components/Background';
 
-export default function Home() {
-  const [isMobile, setIsMobile] = useState(false);
+const useDeviceType = () => {
+  const [deviceType, setDeviceType] = useState<'desktop' | 'tablet' | 'phone'>('desktop');
 
   useEffect(() => {
     const checkDevice = () => {
-      setIsMobile(isMobileOrTablet());
+      const width = window.innerWidth;
+      if (width <= 480) {
+        setDeviceType('phone');
+      } else if (width <= 1024) {
+        setDeviceType('tablet');
+      } else {
+        setDeviceType('desktop');
+      }
     };
 
     checkDevice();
     window.addEventListener('resize', checkDevice);
-
-    return () => {
-      window.removeEventListener('resize', checkDevice);
-    };
+    return () => window.removeEventListener('resize', checkDevice);
   }, []);
+
+  return deviceType;
+};
+
+export default function Home() {
+  const deviceType = useDeviceType();
 
   return (
     <main>
       <Background />
-      {isMobile ? <MobileOverlay /> : <Overlay />}
+      {deviceType === 'phone' ? (
+        <PhoneOverlay />
+      ) : deviceType === 'tablet' ? (
+        <MobileOverlay />
+      ) : (
+        <Overlay />
+      )}
     </main>
   );
 } 
