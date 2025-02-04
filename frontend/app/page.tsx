@@ -1,30 +1,31 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Overlay from '../components/Overlay';
-import BackgroundLayers from '../components/Background';
+import MobileOverlay from '../components/MobileOverlay';
+import { isMobileOrTablet } from '../utils/deviceDetection';
+import Background from '../components/Background';
 
 export default function Home() {
-  const overlayRef = useRef<{ scrollToSection: (section: string) => void }>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if we're returning from a detail page
-    const returnTo = sessionStorage.getItem('returnTo');
-    if (returnTo) {
-      // Clear the flag immediately to prevent re-triggering
-      sessionStorage.removeItem('returnTo');
-      
-      // Wait for components to mount and then scroll
-      setTimeout(() => {
-        overlayRef.current?.scrollToSection(returnTo);
-      }, 100);
-    }
+    const checkDevice = () => {
+      setIsMobile(isMobileOrTablet());
+    };
+
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+
+    return () => {
+      window.removeEventListener('resize', checkDevice);
+    };
   }, []);
 
   return (
-    <div>
-      <BackgroundLayers />
-      <Overlay ref={overlayRef} />
-    </div>
+    <main>
+      <Background />
+      {isMobile ? <MobileOverlay /> : <Overlay />}
+    </main>
   );
 } 
