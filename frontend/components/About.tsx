@@ -299,13 +299,13 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
         <div className={styles.contentContainer}>
           <div className={styles.sectionLabel}>About the developer</div>
           <div ref={descriptionRef} className={styles.description}>
-          <p><strong>I'm a software engineer, producer, and musician</strong> who thrives at the intersection of logic and creativity.</p>
+          <p><strong>I'm a software engineer and part time music producer</strong> who thrives at the intersection of logic and creativity.</p>
 
-<p>I build <strong>full-stack apps</strong>, <strong>scalable backends</strong>, and explore <strong>AI/ML in music production</strong>. I’ve deeply engaged in <strong>web development, backend architecture, and machine learning</strong>, always pushing myself to learn and improve.</p>
+<p>I build <strong>full-stack apps</strong>, <strong>scalable backends</strong>, and explore <strong>AI/ML in music production</strong>. I’ve deeply engaged in <strong>web development, backend architecture, and machine learning.</strong></p>
 
 <p>With a strong foundation in <strong>OOP and algorithms</strong> from <strong>Northeastern University</strong>, I write <strong>clean, scalable code</strong> and adapt quickly.</p>
 
-<p>I'm driven by the mindset of <strong>taking action, moving fast, and making things happen—because if not now, then when?</strong></p>
+<p>I'm driven by the mindset of <strong>moving fast and making things happen—because if not now, then when?</strong></p>
 
 <p>Currently focused on <strong>AI-powered SaaS</strong> and pushing the boundaries of <strong>AI in music production</strong>.</p>
 

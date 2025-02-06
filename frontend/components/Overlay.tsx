@@ -170,7 +170,7 @@ const Overlay = forwardRef((props, ref) => {
 </p>
 
 <p>
-  <strong>a Software Engineer, Full-Stack Developer, and current student in Boston, MA.</strong>
+  <strong>Software Engineer, Full-Stack Developer, and current student in Boston, MA.</strong>
 </p>
 
 <p>
