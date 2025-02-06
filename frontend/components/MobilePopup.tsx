@@ -3,6 +3,7 @@ import styles from '../styles/MobilePopup.module.css';
 
 const MobilePopup = () => {
   const [isVisible, setIsVisible] = useState(true);
+  const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -19,21 +20,31 @@ const MobilePopup = () => {
     }
   }, []);
 
+  const handleClose = () => {
+    setIsClosing(true);
+    // Add a small delay before actually closing to show the animation
+    setTimeout(() => {
+      setIsVisible(false);
+      setIsClosing(false);
+    }, 300);
+  };
+
   if (!isVisible) return null;
 
   return (
-    <div className={styles.popupOverlay}>
-      <div className={styles.popup}>
+    <div className={`${styles.popupOverlay} ${isClosing ? styles.closing : ''}`}>
+      <div className={`${styles.popup} ${isClosing ? styles.closing : ''}`}>
         <p>
           <strong>Hello!</strong> Welcome to the mobile version of my portfolio. 
           For the best experience, <strong>please visit on a desktop!</strong>
         </p>
         <button 
-          className={styles.closeButton}
-          onClick={() => setIsVisible(false)}
+          className={`${styles.closeButton} ${isClosing ? styles.closing : ''}`}
+          onClick={handleClose}
           aria-label="Close popup"
+          disabled={isClosing}
         >
-          ✕
+          {isClosing ? 'Closing...' : '✕'}
         </button>
       </div>
     </div>

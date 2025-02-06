@@ -24,6 +24,7 @@ interface Project {
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [clickedId, setClickedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -51,15 +52,18 @@ export default function Projects() {
 
   const handleProjectClick = (projectId: string | undefined) => {
     if (!projectId || projectId === 'null') return;
+    setClickedId(projectId);
     router.push(`/project/${projectId}`, { scroll: false });
   };
 
   const renderProject = (project: Project, isActive: boolean) => {
     if (!project?.id) return null;
     
+    const isClicked = project.id === clickedId;
+    
     return (
       <div 
-        className={`${styles.projectItem} ${isActive ? styles.active : ''}`}
+        className={`${styles.projectItem} ${isActive ? styles.active : ''} ${isClicked ? styles.clicked : ''}`}
         role="button"
         tabIndex={0}
         onClick={() => project.id && handleProjectClick(project.id)}
@@ -78,7 +82,9 @@ export default function Projects() {
           )}
         </div>
         <div className={styles.projectInfo}>
-          <h3 className={styles.projectName}>{project.name}</h3>
+          <h3 className={styles.projectName}>
+            {isClicked ? 'Loading...' : project.name}
+          </h3>
           <p className={styles.projectDescription}>{project.shortDesc}</p>
         </div>
         <span className={styles.projectDateRange}>{project.dateRange}</span>

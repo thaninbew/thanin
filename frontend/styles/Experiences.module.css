@@ -93,6 +93,17 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+.experienceItem.clicked {
+  background: rgba(0, 0, 0, 0.05);
+  opacity: 0.7;
+  pointer-events: none;
+  cursor: wait;
+}
+
+.experienceItem.clicked .experienceName {
+  color: rgba(0, 0, 0, 0.6);
+}
+
 .experienceIcon {
   width: 40px;
   height: 40px;

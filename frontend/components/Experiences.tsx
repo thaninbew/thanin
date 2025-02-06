@@ -24,6 +24,7 @@ interface Experience {
 export default function Experiences() {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
+  const [clickedId, setClickedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -51,15 +52,18 @@ export default function Experiences() {
 
   const handleExperienceClick = (experienceId: string | undefined) => {
     if (!experienceId || experienceId === 'null') return;
+    setClickedId(experienceId);
     router.push(`/experience/${experienceId}`, { scroll: false });
   };
 
   const renderExperience = (experience: Experience, isActive: boolean) => {
     if (!experience?.id) return null;
     
+    const isClicked = experience.id === clickedId;
+    
     return (
       <div 
-        className={`${styles.experienceItem} ${isActive ? styles.active : ''}`}
+        className={`${styles.experienceItem} ${isActive ? styles.active : ''} ${isClicked ? styles.clicked : ''}`}
         role="button"
         tabIndex={0}
         onClick={() => experience.id && handleExperienceClick(experience.id)}
@@ -78,7 +82,9 @@ export default function Experiences() {
           )}
         </div>
         <div className={styles.experienceInfo}>
-          <h3 className={styles.experienceName}>{experience.name}</h3>
+          <h3 className={styles.experienceName}>
+            {isClicked ? 'Loading...' : experience.name}
+          </h3>
           <p className={styles.experienceRole}>{experience.role}</p>
         </div>
         <span className={styles.experienceDateRange}>{experience.dateRange}</span>
