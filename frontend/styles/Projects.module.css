@@ -5,6 +5,11 @@
   position: relative;
   justify-content: space-between;
   margin-top: 1rem;
+  /* Force hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
 }
 
 .projects {
@@ -84,8 +89,12 @@
   gap: 1rem;
   padding: 0.5rem 1rem;
   height: 56px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
+  /* Force hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 .projectItem:hover {

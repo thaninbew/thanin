@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import styles from '../styles/Experiences.module.css';
 import { FaBuilding } from 'react-icons/fa';
 import ContentPlayer from './ContentPlayer';
 import { useRouter } from 'next/navigation';
+import { usePreloader } from '../utils/usePreloader';
 
 interface Experience {
   id: string;
@@ -22,33 +23,22 @@ interface Experience {
 }
 
 export default function Experiences() {
-  const [experiences, setExperiences] = useState<Experience[]>([]);
-  const [loading, setLoading] = useState(true);
   const [clickedId, setClickedId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchExperiences = async () => {
-      try {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        const res = await fetch(`${backendUrl}/api/experiences`);
-        if (!res.ok) throw new Error('Failed to fetch experiences');
-        const data = await res.json();
-        const publishedExperiences = data
-          .filter((experience: Experience) => experience.published && experience.id)
-          .sort((a: Experience, b: Experience) => a.position - b.position);
-        setExperiences(publishedExperiences);
-      } catch (err) {
-        setError('Failed to load experiences');
-        console.error('Error fetching experiences:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchExperiences();
+  const fetchExperiences = useCallback(async () => {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const res = await fetch(`${backendUrl}/api/experiences`, {
+      next: { revalidate: 3600 } // Cache for 1 hour
+    });
+    if (!res.ok) throw new Error('Failed to fetch experiences');
+    const data = await res.json();
+    return data
+      .filter((experience: Experience) => experience.published && experience.id)
+      .sort((a: Experience, b: Experience) => a.position - b.position);
   }, []);
+
+  const { data: experiences, loading, error } = usePreloader<Experience[]>(fetchExperiences);
 
   const handleExperienceClick = (experienceId: string | undefined) => {
     if (!experienceId || experienceId === 'null') return;
@@ -72,11 +62,12 @@ export default function Experiences() {
       >
         <div className={styles.experienceIcon}>
           {experience.imageUrl ? (
-          <img 
+            <img 
               src={experience.imageUrl} 
-            alt={experience.name}
-            className={styles.experienceImage}
-          />
+              alt={experience.name}
+              className={styles.experienceImage}
+              loading="eager" // Force immediate loading
+            />
           ) : (
             <FaBuilding size={24} />
           )}
@@ -94,7 +85,7 @@ export default function Experiences() {
 
   if (loading) return <div>Loading experiences...</div>;
   if (error) return <div>{error}</div>;
-  if (!experiences.length) return <div>No experiences available.</div>;
+  if (!experiences?.length) return <div>No experiences available.</div>;
 
   return (
     <ContentPlayer

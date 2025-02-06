@@ -5,6 +5,11 @@
   position: relative;
   justify-content: space-between;
   margin-top: 1rem;
+  /* Force hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
 }
 
 .experiences {
@@ -86,6 +91,10 @@
   height: 56px;
   transition: all 0.3s ease;
   cursor: pointer;
+  /* Force hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 .experienceItem:hover,

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import styles from '../styles/Projects.module.css';
 import { FaCode } from 'react-icons/fa';
 import ContentPlayer from './ContentPlayer';
 import { useRouter } from 'next/navigation';
+import { usePreloader } from '../utils/usePreloader';
 
 interface Project {
   id: string;
@@ -22,33 +23,22 @@ interface Project {
 }
 
 export default function Projects() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
   const [clickedId, setClickedId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        const res = await fetch(`${backendUrl}/api/projects`);
-        if (!res.ok) throw new Error('Failed to fetch projects');
-        const data = await res.json();
-        const publishedProjects = data
-          .filter((project: Project) => project.published && project.id)
-          .sort((a: Project, b: Project) => a.position - b.position);
-        setProjects(publishedProjects);
-      } catch (err) {
-        setError('Failed to load projects');
-        console.error('Error fetching projects:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
+  const fetchProjects = useCallback(async () => {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const res = await fetch(`${backendUrl}/api/projects`, {
+      next: { revalidate: 3600 } // Cache for 1 hour
+    });
+    if (!res.ok) throw new Error('Failed to fetch projects');
+    const data = await res.json();
+    return data
+      .filter((project: Project) => project.published && project.id)
+      .sort((a: Project, b: Project) => a.position - b.position);
   }, []);
+
+  const { data: projects, loading, error } = usePreloader<Project[]>(fetchProjects);
 
   const handleProjectClick = (projectId: string | undefined) => {
     if (!projectId || projectId === 'null') return;
@@ -72,11 +62,12 @@ export default function Projects() {
       >
         <div className={styles.projectIcon}>
           {project.imageUrl ? (
-          <img 
+            <img 
               src={project.imageUrl} 
-            alt={project.name}
-            className={styles.projectImage}
-          />
+              alt={project.name}
+              className={styles.projectImage}
+              loading="eager" // Force immediate loading
+            />
           ) : (
             <FaCode size={24} />
           )}
@@ -94,7 +85,7 @@ export default function Projects() {
 
   if (loading) return <div>Loading projects...</div>;
   if (error) return <div>{error}</div>;
-  if (!projects.length) return <div>No projects available.</div>;
+  if (!projects?.length) return <div>No projects available.</div>;
 
   return (
     <ContentPlayer

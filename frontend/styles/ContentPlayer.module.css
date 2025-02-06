@@ -5,6 +5,22 @@
   position: relative;
   justify-content: space-between;
   margin-top: 1rem;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+  /* Force hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .content {
@@ -26,6 +42,24 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   width: 72%;
   margin-right: auto;
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideIn 0.4s ease forwards;
+  /* Force hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .header {
@@ -77,6 +111,35 @@
   flex-direction: column;
 }
 
+.itemsList > div {
+  opacity: 0;
+  transform: translateX(-10px);
+  animation: itemSlideIn 0.3s ease forwards;
+}
+
+/* Stagger the items animation */
+.itemsList > div:nth-child(1) { animation-delay: 0.1s; }
+.itemsList > div:nth-child(2) { animation-delay: 0.15s; }
+.itemsList > div:nth-child(3) { animation-delay: 0.2s; }
+.itemsList > div:nth-child(4) { animation-delay: 0.25s; }
+.itemsList > div:nth-child(5) { animation-delay: 0.3s; }
+.itemsList > div:nth-child(6) { animation-delay: 0.35s; }
+.itemsList > div:nth-child(7) { animation-delay: 0.4s; }
+.itemsList > div:nth-child(8) { animation-delay: 0.45s; }
+.itemsList > div:nth-child(9) { animation-delay: 0.5s; }
+.itemsList > div:nth-child(10) { animation-delay: 0.55s; }
+
+@keyframes itemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Player Styles */
 .player {
   flex: 1;
@@ -100,6 +163,24 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   min-width: 250px;
   align-self: flex-start;
+  opacity: 0;
+  transform: translateX(20px);
+  animation: playerSlideIn 0.4s ease forwards 0.2s;
+  /* Force hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+@keyframes playerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .sectionLabel {
@@ -130,7 +211,11 @@
   overflow: hidden;
   background-size: cover !important;
   background-position: center !important;
-  transition: all 0.3s ease;
+  /* Optimize transitions */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .playerTitle {
@@ -181,11 +266,14 @@
   width: 0;
   background-color: #000000;
   border-radius: 4px;
-  transition: width 0.1s linear;
+  /* Optimize animations */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, width;
 }
 
 .progressRunning {
-  animation: progressAnimation 5s linear;
+  animation: progressAnimation 5s cubic-bezier(0.4, 0, 0.2, 1);
   animation-fill-mode: forwards;
 }
 
@@ -194,8 +282,14 @@
 }
 
 @keyframes progressAnimation {
-  from { width: 0%; }
-  to { width: 100%; }
+  from { 
+    transform: translateZ(0);
+    width: 0%; 
+  }
+  to { 
+    transform: translateZ(0);
+    width: 100%; 
+  }
 }
 
 .controlButtons {
