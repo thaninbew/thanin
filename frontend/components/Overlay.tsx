@@ -163,27 +163,24 @@ const Overlay = forwardRef((props, ref) => {
           {/* Main Content */}
           <div className={styles.mainContent}>
             <div className={styles.sectionLabel}>LYRICS</div>
-            <p>Hello!</p>
-            <p>
-              I'm{' '}
-              <strong>
-                <u>Thanin Kongkiatsophon</u>
-              </strong>
-              , also known as Bew
-            </p>
-            <p>
-              Software Engineer, Full-Stack Developer, and Current student in
-              Boston, MA
-            </p>
-            <p>
-            I bring ideas to life through scalable, efficient, and creative software solutions.
-            </p>
-            <p>
-              <i>
-                ↜ See how my experiences and projects combine creativity with
-                technical expertise. You can also scroll! ⤵
-              </i>
-            </p>
+            <p><strong>Hello!</strong></p>
+
+<p>
+  I'm <strong><u>Thanin Kongkiatsophon</u></strong>, also known as Bew.
+</p>
+
+<p>
+  <strong>a Software Engineer, Full-Stack Developer, and current student in Boston, MA.</strong>
+</p>
+
+<p>
+  I create and transform innovative ideas into <strong>scalable, efficient, and creative software solutions.</strong>
+</p>
+
+<p>
+  <i>↜ Explore my experiences and projects to see how I blend creativity with technical expertise. Oh, and feel free to just scroll! ⤵</i>
+</p>
+
           </div>
 
           {/* Thanin's Radio Section */}
