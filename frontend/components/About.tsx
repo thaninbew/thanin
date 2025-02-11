@@ -21,30 +21,25 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
   const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
   const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright','arrowleft', 'arrowright', 'b', 'a'];
 
-  // Track dynamic measurements
   const [elementTop, setElementTop] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
 
-  // We'll store pinnedTopPx once, the FIRST time we hit expandEnd
+  // store pinnedTopPx once, the FIRST time we hit expandEnd
   // and reuse it for all subsequent fixed phases
   const [pinnedTopPx, setPinnedTopPx] = useState<number | null>(null);
 
   // For detecting threshold crossing
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Track if we should show Projects and Contact
   const [showProjects, setShowProjects] = useState(false);
   const [showContact, setShowContact] = useState(false);
 
-  // Add this before getAnimationState
   const easeOut = (x: number, power: number = 3): number => {
     return 1 - Math.pow(1 - x, power);
   };
 
-  // Track image width
-  const [imageWidth, setImageWidth] = useState('flex: 1'); // Default full flex
+  const [imageWidth, setImageWidth] = useState('flex: 1');
 
-  // Measure element position & viewport size
   useEffect(() => {
     const updatePositions = () => {
       if (aboutRef.current) {
@@ -58,7 +53,6 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
     window.addEventListener('resize', updatePositions);
     window.addEventListener('scroll', updatePositions);
 
-    // Re-measure after a short delay
     const timeout = setTimeout(updatePositions, 100);
 
     return () => {
@@ -68,12 +62,10 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
     };
   }, []);
 
-  // Keep track of last known scroll position
   useEffect(() => {
     setLastScrollY(scrollY);
   }, [scrollY]);
 
-  // Calculate our "phases"
   const getAnimationState = () => {
     // Start animation when the element is 20% from the top of the viewport
     const triggerStart = Math.max(elementTop - (viewportHeight * 0.9), 0);
@@ -111,12 +103,10 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
    */
   useEffect(() => {
     if (pinnedTopPx == null && lastScrollY < expandEnd && scrollY >= expandEnd) {
-      // We haven't measured yet, so measure now
       if (aboutRef.current) {
         const rect = aboutRef.current.getBoundingClientRect();
-        // rect.top is how far from top of viewport in px
-        // We'll store that so the 'fixed' phase uses exactly that for 'top'
         setPinnedTopPx(rect.top);
+
       }
     }
   }, [scrollY, lastScrollY, expandEnd, pinnedTopPx]);
