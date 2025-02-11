@@ -67,7 +67,6 @@ export default function ProjectDetail({ project }: Props) {
   }, [project.imageUrl]);
 
   const handleBack = () => {
-    // Store a flag in sessionStorage to indicate we're returning from projects
     sessionStorage.setItem('returnTo', 'projects');
     router.back();
   };

@@ -59,6 +59,14 @@ const Overlay = forwardRef((props, ref) => {
     };
   }, [lastScrollY]);
 
+  useEffect(() => {
+    const returnTo = sessionStorage.getItem('returnTo');
+    if (returnTo) {
+      scrollToSection(returnTo as any);
+      sessionStorage.removeItem('returnTo');
+    }
+  }, []);
+
   const handleSectionPositionsChange = useCallback((positions: {
     about: number;
     experiences: number;

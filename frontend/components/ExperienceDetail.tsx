@@ -61,7 +61,6 @@ export default function ExperienceDetail({ experience }: Props) {
   }, [experience.imageUrl]);
 
   const handleBack = () => {
-    // Store a flag in sessionStorage to indicate we're returning from experiences
     sessionStorage.setItem('returnTo', 'experiences');
     router.back();
   };
