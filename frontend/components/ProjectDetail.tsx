@@ -142,20 +142,15 @@ export default function ProjectDetail({ project }: Props) {
       <div className={styles.technologiesContainer}>
         <div className={styles.technologiesScroller}>
           <div className={styles.technologiesContent}>
-            <div className={styles.techCopy}>
-              {project.technologies.map((tech, index) => (
-                <span key={index} className={styles.tag}>
-                  {tech}
-                </span>
-              ))}
-            </div>
-            <div className={styles.techCopy}>
-              {project.technologies.map((tech, index) => (
-                <span key={`duplicate-${index}`} className={styles.tag}>
-                  {tech}
-                </span>
-              ))}
-            </div>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={`copy-${i}`} className={styles.techCopy}>
+                {project.technologies.map((tech, index) => (
+                  <span key={`${i}-${index}`} className={styles.tag}>
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -42,7 +42,7 @@
   border: 2px solid;
   border-radius: 16px;
   overflow: hidden;
-  padding: 1rem 0;
+  padding: 0.5rem 0;
   display: flex;
   align-items: center;
 }
@@ -53,20 +53,20 @@
 
 .technologiesScroller {
   overflow: hidden;
-  position: relative;
   width: 100%;
 }
 
 .technologiesContent {
   display: flex;
-  white-space: nowrap;
+  width: max-content;
   animation: marquee 20s linear infinite;
-  gap: 0;
 }
 
 .techCopy {
   display: flex;
   gap: 1rem;
+  padding-right: 1rem;
+  margin-left: 1rem;
 }
 
 .techCopy + .techCopy {
@@ -86,12 +86,8 @@
 }
 
 @keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-30%);
-  }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-16.666%); }
 }
 
 .headerContent {
@@ -350,4 +346,34 @@
   .role {
     font-size: 1.6rem;
   }
+}
+
+/* Only animate if content overflows */
+@media (hover: hover) {
+  .technologiesContainer:not(:hover) .technologiesContent {
+    animation-play-state: running;
+  }
+  .technologiesContainer:hover .technologiesContent {
+    animation-play-state: paused;
+  }
+}
+
+/* Disable animation if not needed */
+.technologiesScroller {
+  overflow: hidden;
+  position: relative;
+}
+.technologiesScroller::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(90deg, transparent, var(--bg-color));
+  pointer-events: none;
+  opacity: 0;
+}
+.technologiesContainer:has(.technologiesContent:not(:hover)) .technologiesScroller::after {
+  opacity: 1;
 }

@@ -2,7 +2,7 @@
 
 import styles from '../styles/DetailPage.module.css';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ColorThief from 'colorthief/dist/color-thief.mjs';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { marked } from 'marked';
@@ -40,6 +40,8 @@ export default function ExperienceDetail({ experience }: Props) {
   const router = useRouter();
   const [dominantColor, setDominantColor] = useState<[number, number, number]>([0, 0, 0]);
   const [textColor, setTextColor] = useState('white');
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const techContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (experience.imageUrl) {
@@ -59,6 +61,15 @@ export default function ExperienceDetail({ experience }: Props) {
       };
     }
   }, [experience.imageUrl]);
+
+  useEffect(() => {
+    if (techContentRef.current) {
+      const container = techContentRef.current;
+      const contentWidth = container.scrollWidth;
+      const containerWidth = container.clientWidth;
+      setShouldAnimate(contentWidth > containerWidth);
+    }
+  }, [experience.technologies]);
 
   const handleBack = () => {
     sessionStorage.setItem('returnTo', 'experiences');
@@ -131,18 +142,17 @@ export default function ExperienceDetail({ experience }: Props) {
           </div>
         </div>
       </div>
-
       <div className={styles.technologiesContainer}>
-        <div className={styles.containerContent}>
-          <div className={styles.tags}>
-            {experience.technologies.map((tech, index) => (
-              <span 
-                key={index} 
-                className={styles.tag}
-                style={{ borderColor: textColor }}
-              >
-                {tech}
-              </span>
+        <div className={styles.technologiesScroller}>
+          <div className={styles.technologiesContent}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={`copy-${i}`} className={styles.techCopy}>
+                {experience.technologies.map((tech, index) => (
+                  <span key={`${i}-${index}`} className={styles.tag}>
+                    {tech}
+                  </span>
+                ))}
+              </div>
             ))}
           </div>
         </div>
