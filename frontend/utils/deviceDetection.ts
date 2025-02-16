@@ -4,7 +4,7 @@ export type DeviceType = 'desktop' | 'tablet' | 'phone';
 
 const BREAKPOINTS = {
   PHONE: 768,
-  TABLET: 1300
+  TABLET: 1400
 } as const;
 
 export const detectDeviceType = (): DeviceType => {

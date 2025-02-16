@@ -35,8 +35,8 @@ const MobilePopup = () => {
     <div className={`${styles.popupOverlay} ${isClosing ? styles.closing : ''}`}>
       <div className={`${styles.popup} ${isClosing ? styles.closing : ''}`}>
         <p>
-          <strong>Hello!</strong> Welcome to the mobile version of my portfolio. 
-          For the best experience, <strong>please visit on a desktop!</strong>
+          <strong>Hello!</strong> Welcome to the compact version of my portfolio. 
+          For the best experience, <strong>view on a desktop or zoom out (browser zoom).</strong>
         </p>
         <button 
           className={`${styles.closeButton} ${isClosing ? styles.closing : ''}`}

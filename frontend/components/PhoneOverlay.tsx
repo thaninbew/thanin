@@ -197,7 +197,7 @@ const PhoneOverlay = () => {
             </p>
             <p>
               <i>
-              The desktop version of this site has 100% more animations and a 200% increase in buzzwords per second!
+              The desktop version of this site has 100% more animations!!
               </i>
             </p>
           </div>
