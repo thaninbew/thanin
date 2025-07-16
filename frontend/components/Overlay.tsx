@@ -178,7 +178,7 @@ const Overlay = forwardRef((props, ref) => {
 </p>
 
 <p>
-  <strong>Software Engineer, Full-Stack Developer, and current student in Boston, MA.</strong>
+  <strong>Software Engineer with experience in Digital Signal Processing and Web Development, currently a co-op at Bose Professional near Boston, MA.</strong>
 </p>
 
 <p>
@@ -186,7 +186,7 @@ const Overlay = forwardRef((props, ref) => {
 </p>
 
 <p>
-  <i>↜ Explore my experiences and projects to see how I blend creativity with technical expertise. Oh, and feel free to just scroll! ⤵</i>
+  <i>↜ Explore my experiences and projects to see how I blend creativity with technical expertise. Feel free to also just scroll! ⤵</i>
 </p>
 
           </div>

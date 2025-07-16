@@ -291,13 +291,13 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
           <div ref={descriptionRef} className={styles.description}>
           <p><strong>I'm a software engineer and part time music producer</strong> who thrives at the intersection of logic and creativity.</p>
 
-<p>I build <strong>full-stack apps</strong>, <strong>scalable backends</strong>, and explore <strong>AI/ML in music production</strong>. I’ve deeply engaged in <strong>web development, backend architecture, and machine learning.</strong></p>
+<p>I build <strong>full-stack apps</strong>, <strong>DSP algorithms</strong>, and explore <strong>AI/ML in both domains</strong>. </p>
 
-<p>With a strong foundation in <strong>OOP and algorithms</strong> from <strong>Northeastern University</strong>, I write <strong>clean, scalable code</strong> and adapt quickly.</p>
+<p>With a strong foundation in <strong>OOP and algorithms</strong> from <strong>Northeastern University, aswell as experience in contributing to real-world professional audio software</strong>, I write <strong>clean, scalable code</strong> and adapt quickly.</p>
 
 <p>I'm driven by the mindset of <strong>moving fast and making things happen—because if not now, then when?</strong></p>
 
-<p>Currently focused on <strong>AI-powered SaaS</strong> and pushing the boundaries of <strong>AI in music production</strong>.</p>
+<p>Currently focused on <strong>audio programming</strong> and pushing the boundaries of <strong>software in professional audio through my co-op</strong>.</p>
 
           </div>
         </div>
