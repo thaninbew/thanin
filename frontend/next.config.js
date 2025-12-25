@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['res.cloudinary.com'],
+    domains: ['res.cloudinary.com', 'YOUR_SUPABASE_PROJECT_ID.supabase.co'],
   },
   webpack: (config) => {
     config.resolve.fallback = { fs: false };

@@ -20,7 +20,7 @@
     "start": "concurrently \"npm start:frontend\" \"npm start:backend\"",
     "start:frontend": "cd frontend && npm run build && npm run start:watch",
     "start:backend": "cd backend && npm run start --port 3001",
-    "dev": "concurrently \"npm run dev:frontend\" \"npm dev:backend\"",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev"
   },
