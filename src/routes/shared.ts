@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
-import { uploadToCloudinary } from '../utils/cloudinary';
+import { uploadToStorage } from '../utils/storage';
 
 const prisma = new PrismaClient();
 
@@ -71,14 +71,14 @@ export async function handleEntityUpdate(
 
   // Handle file uploads
   if (files?.image) {
-    updateData.imageUrl = await uploadToCloudinary(
+    updateData.imageUrl = await uploadToStorage(
       files.image[0],
       `${entityType}s/images`
     );
   }
 
   if (files?.gif) {
-    updateData.gifUrl = await uploadToCloudinary(
+    updateData.gifUrl = await uploadToStorage(
       files.gif[0],
       `${entityType}s/gifs`
     );
@@ -87,10 +87,10 @@ export async function handleEntityUpdate(
   // Handle extra images
   if (files?.extraImages) {
     const uploadPromises = files.extraImages.map(file => 
-      uploadToCloudinary(file, `${entityType}s/extra-images`)
+      uploadToStorage(file, `${entityType}s/extra-images`)
     );
     const uploadedUrls = await Promise.all(uploadPromises);
-    const validUrls = uploadedUrls.filter(url => url !== null) as string[];
+    const validUrls = uploadedUrls.filter((url: string | null) => url !== null) as string[];
     
     updateData.extraImages = validUrls;
   } else if (existingExtraImages) {
@@ -175,14 +175,14 @@ export async function handleEntityCreate(
     let extraImages: string[] = [];
 
     if (files?.image) {
-      imageUrl = await uploadToCloudinary(
+      imageUrl = await uploadToStorage(
         files.image[0],
         `${entityType}s/images`
       );
     }
 
     if (files?.gif) {
-      gifUrl = await uploadToCloudinary(
+      gifUrl = await uploadToStorage(
         files.gif[0],
         `${entityType}s/gifs`
       );
@@ -191,10 +191,10 @@ export async function handleEntityCreate(
     // Handle extra images
     if (files?.extraImages) {
       const uploadPromises = files.extraImages.map(file => 
-        uploadToCloudinary(file, `${entityType}s/extra-images`)
+        uploadToStorage(file, `${entityType}s/extra-images`)
       );
       const uploadedUrls = await Promise.all(uploadPromises);
-      extraImages = uploadedUrls.filter(url => url !== null) as string[];
+      extraImages = uploadedUrls.filter((url: string | null) => url !== null) as string[];
     }
 
     const parsedOutcomes = JSON.parse(learningOutcomes || '[]')
