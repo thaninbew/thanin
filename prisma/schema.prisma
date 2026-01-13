@@ -97,3 +97,13 @@ model ContactSubmission {
   @@index([createdAt])
   @@index([email])
 }
+
+model Settings {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+}
