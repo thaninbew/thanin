@@ -645,3 +645,157 @@ input:checked + .slider:before {
   background: rgba(254, 226, 226, 0.95);
   transform: translateY(-2px);
 }
+
+/* Settings Page Styles */
+.settingsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.settingCard {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.settingCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.settingHeader h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.settingHeader p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.preview {
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.preview img,
+.preview video {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.uploadSection {
+  margin: 1rem 0;
+}
+
+.fileInput {
+  display: none;
+}
+
+.uploadButton {
+  display: inline-block;
+  background: rgba(236, 253, 245, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+  font-weight: 500;
+  text-align: center;
+  width: 100%;
+}
+
+.uploadButton:hover {
+  background: rgba(209, 250, 229, 0.95);
+  transform: translateY(-2px);
+}
+
+.currentUrl {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.currentUrl small {
+  display: block;
+  color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 0.25rem;
+}
+
+.currentUrl code {
+  display: block;
+  color: rgba(0, 0, 0, 0.7);
+  word-break: break-all;
+  font-family: 'Courier New', monospace;
+}
+
+.instructions {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: rgba(249, 250, 251, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+}
+
+.instructions h3 {
+  margin: 0 0 1rem 0;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.instructions pre {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.875rem;
+}
+
+.message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.message.success {
+  background: rgba(236, 253, 245, 0.9);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.message.error {
+  background: rgba(254, 242, 242, 0.9);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.backButton {
+  background: rgba(243, 244, 246, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.backButton:hover {
+  background: rgba(229, 231, 235, 0.95);
+  transform: translateY(-2px);
+}

@@ -689,6 +689,13 @@ export default function AdminDashboard() {
         >
           Add New {activeTab === 'projects' ? 'Project' : 'Experience'}
         </button>
+        <button
+          className={`${styles.button} ${styles.settingsButton}`}
+          onClick={() => router.push('/admin/settings')}
+          style={{ marginLeft: 'auto' }}
+        >
+          ⚙️ Settings
+        </button>
       </nav>
 
       {loading ? (
