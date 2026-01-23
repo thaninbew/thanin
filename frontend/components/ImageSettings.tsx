@@ -95,7 +95,7 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
   const [expandedText, setExpandedText] = useState(false);
 
   const loadSettings = async () => {
-    try 
+    try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/settings`);
       
       if (!response.ok) {
