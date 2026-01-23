@@ -67,6 +67,12 @@ export default function SettingsPage() {
   const loadSettings = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/settings`);
+      
+      if (!response.ok) {
+        console.error('Failed to load settings:', response.status);
+        return;
+      }
+      
       const data = await response.json();
       setSettings(data);
     } catch (error) {
@@ -80,6 +86,13 @@ export default function SettingsPage() {
 
     try {
       const token = localStorage.getItem('token');
+      
+      if (!token) {
+        setMessage('❌ No authentication token found. Please log in again.');
+        router.push('/admin/login');
+        return;
+      }
+
       const formData = new FormData();
       formData.append('file', file);
       formData.append('description', SETTINGS_CONFIG.find(s => s.key === key)?.description || '');
@@ -95,7 +108,17 @@ export default function SettingsPage() {
         }
       );
 
-      if (!response.ok) throw new Error('Upload failed');
+      if (response.status === 401) {
+        setMessage('❌ Session expired. Please log in again.');
+        localStorage.removeItem('token');
+        router.push('/admin/login');
+        return;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
+      }
 
       const data = await response.json();
       setSettings(prev => ({ ...prev, [key]: data.value }));
@@ -105,7 +128,7 @@ export default function SettingsPage() {
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       console.error('Upload error:', error);
-      setMessage(`❌ Failed to upload ${SETTINGS_CONFIG.find(s => s.key === key)?.label}`);
+      setMessage(`❌ Failed to upload ${SETTINGS_CONFIG.find(s => s.key === key)?.label}: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setUploading(prev => ({ ...prev, [key]: false }));
     }
