@@ -23,7 +23,10 @@ Software Engineer with experience in Digital Signal Processing and Web Developme
 
 I create and transform innovative ideas into scalable, efficient, and creative software solutions.
 
-↜ Explore my experiences and projects to see how I blend creativity with technical expertise. Feel free to also just scroll! ⤵`;
+↜ Explore my experiences and projects to see how I blend creativity with technical expertise. Feel free to also just scroll! ⤵
+
+NOTE: Images/GIFs are inconsistent due to dependency migrations and storage limitations. Working on improving this!`
+;
 
   const lyricsText = settings.lyrics?.trim() || defaultLyrics;
 
