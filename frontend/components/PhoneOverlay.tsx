@@ -210,7 +210,7 @@ const PhoneOverlay = () => {
           <div className={styles.sectionLabel}>ABOUT</div>
           <div className={styles.content}>
             <div className={styles.expandedImagePlaceholder}>
-              <img src={settings.profile_image || "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg"} alt="Profile" />
+              <img src={settings.profile_image || ''} alt="Profile" />
             </div>
             <p><strong>I'm a software engineer, producer, and musician</strong> who thrives at the intersection of logic and creativity.</p>
 

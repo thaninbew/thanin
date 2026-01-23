@@ -15,10 +15,10 @@ const BackgroundLayers: React.FC = () => {
         playsInline
         disablePictureInPicture
         disableRemotePlayback
-        src={settings.background_video || "https://res.cloudinary.com/dez4qkb8z/video/upload/v1738030613/bgloop_kjjfvz.mp4"}
+        src={settings.background_video}
       >
         <source 
-          src={settings.background_video || "https://res.cloudinary.com/dez4qkb8z/video/upload/v1738030613/bgloop_kjjfvz.mp4"} 
+          src={settings.background_video} 
           type="video/mp4" 
         />
       </video>

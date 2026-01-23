@@ -44,6 +44,8 @@ export default function ContentPlayer<T extends ContentItem>({
   const [currentItem, setCurrentItem] = useState<T>(items[0]);
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [playerImageLoaded, setPlayerImageLoaded] = useState(false);
   const progressRef = useRef<HTMLDivElement>(null);
 
   const resetProgress = useCallback(() => {
@@ -126,6 +128,26 @@ export default function ContentPlayer<T extends ContentItem>({
 
   const displayedItem = hoveredItem || currentItem;
 
+  // Preload header image and trigger fade-in
+  useEffect(() => {
+    const placeholderUrl = title === "Projects" ? settings.projects_placeholder : settings.experience_placeholder;
+    if (placeholderUrl) {
+      const img = new Image();
+      img.onload = () => setImageLoaded(true);
+      img.src = placeholderUrl;
+    }
+  }, [settings.projects_placeholder, settings.experience_placeholder, title]);
+
+  // Preload player image and trigger fade-in
+  useEffect(() => {
+    if (displayedItem.gifUrl) {
+      setPlayerImageLoaded(false);
+      const img = new Image();
+      img.onload = () => setPlayerImageLoaded(true);
+      img.src = displayedItem.gifUrl;
+    }
+  }, [displayedItem.gifUrl]);
+
   return (
     <div className={`${styles.container} ${className}`}>
       <div className={styles.content}>
@@ -134,11 +156,13 @@ export default function ContentPlayer<T extends ContentItem>({
             <div 
               className={styles.headerImagePlaceholder}
               style={{
-                backgroundImage: `url(${title === "Projects" ? 
-                  (settings.projects_placeholder || "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738041361/portfolio/experiences/images/aonbgl1sabrwxandhfg1.jpg") : 
-                  (settings.experience_placeholder || "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738292542/unnamed_acj96f.jpg")})`,
+                backgroundImage: title === "Projects" 
+                  ? `url(${settings.projects_placeholder})` 
+                  : `url(${settings.experience_placeholder})`,
                 backgroundSize: 'cover',
-                backgroundPosition: 'center'
+                backgroundPosition: 'center',
+                opacity: imageLoaded ? 1 : 0,
+                transition: 'opacity 0.5s ease-in-out'
               }}
             ></div>
             <h1 className={styles.title}>{title}</h1>
@@ -168,7 +192,9 @@ export default function ContentPlayer<T extends ContentItem>({
           <div 
             className={styles.playerImagePlaceholder}
             style={{
-              backgroundImage: `url(${displayedItem.gifUrl})`,
+              backgroundImage: `url(${disp,
+              opacity: playerImageLoaded ? 1 : 0,
+              transition: 'opacity 0.5s ease-in-out'layedItem.gifUrl})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}

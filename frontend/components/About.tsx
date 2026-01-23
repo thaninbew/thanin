@@ -309,7 +309,7 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
             className={styles.expandedImagePlaceholder}
             style={{ flex: '0.7' }}
           >
-            <img src={settings.profile_image || "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg"} alt="Profile" />
+            <img src={settings.profile_image || ''} alt="Profile" />
           </div>
         )}
       </div>

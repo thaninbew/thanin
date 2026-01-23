@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import styles from '../styles/Admin.module.css';
+import dynamic from 'next/dynamic';
+import 'easymde/dist/easymde.min.css';
 
-// Placeholder for now - will be replaced entirely
+const SimpleMDE = dynamic(() => import('react-simplemde-editor'), { ssr: false });
 
 interface ImageSettingsProps {
   onClose?: () => void;
@@ -221,6 +223,19 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
     }
   };
 
+  const mdeOptions = useMemo(() => ({
+    spellChecker: false,
+    placeholder: 'Enter markdown text...',
+    status: false,
+    toolbar: [
+      'bold', 'italic', 'heading', '|',
+      'quote', 'unordered-list', 'ordered-list', '|',
+      'link', 'image', '|',
+      'preview', 'side-by-side', 'fullscreen', '|',
+      'guide'
+    ]
+  }), []);
+
   return (
     <div className={styles.imageSettingsContainer}>
       {/* Images Section */}
@@ -298,12 +313,10 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
 
         {expandedText && (
           <div className={styles.imageSettingsContent}>
-            {message && (
-              <div className={`${styles.message} ${message.includes('✅') ? styles.success : styles.error}`}>
-                {message}
-              </div>
-            )}
-
+            {messagSimpleMDE
+                    value={textValues[config.key] || ''}
+                    onChange={(value) => setTextValues(prev => ({ ...prev, [config.key]: value }))}
+                    options={mdeOptions
             <div className={styles.textSettingsGrid}>
               {TEXT_SETTINGS.map(config => (
                 <div key={config.key} className={styles.textSettingCard}>

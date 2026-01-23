@@ -199,7 +199,7 @@ const Overlay = forwardRef((props, ref) => {
             <div className={styles.radioContent}>
               <div className={styles.imagePlaceholder}>
                 <img 
-                  src={settings.profile_image || "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg"}
+                  src={settings.profile_image || ''}
                   alt="Profile"
                 />
               </div>

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
-const DEFAULT_FAVICON = 'https://res.cloudinary.com/dez4qkb8z/image/upload/v1738440450/portfolio/projects/images/uq5znpvme1w3gbzwgxlr.png';
-const DEFAULT_OG_IMAGE = 'https://res.cloudinary.com/dez4qkb8z/image/upload/v1738440450/portfolio/projects/images/uq5znpvme1w3gbzwgxlr.png';
+const DEFAULT_FAVICON = '';
+const DEFAULT_OG_IMAGE = '';
 
 async function fetchSettings(): Promise<Record<string, string>> {
   try {
