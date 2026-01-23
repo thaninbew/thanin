@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import styles from '../styles/Admin.module.css';
 
+// Placeholder for now - will be replaced entirely
+
 interface ImageSettingsProps {
   onClose?: () => void;
 }
@@ -156,7 +158,13 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       console.error('Upload error:', error);
-      setMessage(`❌ Images = () => {
+      setMessage(`❌ Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setUploading(prev => ({ ...prev, [key]: false }));
+    }
+  };
+
+  const handleToggleImages = () => {
     if (!expandedImages) {
       loadSettings();
     }
@@ -171,7 +179,50 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
   };
 
   const handleSaveText = async () => {
-    setSaving(true);Container}>
+    setSaving(true);
+    setMessage('');
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      
+      if (!token) {
+        setMessage('❌ No authentication token found');
+        return;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/settings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(textValues)
+      });
+
+      if (response.status === 401) {
+        setMessage('❌ Session expired');
+        localStorage.removeItem('adminToken');
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to save text settings');
+      }
+
+      setMessage('✅ Text settings updated!');
+      setSettings(prev => ({ ...prev, ...textValues }));
+      
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('Save error:', error);
+      setMessage(`❌ Save failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className={styles.imageSettingsContainer}>
       {/* Images Section */}
       <div className={styles.imageSettings}>
         <div 
@@ -186,7 +237,7 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
 
         {expandedImages && (
           <div className={styles.imageSettingsContent}>
-            {message && message.includes('Image') && (
+            {message && (
               <div className={`${styles.message} ${message.includes('✅') ? styles.success : styles.error}`}>
                 {message}
               </div>
@@ -247,7 +298,7 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
 
         {expandedText && (
           <div className={styles.imageSettingsContent}>
-            {message && !message.includes('Image') && (
+            {message && (
               <div className={`${styles.message} ${message.includes('✅') ? styles.success : styles.error}`}>
                 {message}
               </div>
@@ -281,71 +332,6 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
           </div>
         )}
       </div>
-    </div>
-  );     loadSettings();
-    }
-    setExpanded(!expanded);
-  };
-
-  return (
-    <div className={styles.imageSettings}>
-      <div 
-        className={styles.imageSettingsHeader}
-        onClick={handleToggle}
-      >
-        <h3>🖼️ Image Settings</h3>
-        <span className={styles.toggleIcon}>
-          {expanded ? '▼' : '▶'}
-        </span>
-      </div>
-
-      {expanded && (
-        <div className={styles.imageSettingsContent}>
-          {message && (
-            <div className={`${styles.message} ${message.includes('✅') ? styles.success : styles.error}`}>
-              {message}
-            </div>
-          )}
-
-          <div className={styles.imageSettingsGrid}>
-            {IMAGE_SETTINGS.map(config => (
-              <div key={config.key} className={styles.imageSettingCard}>
-                <div className={styles.imageSettingInfo}>
-                  <h4>{config.label}</h4>
-                  <p>{config.description}</p>
-                </div>
-
-                {settings[config.key] && (
-                  <div className={styles.imagePreview}>
-                    {config.type === 'image' ? (
-                      <img src={settings[config.key]} alt={config.label} />
-                    ) : (
-                      <video src={settings[config.key]} controls />
-                    )}
-                  </div>
-                )}
-
-                <div className={styles.imageUploadSection}>
-                  <input
-                    type="file"
-                    accept={config.accept}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleFileUpload(config.key, file);
-                    }}
-                    disabled={uploading[config.key]}
-                    id={`upload-${config.key}`}
-                    className={styles.fileInput}
-                  />
-                  <label htmlFor={`upload-${config.key}`} className={styles.uploadButton}>
-                    {uploading[config.key] ? 'Uploading...' : settings[config.key] ? 'Replace' : 'Upload'}
-                  </label>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
