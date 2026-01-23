@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { IoPlayBackOutline, IoPlayForwardOutline, IoPlayOutline, IoPauseOutline } from 'react-icons/io5';
 import styles from '../styles/ContentPlayer.module.css';
+import { useSettings } from '../hooks/useSettings';
 
 interface ContentItem {
   id: string;
@@ -38,6 +39,7 @@ export default function ContentPlayer<T extends ContentItem>({
   title,
   description
 }: ContentPlayerProps<T>) {
+  const { settings } = useSettings();
   const [hoveredItem, setHoveredItem] = useState<T | null>(null);
   const [currentItem, setCurrentItem] = useState<T>(items[0]);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -133,8 +135,8 @@ export default function ContentPlayer<T extends ContentItem>({
               className={styles.headerImagePlaceholder}
               style={{
                 backgroundImage: `url(${title === "Projects" ? 
-                  "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738041361/portfolio/experiences/images/aonbgl1sabrwxandhfg1.jpg" : 
-                  "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738292542/unnamed_acj96f.jpg"})`,
+                  (settings.projects_placeholder || "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738041361/portfolio/experiences/images/aonbgl1sabrwxandhfg1.jpg") : 
+                  (settings.experience_placeholder || "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738292542/unnamed_acj96f.jpg")})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}

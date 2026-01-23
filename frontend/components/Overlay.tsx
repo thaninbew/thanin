@@ -5,12 +5,14 @@ import styles from '../styles/Overlay.module.css';
 import Frame from './Frame';
 import About from './About';
 import Contact from './Contact';
+import { useSettings } from '../hooks/useSettings';
 
 const Overlay = forwardRef((props, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState(0);
   const [lastScrollY, setLastScrollY] = useState(0);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+  const { settings } = useSettings();
 
   // Store scroll positions where sections become visible
   const [sectionScrollPositions, setSectionScrollPositions] = useState({
@@ -196,7 +198,10 @@ const Overlay = forwardRef((props, ref) => {
             <div className={styles.sectionLabel}>Thanin's Radio</div>
             <div className={styles.radioContent}>
               <div className={styles.imagePlaceholder}>
-                <img src="https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg"/>
+                <img 
+                  src={settings.profile_image || "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg"}
+                  alt="Profile"
+                />
               </div>
               <h4 className={styles.songName}>Portfolio</h4>
               <p className={styles.artistName}>Thanin Kongkiatsophon</p>

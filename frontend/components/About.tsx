@@ -3,6 +3,7 @@ import styles from '../styles/About.module.css';
 import Experiences from './Experiences';
 import Projects from './Projects';
 import Contact from './Contact';
+import { useSettings } from '../hooks/useSettings';
 
 interface AboutProps {
   scrollY: number;
@@ -16,6 +17,7 @@ interface AboutProps {
 }
 
 const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScrollToTop }) => {
+  const { settings } = useSettings();
   const aboutRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
@@ -307,7 +309,7 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
             className={styles.expandedImagePlaceholder}
             style={{ flex: '0.7' }}
           >
-            <img src="https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg" alt="Profile" />
+            <img src={settings.profile_image || "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg"} alt="Profile" />
           </div>
         )}
       </div>

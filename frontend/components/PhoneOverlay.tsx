@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../styles/PhoneOverlay.module.css';
 import { FaGithub, FaLinkedin, FaEnvelope, FaBuilding, FaCode } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import { useSettings } from '../hooks/useSettings';
 
 interface Experience {
   id: string;
@@ -159,6 +160,7 @@ const PhoneContact = () => (
 );
 
 const PhoneOverlay = () => {
+  const { settings } = useSettings();
   return (
     <div className={styles.wrapper}>
       {/* Floating Header */}
@@ -208,7 +210,7 @@ const PhoneOverlay = () => {
           <div className={styles.sectionLabel}>ABOUT</div>
           <div className={styles.content}>
             <div className={styles.expandedImagePlaceholder}>
-              <img src="https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg" alt="Profile" />
+              <img src={settings.profile_image || "https://res.cloudinary.com/dez4qkb8z/image/upload/v1738030646/bewsmile_b8rxkj.jpg"} alt="Profile" />
             </div>
             <p><strong>I'm a software engineer, producer, and musician</strong> who thrives at the intersection of logic and creativity.</p>
 
