@@ -55,7 +55,7 @@ const IMAGE_SETTINGS: ImageSetting[] = [
     accept: 'video/*'
   },
   {
-    key: 'projects_placeholder',
+    key: 'project_placeholder',
     label: 'Projects Placeholder Image',
     description: 'Default image for projects without custom images',
     type: 'image',
@@ -104,12 +104,16 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
       }
       
       const data = await response.json();
-      setSettings(data);
+      const normalizedData = {
+        ...data,
+        project_placeholder: data.project_placeholder || data.projects_placeholder || ''
+      };
+      setSettings(normalizedData);
       
       // Set text values from loaded settings
       const textVals: Record<string, string> = {};
       TEXT_SETTINGS.forEach(setting => {
-        textVals[setting.key] = data[setting.key] || '';
+        textVals[setting.key] = normalizedData[setting.key] || '';
       });
       setTextValues(textVals);
     } catch (error) {
@@ -132,8 +136,9 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
       const formData = new FormData();
       formData.append('file', file);
 
+      const uploadKey = key === 'project_placeholder' ? 'project_placeholder' : key;
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/settings/upload/${key}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/settings/upload/${uploadKey}`,
         {
           method: 'POST',
           headers: {
@@ -155,7 +160,11 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
       }
 
       const data = await response.json();
-      setSettings(prev => ({ ...prev, [key]: data.value }));
+      setSettings(prev => ({
+        ...prev,
+        [key]: data.value,
+        ...(key === 'project_placeholder' ? { projects_placeholder: data.value } : {})
+      }));
       setMessage(`✅ ${IMAGE_SETTINGS.find(s => s.key === key)?.label} updated!`);
       
       setTimeout(() => setMessage(''), 3000);
@@ -314,6 +323,11 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
 
         {expandedText && (
           <div className={styles.imageSettingsContent}>
+            {message && (
+              <div className={`${styles.message} ${message.includes('✅') ? styles.success : styles.error}`}>
+                {message}
+              </div>
+            )}
             <div className={styles.textSettingsGrid}>
               {TEXT_SETTINGS.map(config => (
                 <div key={config.key} className={styles.textSettingCard}>

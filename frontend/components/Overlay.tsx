@@ -6,7 +6,7 @@ import Frame from './Frame';
 import About from './About';
 import Contact from './Contact';
 import { useSettings } from '../hooks/useSettings';
-import { marked } from 'marked';
+import ReactMarkdown from 'react-markdown';
 
 const Overlay = forwardRef((props, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -14,8 +14,6 @@ const Overlay = forwardRef((props, ref) => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
   const { settings } = useSettings();
-
-  const lyricsHtml = marked.parse(settings.lyrics?.trim() || '');
 
   // Store scroll positions where sections become visible
   const [sectionScrollPositions, setSectionScrollPositions] = useState({
@@ -176,9 +174,9 @@ const Overlay = forwardRef((props, ref) => {
           {/* Main Content */}
           <div className={styles.mainContent}>
             <div className={styles.sectionLabel}>LYRICS</div>
-            <div
-              dangerouslySetInnerHTML={{ __html: lyricsHtml }}
-            />
+            <ReactMarkdown>
+              {settings.lyrics || ''}
+            </ReactMarkdown>
 
           </div>
 
