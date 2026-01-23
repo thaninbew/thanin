@@ -78,7 +78,7 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
     setMessage('');
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('adminToken');
       
       if (!token) {
         setMessage('❌ No authentication token found');
@@ -101,7 +101,7 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
 
       if (response.status === 401) {
         setMessage('❌ Session expired');
-        localStorage.removeItem('token');
+        localStorage.removeItem('adminToken');
         return;
       }
 
