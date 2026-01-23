@@ -20,7 +20,12 @@ export function useSettings() {
         }
         
         const data = await response.json();
-        setSettings(data);
+        const normalizedData = {
+          ...data,
+          project_placeholder: data.project_placeholder || data.projects_placeholder || '',
+          projects_placeholder: data.projects_placeholder || data.project_placeholder || ''
+        };
+        setSettings(normalizedData);
         setError(null);
       } catch (err) {
         console.error('Failed to load settings:', err);

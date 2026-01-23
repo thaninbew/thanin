@@ -55,7 +55,7 @@ const IMAGE_SETTINGS: ImageSetting[] = [
     accept: 'video/*'
   },
   {
-    key: 'projects_placeholder',
+    key: 'project_placeholder',
     label: 'Projects Placeholder Image',
     description: 'Default image for projects without custom images',
     type: 'image',
@@ -104,12 +104,17 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
       }
       
       const data = await response.json();
-      setSettings(data);
+      const normalizedData = {
+        ...data,
+        project_placeholder: data.project_placeholder || data.projects_placeholder || '',
+        projects_placeholder: data.projects_placeholder || data.project_placeholder || ''
+      };
+      setSettings(normalizedData);
       
       // Set text values from loaded settings
       const textVals: Record<string, string> = {};
       TEXT_SETTINGS.forEach(setting => {
-        textVals[setting.key] = data[setting.key] || '';
+        textVals[setting.key] = normalizedData[setting.key] || '';
       });
       setTextValues(textVals);
     } catch (error) {
