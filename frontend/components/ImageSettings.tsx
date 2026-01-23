@@ -55,7 +55,7 @@ const IMAGE_SETTINGS: ImageSetting[] = [
     accept: 'video/*'
   },
   {
-    key: 'project_placeholder',
+    key: 'projects_placeholder',
     label: 'Projects Placeholder Image',
     description: 'Default image for projects without custom images',
     type: 'image',
