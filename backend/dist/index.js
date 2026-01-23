@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -25,7 +16,7 @@ const contact_1 = __importDefault(require("./routes/contact"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
-const PORT = process.env.PORT || 3001;
+const PORT = Number(process.env.PORT) || 3001;
 // Security middleware
 const limiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -65,37 +56,35 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Something broke!' });
 });
 // Connect to database and start server
-function startServer() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield prisma.$connect();
-            console.log('Connected to database');
-            const server = app.listen(PORT, () => {
-                console.log(`Server is running on http://localhost:${PORT}`);
+async function startServer() {
+    try {
+        await prisma.$connect();
+        console.log('Connected to database');
+        const server = app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+        });
+        // Handle graceful shutdown
+        process.on('SIGTERM', () => {
+            console.log('SIGTERM signal received: closing HTTP server');
+            server.close(() => {
+                prisma.$disconnect();
+                console.log('HTTP server closed');
+                process.exit(0);
             });
-            // Handle graceful shutdown
-            process.on('SIGTERM', () => {
-                console.log('SIGTERM signal received: closing HTTP server');
-                server.close(() => {
-                    prisma.$disconnect();
-                    console.log('HTTP server closed');
-                    process.exit(0);
-                });
+        });
+        process.on('SIGINT', () => {
+            console.log('SIGINT signal received: closing HTTP server');
+            server.close(() => {
+                prisma.$disconnect();
+                console.log('HTTP server closed');
+                process.exit(0);
             });
-            process.on('SIGINT', () => {
-                console.log('SIGINT signal received: closing HTTP server');
-                server.close(() => {
-                    prisma.$disconnect();
-                    console.log('HTTP server closed');
-                    process.exit(0);
-                });
-            });
-        }
-        catch (error) {
-            console.error('Error starting server:', error);
-            yield prisma.$disconnect();
-            process.exit(1);
-        }
-    });
+        });
+    }
+    catch (error) {
+        console.error('Error starting server:', error);
+        await prisma.$disconnect();
+        process.exit(1);
+    }
 }
 startServer();

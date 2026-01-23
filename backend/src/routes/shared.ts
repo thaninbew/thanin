@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
-import { uploadToCloudinary } from '../utils/cloudinary';
+import { uploadToSupabase } from '../utils/supabase';
 
 const prisma = new PrismaClient();
 
@@ -71,14 +71,14 @@ export async function handleEntityUpdate(
 
   // Handle file uploads
   if (files?.image) {
-    updateData.imageUrl = await uploadToCloudinary(
+    updateData.imageUrl = await uploadToSupabase(
       files.image[0],
       `${entityType}s/images`
     );
   }
 
   if (files?.gif) {
-    updateData.gifUrl = await uploadToCloudinary(
+    updateData.gifUrl = await uploadToSupabase(
       files.gif[0],
       `${entityType}s/gifs`
     );
@@ -87,7 +87,7 @@ export async function handleEntityUpdate(
   // Handle extra images
   if (files?.extraImages) {
     const uploadPromises = files.extraImages.map(file => 
-      uploadToCloudinary(file, `${entityType}s/extra-images`)
+      uploadToSupabase(file, `${entityType}s/extra-images`)
     );
     const uploadedUrls = await Promise.all(uploadPromises);
     const validUrls = uploadedUrls.filter(url => url !== null) as string[];
@@ -176,14 +176,14 @@ export async function handleEntityCreate(
     let extraImages: string[] = [];
 
     if (files?.image) {
-      imageUrl = await uploadToCloudinary(
+      imageUrl = await uploadToSupabase(
         files.image[0],
         `${entityType}s/images`
       );
     }
 
     if (files?.gif) {
-      gifUrl = await uploadToCloudinary(
+      gifUrl = await uploadToSupabase(
         files.gif[0],
         `${entityType}s/gifs`
       );
@@ -192,7 +192,7 @@ export async function handleEntityCreate(
     // Handle extra images
     if (files?.extraImages) {
       const uploadPromises = files.extraImages.map(file => 
-        uploadToCloudinary(file, `${entityType}s/extra-images`)
+        uploadToSupabase(file, `${entityType}s/extra-images`)
       );
       const uploadedUrls = await Promise.all(uploadPromises);
       extraImages = uploadedUrls.filter(url => url !== null) as string[];
