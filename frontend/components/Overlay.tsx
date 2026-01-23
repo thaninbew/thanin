@@ -15,6 +15,18 @@ const Overlay = forwardRef((props, ref) => {
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
   const { settings } = useSettings();
 
+  const defaultLyrics = `Hello!
+
+I'm Thanin Kongkiatsophon, also known as Bew.
+
+Software Engineer with experience in Digital Signal Processing and Web Development, currently a co-op at Bose Professional near Boston, MA.
+
+I create and transform innovative ideas into scalable, efficient, and creative software solutions.
+
+↜ Explore my experiences and projects to see how I blend creativity with technical expertise. Feel free to also just scroll! ⤵`;
+
+  const lyricsText = settings.lyrics?.trim() || defaultLyrics;
+
   // Store scroll positions where sections become visible
   const [sectionScrollPositions, setSectionScrollPositions] = useState({
     home: 0,
@@ -175,7 +187,7 @@ const Overlay = forwardRef((props, ref) => {
           <div className={styles.mainContent}>
             <div className={styles.sectionLabel}>LYRICS</div>
             <ReactMarkdown>
-              {settings.lyrics || ''}
+              {lyricsText}
             </ReactMarkdown>
 
           </div>

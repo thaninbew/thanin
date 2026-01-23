@@ -37,6 +37,18 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
   const [showProjects, setShowProjects] = useState(false);
   const [showContact, setShowContact] = useState(false);
 
+  const defaultAbout = `**I'm a software engineer and part time music producer** who thrives at the intersection of logic and creativity.
+
+I build **full-stack apps**, **DSP algorithms**, and explore **AI/ML in both domains**.
+
+With a strong foundation in **OOP and algorithms** from **Northeastern University, aswell as experience in contributing to real-world professional audio software**, I write **clean, scalable code** and adapt quickly.
+
+I'm driven by the mindset of **moving fast and making things happen—because if not now, then when?**
+
+Currently focused on **audio programming** and pushing the boundaries of **software in professional audio through my co-op**.`;
+
+  const aboutText = settings.about_developer?.trim() || defaultAbout;
+
   const easeOut = (x: number, power: number = 3): number => {
     return 1 - Math.pow(1 - x, power);
   };
@@ -293,7 +305,7 @@ const About: React.FC<AboutProps> = ({ scrollY, onSectionPositionsChange, onScro
           <div className={styles.sectionLabel}>About the developer</div>
           <div ref={descriptionRef} className={styles.description}>
             <ReactMarkdown>
-              {settings.about_developer || ''}
+              {aboutText}
             </ReactMarkdown>
           </div>
         </div>
