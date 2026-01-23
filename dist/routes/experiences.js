@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -26,8 +17,8 @@ const upload = (0, multer_1.default)({
     limits: { fileSize: 5 * 1024 * 1024 }
 });
 // Get all experiences
-router.get('/', (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const experiences = yield prisma.experience.findMany({
+router.get('/', (0, express_async_handler_1.default)(async (req, res) => {
+    const experiences = await prisma.experience.findMany({
         orderBy: { position: 'asc' },
         include: {
             learningOutcomes: {
@@ -36,21 +27,22 @@ router.get('/', (0, express_async_handler_1.default)((req, res) => __awaiter(voi
         }
     });
     res.json(experiences);
-})));
+}));
 // Create experience
 router.post('/', auth_1.authenticateToken, auth_1.requireAdmin, upload.fields([
     { name: 'image', maxCount: 1 },
-    { name: 'gif', maxCount: 1 }
-]), (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, shared_1.handleEntityCreate)(req, res, 'experience');
-})));
+    { name: 'gif', maxCount: 1 },
+    { name: 'extraImages', maxCount: 10 } // Allow up to 10 extra images
+]), (0, express_async_handler_1.default)(async (req, res) => {
+    await (0, shared_1.handleEntityCreate)(req, res, 'experience');
+}));
 // Reorder experiences - must come before /:id routes
-router.put('/reorder', auth_1.authenticateToken, auth_1.requireAdmin, (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, shared_1.handleReorder)(req, res, 'experience');
-})));
+router.put('/reorder', auth_1.authenticateToken, auth_1.requireAdmin, (0, express_async_handler_1.default)(async (req, res) => {
+    await (0, shared_1.handleReorder)(req, res, 'experience');
+}));
 // Get single experience
-router.get('/:id', (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const experience = yield prisma.experience.findUnique({
+router.get('/:id', (0, express_async_handler_1.default)(async (req, res) => {
+    const experience = await prisma.experience.findUnique({
         where: { id: req.params.id },
         include: {
             learningOutcomes: {
@@ -63,19 +55,20 @@ router.get('/:id', (0, express_async_handler_1.default)((req, res) => __awaiter(
         return;
     }
     res.json(experience);
-})));
+}));
 // Update experience
 router.put('/:id', auth_1.authenticateToken, auth_1.requireAdmin, upload.fields([
     { name: 'image', maxCount: 1 },
-    { name: 'gif', maxCount: 1 }
-]), (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, shared_1.handleEntityUpdate)(req, res, 'experience');
-})));
+    { name: 'gif', maxCount: 1 },
+    { name: 'extraImages', maxCount: 10 } // Allow up to 10 extra images
+]), (0, express_async_handler_1.default)(async (req, res) => {
+    await (0, shared_1.handleEntityUpdate)(req, res, 'experience');
+}));
 // Delete experience
-router.delete('/:id', auth_1.authenticateToken, auth_1.requireAdmin, (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    yield prisma.experience.delete({
+router.delete('/:id', auth_1.authenticateToken, auth_1.requireAdmin, (0, express_async_handler_1.default)(async (req, res) => {
+    await prisma.experience.delete({
         where: { id: req.params.id }
     });
     res.json({ message: 'Experience deleted successfully' });
-})));
+}));
 exports.default = router;

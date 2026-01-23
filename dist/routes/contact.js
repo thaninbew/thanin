@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -27,7 +18,7 @@ const transporter = nodemailer_1.default.createTransport({
     }
 });
 // Contact form submission
-router.post('/', (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/', (0, express_async_handler_1.default)(async (req, res) => {
     const { name, email, message } = req.body;
     // Validate input
     if (!name || !email || !message) {
@@ -36,7 +27,7 @@ router.post('/', (0, express_async_handler_1.default)((req, res) => __awaiter(vo
     }
     try {
         // Save contact submission to database
-        yield prisma.contactSubmission.create({
+        await prisma.contactSubmission.create({
             data: {
                 name,
                 email,
@@ -44,7 +35,7 @@ router.post('/', (0, express_async_handler_1.default)((req, res) => __awaiter(vo
             }
         });
         // Send email notification
-        yield transporter.sendMail({
+        await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: 'bewxtt@gmail.com', // Your email
             subject: `New Contact Form Submission from ${name}`,
@@ -67,5 +58,5 @@ router.post('/', (0, express_async_handler_1.default)((req, res) => __awaiter(vo
         console.error('Contact submission error:', error);
         res.status(500).json({ error: 'Failed to send message' });
     }
-})));
+}));
 exports.default = router;

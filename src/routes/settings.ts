@@ -8,7 +8,10 @@ const router = express.Router();
 const prisma = new PrismaClient();
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Get all settings
+/**
+ * GET /api/settings
+ * Get all settings as a key-value object
+ */
 router.get('/', async (req, res) => {
   try {
     const settings = await prisma.settings.findMany();
@@ -24,7 +27,60 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Update settings (protected route)
+/**
+ * POST /api/settings/upload/:key
+ * Upload a file for a specific setting key
+ */
+router.post('/upload/:key', authenticateToken, upload.single('file'), async (req: any, res) => {
+  try {
+    const { key } = req.params;
+    const file = req.file;
+
+    if (!file) {
+      res.status(400).json({ error: 'No file provided' });
+      return;
+    }
+
+    // Validate key is in allowed settings
+    const allowedKeys = [
+      'site_favicon',
+      'og_image',
+      'profile_image',
+      'background_video',
+      'experience_placeholder'
+    ];
+
+    if (!allowedKeys.includes(key)) {
+      res.status(400).json({ error: 'Invalid setting key' });
+      return;
+    }
+
+    // Upload to Supabase
+    const fileUrl = await uploadToStorage(file, 'settings');
+
+    if (!fileUrl) {
+      res.status(500).json({ error: 'Failed to upload file' });
+      return;
+    }
+
+    // Save or update setting in database
+    const setting = await prisma.settings.upsert({
+      where: { key },
+      update: { value: fileUrl },
+      create: { key, value: fileUrl }
+    });
+
+    res.json(setting);
+  } catch (error) {
+    console.error('Error uploading setting:', error);
+    res.status(500).json({ error: 'Failed to upload setting' });
+  }
+});
+
+/**
+ * POST /api/settings
+ * Update multiple settings (legacy endpoint)
+ */
 router.post('/', authenticateToken, upload.fields([
   { name: 'favicon', maxCount: 1 },
   { name: 'profileImage', maxCount: 1 },
