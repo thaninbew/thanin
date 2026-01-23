@@ -104,17 +104,12 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
       }
       
       const data = await response.json();
-      const normalizedData = {
-        ...data,
-        project_placeholder: data.project_placeholder || data.projects_placeholder || '',
-        projects_placeholder: data.projects_placeholder || data.project_placeholder || ''
-      };
-      setSettings(normalizedData);
+      setSettings(data);
       
       // Set text values from loaded settings
       const textVals: Record<string, string> = {};
       TEXT_SETTINGS.forEach(setting => {
-        textVals[setting.key] = normalizedData[setting.key] || '';
+        textVals[setting.key] = data[setting.key] || '';
       });
       setTextValues(textVals);
     } catch (error) {

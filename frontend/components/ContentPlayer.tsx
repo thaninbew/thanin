@@ -130,14 +130,13 @@ export default function ContentPlayer<T extends ContentItem>({
 
   // Preload header image and trigger fade-in
   useEffect(() => {
-    const projectPlaceholder = settings.project_placeholder || settings.projects_placeholder;
-    const placeholderUrl = title === "Projects" ? projectPlaceholder : settings.experience_placeholder;
+    const placeholderUrl = title === "Projects" ? settings.projects_placeholder : settings.experience_placeholder;
     if (placeholderUrl) {
       const img = new Image();
       img.onload = () => setImageLoaded(true);
       img.src = placeholderUrl;
     }
-  }, [settings.project_placeholder, settings.projects_placeholder, settings.experience_placeholder, title]);
+  }, [settings.projects_placeholder, settings.experience_placeholder, title]);
 
   // Preload player image and trigger fade-in
   useEffect(() => {
@@ -158,7 +157,7 @@ export default function ContentPlayer<T extends ContentItem>({
               className={styles.headerImagePlaceholder}
               style={{
                 backgroundImage: title === "Projects" 
-                  ? `url(${settings.project_placeholder || settings.projects_placeholder})` 
+                  ? `url(${settings.projects_placeholder})` 
                   : `url(${settings.experience_placeholder})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',

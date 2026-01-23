@@ -6,6 +6,7 @@ import Frame from './Frame';
 import About from './About';
 import Contact from './Contact';
 import { useSettings } from '../hooks/useSettings';
+import { marked } from 'marked';
 
 const Overlay = forwardRef((props, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,6 +14,8 @@ const Overlay = forwardRef((props, ref) => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
   const { settings } = useSettings();
+
+  const lyricsHtml = marked.parse(settings.lyrics?.trim() || '');
 
   // Store scroll positions where sections become visible
   const [sectionScrollPositions, setSectionScrollPositions] = useState({
@@ -173,23 +176,9 @@ const Overlay = forwardRef((props, ref) => {
           {/* Main Content */}
           <div className={styles.mainContent}>
             <div className={styles.sectionLabel}>LYRICS</div>
-            <p><strong>Hello!</strong></p>
-
-<p>
-  I'm <strong><u>Thanin Kongkiatsophon</u></strong>, also known as Bew.
-</p>
-
-<p>
-  <strong>Software Engineer with experience in Digital Signal Processing and Web Development, currently a co-op at Bose Professional near Boston, MA.</strong>
-</p>
-
-<p>
-  I create and transform innovative ideas into <strong>scalable, efficient, and creative software solutions.</strong>
-</p>
-
-<p>
-  <i>↜ Explore my experiences and projects to see how I blend creativity with technical expertise. Feel free to also just scroll! ⤵</i>
-</p>
+            <div
+              dangerouslySetInnerHTML={{ __html: lyricsHtml }}
+            />
 
           </div>
 
