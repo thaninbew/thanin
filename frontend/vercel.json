@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "regions": ["sin1"],
+  "env": {
+    "NEXT_PUBLIC_BACKEND_URL": "https://thanin-4d10dfaa00d3.herokuapp.com"
+  }
+} 

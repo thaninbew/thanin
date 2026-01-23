@@ -1,0 +1,250 @@
+.wrapper {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: transparent;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  padding: 0.75rem;
+  padding-top: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-sizing: border-box;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3rem;
+  background: rgba(241, 247, 252, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.iconContainer {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.iconLink {
+  color: #000;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.iconLink:hover {
+  opacity: 1;
+}
+
+.mainContent, .section {
+  width: 100%;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(
+    to top,
+    rgba(241, 247, 252, 0.75),
+    rgba(241, 247, 252, 0.75)
+  ), radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(133, 155, 182, 0.5) 45%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  border: 1px solid black;
+  border-radius: 0.75rem;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.sectionLabel {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  font-weight: bold;
+  font-family: 'UncutSans', Arial, sans-serif;
+  color: #000;
+  opacity: 0.5;
+  font-size: 0.8rem;
+}
+
+.mainText {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+
+
+.subtitle {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 0.5rem;
+}
+
+.content {
+  margin-top: 1.5rem;
+}
+
+.expandedImagePlaceholder {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 0 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid black;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.expandedImagePlaceholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.content p {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+
+.experienceList, .projectList {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.experienceItem, .projectItem {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.experienceItem:hover, .projectItem:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.experienceIcon, .projectIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.itemImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.itemInfo {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-right: 0.5rem; 
+}
+
+.itemInfo h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemRole, .itemDescription {
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.7);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemDate {
+  display: none; 
+}
+
+@media screen and (min-width: 600px) {
+  .experienceItem, .projectItem {
+    grid-template-columns: auto 1fr auto; 
+  }
+
+  .itemDate {
+    display: block;
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .itemInfo h3 {
+    font-size: 1.3rem;
+  }
+
+  .itemRole, .itemDescription {
+    font-size: 1.1rem;
+  }
+
+  .itemDate {
+    font-size: 1.1rem;
+  }
+}
+
+.contactInfo {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #000;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.contactItem:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.contactItem svg {
+  opacity: 0.7;
+  width: 18px;
+  height: 18px;
+} 
