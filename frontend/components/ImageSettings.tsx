@@ -13,6 +13,13 @@ interface ImageSetting {
   accept: string;
 }
 
+interface TextSetting {
+  key: string;
+  label: string;
+  description: string;
+  type: 'text';
+}
+
 const IMAGE_SETTINGS: ImageSetting[] = [
   {
     key: 'site_favicon',
@@ -43,19 +50,44 @@ const IMAGE_SETTINGS: ImageSetting[] = [
     accept: 'video/*'
   },
   {
+    key: 'projects_placeholder',
+    label: 'Projects Placeholder Image',
+    description: 'Default image for projects without custom images',
+    type: 'image',
+    accept: 'image/*'
+  },
+  {
     key: 'experience_placeholder',
     label: 'Experience Placeholder Image',
-    description: 'Default image for experiences',
+    description: 'Default image for experiences without custom images',
     type: 'image',
     accept: 'image/*'
   }
 ];
 
+const TEXT_SETTINGS: TextSetting[] = [
+  {
+    key: 'lyrics',
+    label: 'Lyrics',
+    description: 'Your favorite lyrics or quote',
+    type: 'text'
+  },
+  {
+    key: 'about_developer',
+    label: 'About the Developer',
+    description: 'Information about yourself',
+    type: 'text'
+  }
+];
+
 export default function ImageSettings({ onClose }: ImageSettingsProps) {
   const [settings, setSettings] = useState<Record<string, string>>({});
+  const [textValues, setTextValues] = useState<Record<string, string>>({});
   const [uploading, setUploading] = useState<Record<string, boolean>>({});
+  const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
-  const [expanded, setExpanded] = useState(false);
+  const [expandedImages, setExpandedImages] = useState(false);
+  const [expandedText, setExpandedText] = useState(false);
 
   const loadSettings = async () => {
     try {
@@ -68,6 +100,13 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
       
       const data = await response.json();
       setSettings(data);
+      
+      // Set text values from loaded settings
+      const textVals: Record<string, string> = {};
+      TEXT_SETTINGS.forEach(setting => {
+        textVals[setting.key] = data[setting.key] || '';
+      });
+      setTextValues(textVals);
     } catch (error) {
       console.error('Failed to load settings:', error);
     }
@@ -117,16 +156,133 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       console.error('Upload error:', error);
-      setMessage(`❌ Upload failed`);
-    } finally {
-      setUploading(prev => ({ ...prev, [key]: false }));
+      setMessage(`❌ Images = () => {
+    if (!expandedImages) {
+      loadSettings();
     }
+    setExpandedImages(!expandedImages);
   };
 
-  // Load settings when expanded
-  const handleToggle = () => {
-    if (!expanded) {
+  const handleToggleText = () => {
+    if (!expandedText) {
       loadSettings();
+    }
+    setExpandedText(!expandedText);
+  };
+
+  const handleSaveText = async () => {
+    setSaving(true);Container}>
+      {/* Images Section */}
+      <div className={styles.imageSettings}>
+        <div 
+          className={styles.imageSettingsHeader}
+          onClick={handleToggleImages}
+        >
+          <h3>🖼️ Image Settings</h3>
+          <span className={styles.toggleIcon}>
+            {expandedImages ? '▼' : '▶'}
+          </span>
+        </div>
+
+        {expandedImages && (
+          <div className={styles.imageSettingsContent}>
+            {message && message.includes('Image') && (
+              <div className={`${styles.message} ${message.includes('✅') ? styles.success : styles.error}`}>
+                {message}
+              </div>
+            )}
+
+            <div className={styles.imageSettingsGrid}>
+              {IMAGE_SETTINGS.map(config => (
+                <div key={config.key} className={styles.imageSettingCard}>
+                  <div className={styles.imageSettingInfo}>
+                    <h4>{config.label}</h4>
+                    <p>{config.description}</p>
+                  </div>
+
+                  {settings[config.key] && (
+                    <div className={styles.imagePreview}>
+                      {config.type === 'image' ? (
+                        <img src={settings[config.key]} alt={config.label} />
+                      ) : (
+                        <video src={settings[config.key]} controls />
+                      )}
+                    </div>
+                  )}
+
+                  <div className={styles.imageUploadSection}>
+                    <input
+                      type="file"
+                      accept={config.accept}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleFileUpload(config.key, file);
+                      }}
+                      disabled={uploading[config.key]}
+                      id={`upload-${config.key}`}
+                      className={styles.fileInput}
+                    />
+                    <label htmlFor={`upload-${config.key}`} className={styles.uploadButton}>
+                      {uploading[config.key] ? 'Uploading...' : settings[config.key] ? 'Replace' : 'Upload'}
+                    </label>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Text Settings Section */}
+      <div className={styles.imageSettings}>
+        <div 
+          className={styles.imageSettingsHeader}
+          onClick={handleToggleText}
+        >
+          <h3>✏️ Text Settings</h3>
+          <span className={styles.toggleIcon}>
+            {expandedText ? '▼' : '▶'}
+          </span>
+        </div>
+
+        {expandedText && (
+          <div className={styles.imageSettingsContent}>
+            {message && !message.includes('Image') && (
+              <div className={`${styles.message} ${message.includes('✅') ? styles.success : styles.error}`}>
+                {message}
+              </div>
+            )}
+
+            <div className={styles.textSettingsGrid}>
+              {TEXT_SETTINGS.map(config => (
+                <div key={config.key} className={styles.textSettingCard}>
+                  <label htmlFor={`text-${config.key}`}>
+                    <h4>{config.label}</h4>
+                    <p>{config.description}</p>
+                  </label>
+                  <textarea
+                    id={`text-${config.key}`}
+                    value={textValues[config.key] || ''}
+                    onChange={(e) => setTextValues(prev => ({ ...prev, [config.key]: e.target.value }))}
+                    placeholder={`Enter ${config.label.toLowerCase()}...`}
+                    className={styles.textInput}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <button 
+              onClick={handleSaveText}
+              disabled={saving}
+              className={styles.saveTextButton}
+            >
+              {saving ? 'Saving...' : 'Save Text Settings'}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );     loadSettings();
     }
     setExpanded(!expanded);
   };
