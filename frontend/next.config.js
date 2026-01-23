@@ -9,10 +9,15 @@ const nextConfig = {
     return config;
   },
   async rewrites() {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    if (!backendUrl) {
+      return [];
+    }
+
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/:path*`,
+        destination: `${backendUrl}/api/:path*`,
       },
     ]
   },

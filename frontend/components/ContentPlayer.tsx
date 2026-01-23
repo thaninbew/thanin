@@ -192,9 +192,9 @@ export default function ContentPlayer<T extends ContentItem>({
           <div 
             className={styles.playerImagePlaceholder}
             style={{
-              backgroundImage: `url(${disp,
+              backgroundImage: `url(${displayedItem.gifUrl})`,
               opacity: playerImageLoaded ? 1 : 0,
-              transition: 'opacity 0.5s ease-in-out'layedItem.gifUrl})`,
+              transition: 'opacity 0.5s ease-in-out',
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}

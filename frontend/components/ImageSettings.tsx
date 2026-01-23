@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import styles from '../styles/Admin.module.css';
 import dynamic from 'next/dynamic';
 import 'easymde/dist/easymde.min.css';
+import type { Options } from 'easymde';
 
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), { ssr: false });
 
@@ -94,7 +95,7 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
   const [expandedText, setExpandedText] = useState(false);
 
   const loadSettings = async () => {
-    try {
+    try 
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/settings`);
       
       if (!response.ok) {
@@ -223,7 +224,7 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
     }
   };
 
-  const mdeOptions = useMemo(() => ({
+  const mdeOptions = useMemo<Options>(() => ({
     spellChecker: false,
     placeholder: 'Enter markdown text...',
     status: false,
@@ -233,7 +234,7 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
       'link', 'image', '|',
       'preview', 'side-by-side', 'fullscreen', '|',
       'guide'
-    ]
+    ] as Options['toolbar']
   }), []);
 
   return (
@@ -313,10 +314,6 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
 
         {expandedText && (
           <div className={styles.imageSettingsContent}>
-            {messagSimpleMDE
-                    value={textValues[config.key] || ''}
-                    onChange={(value) => setTextValues(prev => ({ ...prev, [config.key]: value }))}
-                    options={mdeOptions
             <div className={styles.textSettingsGrid}>
               {TEXT_SETTINGS.map(config => (
                 <div key={config.key} className={styles.textSettingCard}>
@@ -324,12 +321,11 @@ export default function ImageSettings({ onClose }: ImageSettingsProps) {
                     <h4>{config.label}</h4>
                     <p>{config.description}</p>
                   </label>
-                  <textarea
+                  <SimpleMDE
                     id={`text-${config.key}`}
                     value={textValues[config.key] || ''}
-                    onChange={(e) => setTextValues(prev => ({ ...prev, [config.key]: e.target.value }))}
-                    placeholder={`Enter ${config.label.toLowerCase()}...`}
-                    className={styles.textInput}
+                    onChange={(value) => setTextValues(prev => ({ ...prev, [config.key]: value }))}
+                    options={mdeOptions}
                   />
                 </div>
               ))}

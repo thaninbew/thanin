@@ -5,7 +5,10 @@ const DEFAULT_OG_IMAGE = '';
 
 async function fetchSettings(): Promise<Record<string, string>> {
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    if (!backendUrl) {
+      return {};
+    }
     const response = await fetch(`${backendUrl}/api/settings`, {
       cache: 'no-store',
     });
