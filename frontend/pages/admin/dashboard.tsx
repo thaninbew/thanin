@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import styles from '../../styles/Admin.module.css';
 import dynamic from 'next/dynamic';
 import { marked } from 'marked';
+import ImageSettings from '../../components/ImageSettings';
 
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
   ssr: false
@@ -689,14 +690,9 @@ export default function AdminDashboard() {
         >
           Add New {activeTab === 'projects' ? 'Project' : 'Experience'}
         </button>
-        <button
-          className={`${styles.button} ${styles.settingsButton}`}
-          onClick={() => router.push('/admin/settings')}
-          style={{ marginLeft: 'auto' }}
-        >
-          ⚙️ Settings
-        </button>
       </nav>
+
+      <ImageSettings />
 
       {loading ? (
         <div className={styles.loading}>Loading...</div>
